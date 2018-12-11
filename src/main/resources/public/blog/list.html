@@ -1,0 +1,130 @@
+<html>
+    <head>
+        <title>HOME</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+        <style>
+            .el-header, .el-footer {
+                background-color: #B3C0D1;
+                color: #333;
+                text-align: center;
+                line-height: 60px;
+            }
+            .el-header{
+                padding: 0px !important;
+            }
+            .el-aside {
+                background-color: #D3DCE6;
+                color: #333;
+                text-align: center;
+                line-height: 200px;
+            }
+
+            .el-main {
+                background-color: #E9EEF3;
+                color: #333;
+                text-align: center;
+                line-height: 160px;
+            }
+
+            body > .el-container {
+                margin-bottom: 40px;
+            }
+
+            .el-container:nth-child(5) .el-aside,
+            .el-container:nth-child(6) .el-aside {
+                line-height: 260px;
+            }
+
+            .el-container:nth-child(7) .el-aside {
+                line-height: 320px;
+            }
+            .el-carousel__item h3 {
+                color: #475669;
+                font-size: 18px;
+                opacity: 0.75;
+                line-height: 300px;
+                margin: 0;
+            }
+
+            .el-carousel__item:nth-child(2n) {
+                background-color: #99a9bf;
+            }
+
+            .el-carousel__item:nth-child(2n+1) {
+                background-color: #d3dce6;
+            }
+            .text {
+                font-size: 14px;
+            }
+
+            .item {
+                padding: 18px 0;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <template>
+                <el-container>
+                    <el-header>
+                        <el-menu
+                                :default-active="activeIndex2"
+                                class="el-menu-demo x_right"
+                                mode="horizontal"
+                                @select="handleSelect"
+                                background-color="#545c64"
+                                text-color="#fff"
+                                active-text-color="#ffd04b">
+                            <el-menu-item index="1">技术文章</el-menu-item>
+                            <el-menu-item index="2">吐槽</el-menu-item>
+                            <el-menu-item index="3">成长</el-menu-item>
+                            <el-menu-item index="4">摄影作品</el-menu-item>
+                            <el-menu-item index="5">关于我</el-menu-item>
+                            <el-menu-item index="6" style="float: right;margin-right: 100px;">博客名称</el-menu-item>
+                        </el-menu>
+
+                    </el-header>
+                    <el-main>
+                        <el-carousel indicator-position="outside">
+                            <el-carousel-item v-for="item in 4" :key="item">
+                                <h3>{{ item }}</h3>
+                            </el-carousel-item>
+                        </el-carousel>
+                        <el-row :gutter="20">
+                            <el-col :span="16">
+                                <div class="grid-content bg-purple">
+                                    <el-card class="box-card">
+                                        <div v-for="o in 4" :key="o" class="text item">
+                                            {{'列表内容 ' + o }}
+                                        </div>
+                                    </el-card>
+                                </div>
+                            </el-col>
+                            <el-col :span="8">
+                                <div class="grid-content bg-purple">
+                                    <el-input v-model="input" placeholder="请输入关键字" style="width: 80%;padding: -10px;"></el-input>
+                                    <el-button type="primary">搜索</el-button>
+                                    <div class="grid-content bg-purple">
+                                        <el-card class="box-card">
+                                            <div v-for="o in 3" :key="o" class="text item">
+                                                {{'列表内容 ' + o }}
+                                            </div>
+                                        </el-card>
+                                    </div>
+                                </div>
+                            </el-col>
+                        </el-row>
+                    </el-main>
+                    <el-footer>footer</el-footer>
+                </el-container>
+            </template>
+        </div>
+    </body>
+    <script type="text/javascript" src="../js/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script>
+    new Vue().$mount('#app')
+</script>
+</html>
