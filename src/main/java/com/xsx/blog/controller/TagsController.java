@@ -23,23 +23,23 @@ public class TagsController {
     @Autowired
     private TagsService tagsService;
 
-    @RequestMapping(name = "/findAll")
+    @RequestMapping(value = "/findAll")
     public Page<Tags> findAll(@RequestParam(name = "pageNo",defaultValue = "1") Integer pageNo,
                               @RequestParam(name = "pageSize",defaultValue = "10") Integer pageSize){
         return tagsService.findPage(pageNo,pageSize);
     }
 
-    @RequestMapping(name = "/findOne")
+    @RequestMapping(value = "/findOne")
     public Tags findOne(@RequestParam(name = "id",required = true) Integer id){
         return tagsService.findOne(id);
     }
 
-    @RequestMapping(name = "edit")
+    @RequestMapping(value = "edit")
     public Boolean edit(@RequestBody Tags tag){
         return tagsService.save(tag);
     }
 
-    @RequestMapping(name = "/deleteOne")
+    @RequestMapping(value = "/deleteOne")
     public Boolean deleteOne(@RequestParam(name = "id",required = true) Integer id){
         return tagsService.deleteOne(id);
     }

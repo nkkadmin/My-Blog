@@ -10,6 +10,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @Description:
  * @Auther: xsx
@@ -36,6 +39,7 @@ public class MenuServiceImpl implements MenuService {
         Sort sort = new Sort(Sort.Direction.DESC,"createTime");
         Pageable pageable = new PageRequest(pageNo,pageSize,sort);
         Page<Menu> page = menuRepository.findAll(pageable);
+
         return page;
     }
 

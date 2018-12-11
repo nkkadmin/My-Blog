@@ -12,30 +12,30 @@ import org.springframework.web.bind.annotation.*;
  * @Date: 2018/12/9 19:00
  */
 @RestController
-@RequestMapping(value = "/menu")
+@RequestMapping(value = "/menus")
 public class MenuController {
 
     @Autowired
     private MenuService menuService;
 
-    @RequestMapping(name = "/findAll")
-    public Page<Menu> findAll(@RequestParam(name = "pageNo",defaultValue = "1") Integer pageNo,
+    @RequestMapping(value = "/findAll")
+    public Page<Menu> findAll(@RequestParam(name = "pageNo",defaultValue = "0") Integer pageNo,
                               @RequestParam(name = "pageSize",defaultValue = "10") Integer pageSize){
         return menuService.findPage(pageNo,pageSize);
     }
 
-    @RequestMapping(name = "/findOne",method = RequestMethod.GET)
-    public Menu findOne(@RequestParam(name = "id",required = true) Integer id){
+    @RequestMapping(value = "/selectById")
+    public Menu selectById(@RequestParam(name = "id") Integer id){
         return menuService.findOne(id);
     }
 
-    @RequestMapping(name = "/edit",method = RequestMethod.POST)
+    @RequestMapping(value = "/edit",method = RequestMethod.POST)
     public Boolean edit(@RequestBody Menu menu){
         return menuService.save(menu);
     }
 
-    @RequestMapping(name = "/deleteOne",method = RequestMethod.GET)
-    public Boolean deleteOne(@RequestParam(name = "id",required = true) Integer id){
+    @RequestMapping(value = "/deleteById")
+    public Boolean deleteById(Integer id){
         return menuService.deleteOne(id);
     }
 }
