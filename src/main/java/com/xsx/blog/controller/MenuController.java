@@ -1,10 +1,13 @@
 package com.xsx.blog.controller;
 
 import com.xsx.blog.entity.Menu;
+import com.xsx.blog.request.PageRequest;
 import com.xsx.blog.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 /**
  * @Description:
@@ -19,9 +22,9 @@ public class MenuController {
     private MenuService menuService;
 
     @RequestMapping(value = "/findAll")
-    public Page<Menu> findAll(@RequestParam(name = "pageNo",defaultValue = "0") Integer pageNo,
-                              @RequestParam(name = "pageSize",defaultValue = "10") Integer pageSize){
-        return menuService.findPage(pageNo,pageSize);
+    public Page<Menu> findAll(@RequestBody PageRequest pageRequest){
+        Page<Menu> page = menuService.findPage(pageRequest.getPageNo(),pageRequest.getPageSize());
+        return page;
     }
 
     @RequestMapping(value = "/selectById")
@@ -31,11 +34,15 @@ public class MenuController {
 
     @RequestMapping(value = "/edit",method = RequestMethod.POST)
     public Boolean edit(@RequestBody Menu menu){
+        if(menu != null && menu.getId() == null){
+            menu.setCreateTime(new Date());
+        }
         return menuService.save(menu);
     }
 
+
     @RequestMapping(value = "/deleteById")
-    public Boolean deleteById(Integer id){
+    public Boolean deleteById(@RequestParam(name = "id",required = true) Integer id){
         return menuService.deleteOne(id);
     }
 }

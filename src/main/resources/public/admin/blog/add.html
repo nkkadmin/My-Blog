@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta charset="UTF-8">
+    <!-- Include the Quill library -->
+    <script src="https://cdn.quilljs.com/1.3.4/quill.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <!-- Quill JS Vue -->
+    <script src="https://cdn.jsdelivr.net/npm/vue-quill-editor@3.0.4/dist/vue-quill-editor.js"></script>
+
+
+    <script type="text/javascript" src="../../js/vue.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script type="text/javascript" src="../../js/url.js"></script>
+
+    <!-- Include stylesheet -->
+    <link href="https://cdn.quilljs.com/1.3.4/quill.core.css" rel="stylesheet">
+    <link href="https://cdn.quilljs.com/1.3.4/quill.snow.css" rel="stylesheet">
+    <link href="https://cdn.quilljs.com/1.3.4/quill.bubble.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+<div id="vueapp">
+    <template>
+        <el-form ref="form" :model="form" label-width="80px">
+            <el-form-item label="标题">
+                <el-input v-model="form.title" style="width:400px;"></el-input>
+            </el-form-item>
+            <el-form-item label="所属菜单">
+                <el-select v-model="form.menu" placeholder="">
+                    <el-option v-for="(item) in menus" :label="item.name" :value="item"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="分类">
+                <el-select v-model="form.tags" placeholder="">
+                    <el-option v-for="(item) in tags" :label="item.name" :value="item"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="内容">
+                <quill-editor v-model="form.content"
+                              ref="quillEditorA"
+                              :options="editorOption"
+                              style="height:400px;">
+                </quill-editor>
+            </el-form-item>
+        </el-form>
+        <el-button type="primary" @click="save">保存</el-button>
+    </template>
+</div>
+    <script>
+        Vue.use(VueQuillEditor)
+        new Vue({
+             el: '#vueapp',
+             data: {
+                form:{
+                    id:"",
+                    title:"",
+                    content:"",
+                    menu:"",
+                    tags:""
+                },
+                menus:[],
+                tags:[],
+                 editorOption: {
+                    theme: 'snow'
+                  }
+                },
+            components: {
+                LocalQuillEditor: VueQuillEditor.quillEditor
+            },
+            methods: {
+              initData(){
+                   var self = this;
+                  axios.post("/adminBlog/initData").then(function(response){
+                    console.log(response);
+                    if(response.data.content.menus != null){
+                        for(var i = 0;i<response.data.content.menus.length;i++){
+                            var info = response.data.content.menus;
+                            var menu = new Object();
+                            menu.name = info[i].name;
+                            menu.id = info[i].id;
+                            self.menus.push(menu);
+                        }
+                    }
+                    if(response.data.content.tags != null){
+                        for(var i = 0;i<response.data.content.tags.length;i++){
+                            var info = response.data.content.tags;
+                            var tag = new Object();
+                            tag.name = info[i].name;
+                            tag.id = info[i].id;
+                            self.tags.push(tag);
+                        }
+                    }
+                  })
+              },
+              save(){//保存
+                var self = this;
+                console.log(this.form);
+                  axios.post("/adminBlog/edit",this.form).then(function(response){
+                    console.log(response);
+                        if(response.data){
+                           self.$message({
+                              showClose: true,
+                              message: '保存成功',
+                              type: 'success'
+                            });
+                        }
+                  })
+              },
+              findOne(){
+                    var self = this;
+                    axios.get("/adminBlog/selectById",{params:{"id":this.form.id}}).then(function(response){
+                        console.log(response);
+                        if(response.data != null){
+                            var info = response.data;
+                            self.form.title = info.title;
+                            self.form.content = info.content;
+                            self.form.menu = info.menu;
+                            self.form.tags = info.tags;
+                        }
+                    });
+                },
+            },
+            mounted:function(){
+                this.initData();
+                 var param = GetRequest();
+                if(param != null){
+                    this.form.id = param.id;
+                    this.findOne();
+                }
+            }
+        })
+    </script>
+</body>
+
+
+</html>

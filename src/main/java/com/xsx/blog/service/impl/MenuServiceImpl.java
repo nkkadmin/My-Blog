@@ -37,9 +37,9 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public Page<Menu> findPage(Integer pageNo,Integer pageSize) {
         Sort sort = new Sort(Sort.Direction.DESC,"createTime");
+        System.out.println("pageNo："+pageNo+"，pageSize："+pageSize);
         Pageable pageable = new PageRequest(pageNo,pageSize,sort);
         Page<Menu> page = menuRepository.findAll(pageable);
-
         return page;
     }
 
@@ -49,6 +49,11 @@ public class MenuServiceImpl implements MenuService {
         menu.setStatu(0);
         Menu m = menuRepository.save(menu);
         return true;
+    }
+
+    @Override
+    public List<Menu> findByStatu(Integer statu) {
+        return menuRepository.findByStatuOrderBySortIndexAsc(statu);
     }
 
 }

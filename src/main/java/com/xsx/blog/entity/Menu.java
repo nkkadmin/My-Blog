@@ -1,5 +1,8 @@
 package com.xsx.blog.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.xsx.blog.util.DateUtils;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -18,6 +21,11 @@ public class Menu {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    //排序
+    @Column(name="sort_index")
+    @NotNull
+    private Integer sortIndex;
+
     @Column(name="name",length = 50)
     @NotNull
     private String name;
@@ -26,12 +34,14 @@ public class Menu {
     @NotNull
     private String url;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
     @Column(name = "create_time")
     private Date createTime;
 
     @Column(name="statu",length = 1,columnDefinition="tinyint default 1")
     @NotNull
     private Integer statu = 1;
+
 
     public Integer getId() {
         return id;
@@ -71,6 +81,14 @@ public class Menu {
 
     public void setStatu(Integer statu) {
         this.statu = statu;
+    }
+
+    public Integer getSortIndex() {
+        return sortIndex;
+    }
+
+    public void setSortIndex(Integer sortIndex) {
+        this.sortIndex = sortIndex;
     }
 
     @Override

@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @Description:
  * @Auther: xsx
@@ -44,6 +46,11 @@ public class TagsServiceImpl implements TagsService {
         tag.setStatu(0);
         tagsRepository.save(tag);
         return true;
+    }
+
+    @Override
+    public List<Tags> findByStatu(Integer statu) {
+        return tagsRepository.findByStatuOrderByCreateTimeAsc(statu);
     }
 
 }

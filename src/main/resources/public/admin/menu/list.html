@@ -9,10 +9,13 @@
 <body>
     <div id="app">
         <template>
+            <el-button type="primary" @click="add">新建</el-button>
             <el-table :data="tableData" border style="width: 100%">
                 <el-table-column fixed prop="id" label="ID">
                 </el-table-column>
                 <el-table-column prop="name" label="名称">
+                </el-table-column>
+                <el-table-column prop="sortIndex" label="排序">
                 </el-table-column>
                 <el-table-column prop="url" label="url">
                 </el-table-column>
@@ -22,11 +25,18 @@
                 </el-table-column>
                 <el-table-column fixed="right" label="操作">
                     <template slot-scope="scope">
-                        <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-                        <el-button type="text" size="small">编辑</el-button>
+                        <el-button @click="edit(scope.row.id)" type="text" size="small">编辑</el-button>
+                        <el-button v-if="scope.row.statu == '有效'" @click="deleteById(scope.row.id)" type="text" size="small">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
+            <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="pageNo"
+                    :page-size="pageSize"
+                    :total="totals">
+            </el-pagination>
         </template>
     </div>
 </body>
@@ -36,12 +46,17 @@
     <script>
         var Main = {
             methods: {
-                handleClick(row) {
-                    console.log(row);
+                add(){
+                    window.location.href="add.html";
+                },
+                edit(id){
+                    window.location.href="add.html?id="+id;
                 },
                 loadData(){
                     var self = this;
-                    axios.post("/menus/findAll",{"pageNo":0,"pageSize":10}).then(function(response){
+                    self.tableData = [];
+
+                    axios.post("/menus/findAll",{"pageNo":this.pageNo,"pageSize":this.pageSize}).then(function(response){
                         console.log(response);
                         if(response != null && response.data != null){
                             var list = response.data.content;
@@ -49,19 +64,50 @@
                                 var info = new Object();
                                 info.id = list[i].id;
                                 info.name = list[i].name;
+                                info.sortIndex = list[i].sortIndex;
                                 info.url = list[i].url;
                                 info.createTime = list[i].createTime;
                                 info.statu = list[i].statu === 1 ? "有效" : "删除";
                                 self.tableData.push(info);
                             }
+                            self.totals = response.data.totalElements;
+                            self.pageSize = response.data.numberOfElements;
+                            self.pageNo = response.data.number + 1;
+
                         }
                     });
+                },
+                deleteById(id){
+                    var self = this;
+                    axios.get("/menus/deleteById",{params:{"id":id}}).then(function(response){
+                        console.log(response);
+                        if(response.data){
+                           self.$message({
+                              showClose: true,
+                              message: '删除成功',
+                              type: 'success'
+                            });
+                            self.loadData();
+                        }
+                    });
+                },
+                handleSizeChange(val) {
+                    console.log(`每页 ${val} 条`);
+                    this.pageSize = val;
+                    this.loadData();
+                },
+                handleCurrentChange(val) {
+                    console.log(`当前页: ${val}`);
+                    this.pageNo = val;
+                    this.loadData();
                 }
             },
-
             data() {
                 return {
-                    tableData: []
+                    tableData: [],
+                    totals:0,
+                    pageSize:10,
+                    pageNo:1
                 }
             },
             mounted:function(){

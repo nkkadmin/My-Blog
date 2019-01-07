@@ -1,31 +1,33 @@
 package com.xsx.blog.entity;
 
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.xsx.blog.common.StatuEnum;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
- * @Description:菜单
- * @Auther: xsx
- * @Date: 2018/12/9 19:39
+ * 评论
  */
 @Entity
-@Table(name="tags")
-public class Tags {
+@Table(name = "comment")
+public class Comment {
 
     @Id
-    @Column(name="id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name="name",length = 50)
     @NotNull
-    private String name;
+    @Column(name = "content")
+    private String content;
 
-    @Column(name="pid",columnDefinition = "tinyint default 0")
-    private Integer pid = 0;
+    //父id，用于回复
+    @Column(name = "pid")
+    private Integer pid;
+
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
     @Column(name = "create_time")
@@ -33,7 +35,12 @@ public class Tags {
 
     @Column(name="statu",length = 1,columnDefinition="tinyint default 1")
     @NotNull
-    private Integer statu = 1;
+    private Integer statu = StatuEnum.OK.getStatu();
+
+    @NotNull
+    @OneToOne
+    @JoinColumn(name = "blog_id")
+    private Blog blog;
 
     public Integer getId() {
         return id;
@@ -43,12 +50,12 @@ public class Tags {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getContent() {
+        return content;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public Integer getPid() {
@@ -73,5 +80,13 @@ public class Tags {
 
     public void setStatu(Integer statu) {
         this.statu = statu;
+    }
+
+    public Blog getBlog() {
+        return blog;
+    }
+
+    public void setBlog(Blog blog) {
+        this.blog = blog;
     }
 }

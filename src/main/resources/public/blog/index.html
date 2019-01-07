@@ -47,42 +47,37 @@
                 margin: 0;
             }
 
-            .el-carousel__item:nth-child(2n) {
-                background-color: #99a9bf;
-            }
-
-            .el-carousel__item:nth-child(2n+1) {
-                background-color: #d3dce6;
-            }
             .text {
                 font-size: 14px;
             }
 
             .item {
-                padding: 18px 0;
+                margin: 0px 0px 0px 55px;
+                float: left;
+            }
+
+            .box-card {
+                width: 70%;
             }
 
         </style>
     </head>
     <body>
-        <div id="app">
+   <!-- <embed src="../muics/chai.mp3" hidden="true"/>-->
+    <div id="app">
             <template>
                 <el-container>
                     <el-header>
                         <el-menu
-                                :default-active="activeIndex2"
+                                :default-active="defaultIndex"
                                 class="el-menu-demo x_right"
                                 mode="horizontal"
                                 @select="handleSelect"
                                 background-color="#545c64"
                                 text-color="#fff"
                                 active-text-color="#ffd04b">
-                            <el-menu-item index="1">技术文章</el-menu-item>
-                            <el-menu-item index="2">吐槽</el-menu-item>
-                            <el-menu-item index="3">成长</el-menu-item>
-                            <el-menu-item index="4">摄影作品</el-menu-item>
-                            <el-menu-item index="5">关于我</el-menu-item>
-                            <el-menu-item index="6" style="float: right;margin-right: 100px;">博客名称</el-menu-item>
+                            <el-menu-item :class="'menuItem'+index" v-for="(item,index) in menuList" :index="''+index" :menu-id="item.id" >{{item.name}}</el-menu-item>
+                            <el-menu-item index="haha,jj" style="float: right;margin-right: 100px;">博客名称</el-menu-item>
                         </el-menu>
 
                     </el-header>
@@ -93,18 +88,16 @@
                             </el-carousel-item>
                         </el-carousel>
                         <el-row :gutter="20">
-                            <el-col :span="16">
-                                <div class="grid-content bg-purple">
-                                    <el-card class="box-card">
-                                        <div v-for="o in 4" :key="o" class="text item">
-                                            {{'列表内容 ' + o }}
-                                        </div>
-                                    </el-card>
+                            <el-card class="box-card" :span="7">
+                                <div v-for="item in blogList" :key="item.id" class="text item">
+                                    <img src="https://element.faas.ele.me/static/hamburger.50e4091.png"/>
+                                    <div height="10px">{{item.title}}</div>
+                                    <div >{{item.createTime}}</div>
                                 </div>
-                            </el-col>
+                            </el-card>
                             <el-col :span="8">
                                 <div class="grid-content bg-purple">
-                                    <el-input v-model="input" placeholder="请输入关键字" style="width: 80%;padding: -10px;"></el-input>
+                                    <el-input v-model="searchKey" placeholder="请输入关键字" style="width: 80%;padding: -10px;"></el-input>
                                     <el-button type="primary">搜索</el-button>
                                     <div class="grid-content bg-purple">
                                         <el-card class="box-card">
@@ -123,8 +116,57 @@
         </div>
     </body>
     <script type="text/javascript" src="../js/vue.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
 <script>
-    new Vue().$mount('#app')
-</script>
+    var Main = {
+            methods: {
+                loadData(){
+                    var self = this;
+                    self.tableData = [];
+
+                    axios.post("/blog/index",null).then(function(response){
+                        console.log(response);
+                        if(response.data != null && response.data.menu != null){
+                            self.menuList = response.data.menu;
+                        }
+                        if(self.menuList.length > 0){
+                            //获取第一个菜单
+                            var menuId = self.menuList[0].id;
+                            self.getBlogByMenuId(menuId);
+                        }
+                    });
+                },
+                getBlogByMenuId:function(menuId){
+                    var self = this;
+                    console.log(menuId);
+                    axios.post("/blog/getBlog",{"pageNo":"1","pageSize":10,"selectMenu":menuId}).then(function(response){
+                        console.log(response);
+                        if(response.data != null && response.data.object != null){
+                            self.blogList = response.data.object.content;
+                        }
+                    });
+                },
+                handleSelect(key, keyPath) {
+                    var menuId = $(".menuItem"+key).attr("menu-id");
+                    this.getBlogByMenuId(menuId);
+                }
+            },
+            data() {
+                return {
+                    defaultIndex:'0',
+                    currentDate: new Date(),
+                    menuList:[],
+                    blogList:[],
+                    searchKey:'' //搜索关键字
+                }
+            },
+            mounted:function(){
+                this.loadData();
+            }
+        }
+        var Ctor = Vue.extend(Main)
+        new Ctor().$mount('#app')
+    </script>
 </html>

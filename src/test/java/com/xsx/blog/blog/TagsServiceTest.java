@@ -1,11 +1,10 @@
 package com.xsx.blog.blog;
 
 import com.alibaba.fastjson.JSON;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.xsx.blog.entity.Menu;
+import com.xsx.blog.entity.Tags;
 import com.xsx.blog.service.MenuService;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.xsx.blog.service.TagsService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,30 +16,29 @@ import java.util.Date;
  * @Auther: xsx
  * @Date: 2018/12/9 20:18
  */
-public class MenuServiceTest extends BlogApplicationTests {
+public class TagsServiceTest extends BlogApplicationTests {
 
     @Autowired
-    private MenuService menuService;
+    private TagsService tagsService;
     @Test
     public void save(){
         for(int i = 0;i<10;i++){
-            Menu menu = new Menu();
-            menu.setName("摄影作品"+i);
-            menu.setUrl("http://baidu.com");
-            menu.setCreateTime(new Date());
-            menuService.save(menu);
+            Tags tags = new Tags();
+            tags.setName("标签"+i);
+            tags.setCreateTime(new Date());
+            tagsService.save(tags);
         }
 
     }
 
     @Test
     public void findOne(){
-        System.out.println(menuService.findOne(2));
+        System.out.println(tagsService.findOne(2));
     }
 
     @Test
     public void findAll(){
-        Page<Menu> page = menuService.findPage(0,10);
+        Page<Tags> page = tagsService.findPage(0,10);
         System.out.println(JSON.toJSON(page));
         System.out.println("查询总页数:"+page.getTotalPages());
         System.out.println("查询总记录数:"+page.getTotalElements());
@@ -51,7 +49,7 @@ public class MenuServiceTest extends BlogApplicationTests {
 
     @Test
     public void delete(){
-        menuService.deleteOne(1);
+        tagsService.deleteOne(1);
     }
 
 }

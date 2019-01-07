@@ -3,6 +3,8 @@ package com.xsx.blog.service;
 import com.xsx.blog.entity.Menu;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 /**
  * @Description:
  * @Auther: xsx
@@ -17,4 +19,6 @@ public interface MenuService {
     public Page<Menu> findPage(Integer pageNo,Integer pageSize);
 
     public Boolean deleteOne(Integer id);
+
+    List<Menu> findByStatu(Integer statu);
 }

@@ -1,8 +1,7 @@
 package com.xsx.blog.controller;
 
-import com.xsx.blog.entity.Menu;
 import com.xsx.blog.entity.Tags;
-import com.xsx.blog.service.MenuService;
+import com.xsx.blog.request.PageRequest;
 import com.xsx.blog.service.TagsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,13 +23,12 @@ public class TagsController {
     private TagsService tagsService;
 
     @RequestMapping(value = "/findAll")
-    public Page<Tags> findAll(@RequestParam(name = "pageNo",defaultValue = "1") Integer pageNo,
-                              @RequestParam(name = "pageSize",defaultValue = "10") Integer pageSize){
-        return tagsService.findPage(pageNo,pageSize);
+    public Page<Tags> findAll(@RequestBody PageRequest pageRequest){
+        return tagsService.findPage(pageRequest.getPageNo(),pageRequest.getPageSize());
     }
 
-    @RequestMapping(value = "/findOne")
-    public Tags findOne(@RequestParam(name = "id",required = true) Integer id){
+    @RequestMapping(value = "/selectById")
+    public Tags selectById(@RequestParam(name = "id",required = true) Integer id){
         return tagsService.findOne(id);
     }
 
@@ -39,8 +37,8 @@ public class TagsController {
         return tagsService.save(tag);
     }
 
-    @RequestMapping(value = "/deleteOne")
-    public Boolean deleteOne(@RequestParam(name = "id",required = true) Integer id){
+    @RequestMapping(value = "/deleteById")
+    public Boolean deleteById(@RequestParam(name = "id",required = true) Integer id){
         return tagsService.deleteOne(id);
     }
 }

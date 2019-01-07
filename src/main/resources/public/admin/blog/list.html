@@ -9,19 +9,50 @@
 <body>
     <div id="app">
         <template>
-            <el-button type="primary" @click="add">新建</el-button>
+            <el-form ref="form" :model="form" label-width="450px">
+                <el-input v-model="form.blogTitle" placeholder="请输入标题关键词" style="width: 200px;"></el-input>
+                <el-select v-model="form.selectMenu" placeholder="所属菜单">
+                    <el-option
+                            v-for="item in menus"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
+                    </el-option>
+                </el-select>
+                <el-select v-model="form.selectTag" placeholder="分类">
+                    <el-option
+                            v-for="item in tags"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
+                    </el-option>
+                </el-select>
+                <el-button type="primary" @click="search">搜索</el-button>
+                <el-button type="primary" @click="add">新建</el-button>
+            </el-form>
+
             <el-table :data="tableData" border style="width: 100%">
                 <el-table-column fixed prop="id" label="ID">
                 </el-table-column>
-                <el-table-column prop="name" label="名称">
+                <el-table-column prop="title" label="标题">
+                </el-table-column>
+                <el-table-column prop="menuName" label="所属菜单">
+                </el-table-column>
+                <el-table-column prop="tagName" label="分类">
+                </el-table-column>
+                <el-table-column prop="statu" label="状态">
                 </el-table-column>
                 <el-table-column prop="createTime" label="创建时间">
                 </el-table-column>
-                <el-table-column prop="statu" label="状态">
+                <el-table-column prop="lookNum" label="浏览量">
+                </el-table-column>
+                <el-table-column prop="commentNum" label="评论量">
                 </el-table-column>
                 <el-table-column fixed="right" label="操作">
                     <template slot-scope="scope">
                         <el-button @click="edit(scope.row.id)" type="text" size="small">编辑</el-button>
+                        <el-button @click="edit(scope.row.id)" type="text" size="small">浏览</el-button>
+                        <el-button @click="edit(scope.row.id)" type="text" size="small">评论</el-button>
                         <el-button v-if="scope.row.statu == '有效'" @click="deleteById(scope.row.id)" type="text" size="small">删除</el-button>
                     </template>
                 </el-table-column>
@@ -29,8 +60,8 @@
             <el-pagination
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
-                    :current-page="pageNo"
-                    :page-size="pageSize"
+                    :current-page="form.pageNo"
+                    :page-size="form.pageSize"
                     :total="totals">
             </el-pagination>
         </template>
@@ -48,18 +79,22 @@
                 edit(id){
                     window.location.href="add.html?id="+id;
                 },
+                search(){
+                  this.loadData();
+                },
                 loadData(){
                     var self = this;
                     self.tableData = [];
-
-                    axios.post("/tags/findAll",{"pageNo":this.pageNo,"pageSize":this.pageSize}).then(function(response){
+                    axios.post("/adminBlog/findAll",this.form).then(function(response){
                         console.log(response);
                         if(response != null && response.data != null){
                             var list = response.data.content;
                             for(var i = 0;i<list.length;i++){
                                 var info = new Object();
                                 info.id = list[i].id;
-                                info.name = list[i].name;
+                                info.title = list[i].title;
+                                info.menuName = list[i].menu.name;
+                                info.tagName = list[i].tags.name;
                                 info.createTime = list[i].createTime;
                                 info.statu = list[i].statu === 1 ? "有效" : "删除";
                                 self.tableData.push(info);
@@ -67,9 +102,19 @@
                             self.totals = response.data.totalElements;
                             self.pageSize = response.data.numberOfElements;
                             self.pageNo = response.data.number + 1;
-
                         }
                     });
+                },
+                loadParam(){
+                    var self = this;
+                    axios.post("/adminBlog/initData",{}).then(function (value) {
+                        console.log(value);
+                        if(value.data.content != null){
+                            self.menus = value.data.content.menus;
+                            self.tags = value.data.content.tags;
+
+                        }
+                    })
                 },
                 deleteById(id){
                     var self = this;
@@ -87,12 +132,12 @@
                 },
                 handleSizeChange(val) {
                     console.log(`每页 ${val} 条`);
-                    this.pageSize = val;
+                    this.form.pageSize = val;
                     this.loadData();
                 },
                 handleCurrentChange(val) {
                     console.log(`当前页: ${val}`);
-                    this.pageNo = val;
+                    this.form.pageNo = val;
                     this.loadData();
                 }
             },
@@ -100,11 +145,20 @@
                 return {
                     tableData: [],
                     totals:0,
-                    pageSize:10,
-                    pageNo:1
+                    menus:[],
+                    tags:[],
+                    form:{
+                        pageSize:10,
+                        pageNo:1,
+                        selectMenu:null,
+                        selectTag:null,
+                        blogTitle:null
+                    }
+
                 }
             },
             mounted:function(){
+                this.loadParam();
                 this.loadData();
             }
         }
