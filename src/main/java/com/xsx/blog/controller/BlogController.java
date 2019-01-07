@@ -8,6 +8,7 @@ import com.xsx.blog.request.BlogSearchRequest;
 import com.xsx.blog.service.BlogService;
 import com.xsx.blog.service.MenuService;
 import com.xsx.blog.result.BlogResult;
+import com.xsx.blog.util.StringUtils;
 import com.xsx.blog.vo.IndexVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -51,6 +52,12 @@ public class BlogController {
         if(blogSearchRequest == null || blogSearchRequest.getSelectMenu() == 0)
             return null;
         Page<Blog> page = blogService.findPage(blogSearchRequest);
+        if(page != null || page.getContent() != null){
+            for(Blog blog : page.getContent()){
+                String content = StringUtils.delHTMLTag(blog.getContent());
+                blog.setContent(content.length() >= 150 ? content.substring(0,150)+"..." : content);
+            }
+        }
         BlogResult result = new BlogResult();
         result.setObject(page);
         return result;

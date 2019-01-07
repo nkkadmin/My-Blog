@@ -20,12 +20,6 @@
                 line-height: 200px;
             }
 
-            .el-main {
-                background-color: #E9EEF3;
-                color: #333;
-                text-align: center;
-                line-height: 160px;
-            }
 
             body > .el-container {
                 margin-bottom: 40px;
@@ -45,19 +39,24 @@
                 opacity: 0.75;
                 line-height: 300px;
                 margin: 0;
+                background-color: #475669;
             }
 
             .text {
                 font-size: 14px;
             }
-
-            .item {
-                margin: 0px 0px 0px 55px;
-                float: left;
+            .left_content .right_content{
+                background-color: #fdfdfd;
+                min-height: 500px;
             }
 
-            .box-card {
-                width: 70%;
+            .blog_item{
+                margin-bottom: 20px;
+            }
+            .blog_item_img{
+                max-width: 100%;
+                height: auto;
+                border-radius: 5px;
             }
 
         </style>
@@ -88,14 +87,24 @@
                             </el-carousel-item>
                         </el-carousel>
                         <el-row :gutter="20">
-                            <el-card class="box-card" :span="7">
-                                <div v-for="item in blogList" :key="item.id" class="text item">
-                                    <img src="https://element.faas.ele.me/static/hamburger.50e4091.png"/>
-                                    <div height="10px">{{item.title}}</div>
-                                    <div >{{item.createTime}}</div>
-                                </div>
-                            </el-card>
-                            <el-col :span="8">
+                            <el-col :span="16" class="left_content">
+                                <el-row class="blog_item" :gutter="20" v-for="item in blogList" :key="item.id">
+                                    <el-col :span="4">
+                                        <div class="grid-content bg-purple">
+                                            <img class="blog_item_img" src="https://element.faas.ele.me/static/hamburger.50e4091.png"/>
+                                        </div>
+                                    </el-col>
+                                    <el-col :span="20">
+                                        <div class="grid-content bg-purple">
+                                            <div height="10px">标题：{{item.title}}</div>
+                                            <div>发布日期：{{item.createTime}}</div>
+                                            <div>内容：{{item.content}}</div>
+                                        </div>
+                                    </el-col>
+                                </el-row>
+
+                            </el-col>
+                            <el-col :span="8" class="right_content">
                                 <div class="grid-content bg-purple">
                                     <el-input v-model="searchKey" placeholder="请输入关键字" style="width: 80%;padding: -10px;"></el-input>
                                     <el-button type="primary">搜索</el-button>
