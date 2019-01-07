@@ -2,6 +2,7 @@ package com.xsx.blog.service;
 
 import com.xsx.blog.entity.Blog;
 import com.xsx.blog.entity.Menu;
+import com.xsx.blog.request.BlogEditRequest;
 import com.xsx.blog.request.BlogSearchRequest;
 import org.springframework.data.domain.Page;
 
@@ -16,7 +17,7 @@ public interface BlogService {
 
     public Blog findOne(Integer id);
 
-    public Boolean save(Blog blog);
+    public Boolean save(BlogEditRequest blogEditRequest);
 
     public Page<Blog> findPage(BlogSearchRequest blogSearchRequest);
 

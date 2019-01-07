@@ -1,15 +1,16 @@
 package com.xsx.blog.service.impl;
 
-import com.sun.tools.doclets.standard.Standard;
 import com.xsx.blog.entity.Blog;
 import com.xsx.blog.entity.Menu;
 import com.xsx.blog.entity.Tags;
 import com.xsx.blog.repository.BlogRepository;
-import com.xsx.blog.repository.MenuRepository;
+import com.xsx.blog.request.BlogEditRequest;
 import com.xsx.blog.request.BlogSearchRequest;
 import com.xsx.blog.service.BlogService;
 import com.xsx.blog.service.LoggerService;
 import com.xsx.blog.service.MenuService;
+import com.xsx.blog.service.TagsService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,6 +37,10 @@ public class BlogServiceImpl extends LoggerService implements BlogService  {
 
     @Autowired
     private BlogRepository blogRepository;
+    @Autowired
+    private MenuService menuService;
+    @Autowired
+    private TagsService tagsService;
 
     @Override
     public Blog findOne(Integer id) {
@@ -43,8 +48,9 @@ public class BlogServiceImpl extends LoggerService implements BlogService  {
     }
 
     @Override
-    public Boolean save(Blog blog) {
+    public Boolean save(BlogEditRequest blogEditRequest) {
         Blog oldBlog = null;
+        Blog blog = coverBlog(blogEditRequest);
         if(blog != null && blog.getId() != null){
             oldBlog = findOne(blog.getId());
             oldBlog.setTitle(blog.getTitle());
@@ -59,6 +65,16 @@ public class BlogServiceImpl extends LoggerService implements BlogService  {
 
         oldBlog.setUpdateTime(new Date());
         return blogRepository.save(oldBlog).getId() != null;
+    }
+
+    private Blog coverBlog(BlogEditRequest blogEditRequest) {
+        Blog blog = new Blog();
+        BeanUtils.copyProperties(blogEditRequest,blog);
+        Menu menu = menuService.findOne(blogEditRequest.getMenuId());
+        blog.setMenu(menu);
+        Tags tags = tagsService.findOne(blogEditRequest.getTagId());
+        blog.setTags(tags);
+        return blog;
     }
 
     @Override

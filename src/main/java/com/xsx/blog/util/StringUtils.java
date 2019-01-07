@@ -12,7 +12,7 @@ public class StringUtils {
         String[] srcs = getImgs(content);
         List<String> result = new ArrayList<>();
         for(int i = 0;i<srcs.length;i++){
-            if(srcs[i].startsWith("data:image/png;base64,"))
+            if(srcs[i].startsWith("data:image/"))
                 result.add(srcs[i]);
         }
         return result;

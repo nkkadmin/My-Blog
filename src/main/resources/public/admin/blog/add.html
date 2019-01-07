@@ -15,12 +15,36 @@
     <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
     <script type="text/javascript" src="../../js/url.js"></script>
-
     <!-- Include stylesheet -->
     <link href="https://cdn.quilljs.com/1.3.4/quill.core.css" rel="stylesheet">
     <link href="https://cdn.quilljs.com/1.3.4/quill.snow.css" rel="stylesheet">
     <link href="https://cdn.quilljs.com/1.3.4/quill.bubble.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        .avatar-uploader .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .avatar-uploader .el-upload:hover {
+            border-color: #409EFF;
+        }
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 178px;
+            height: 178px;
+            line-height: 178px;
+            text-align: center;
+        }
+        .avatar {
+            width: 178px;
+            height: 178px;
+            display: block;
+        }
+    </style>
 </head>
 <body>
 <div id="vueapp">
@@ -29,14 +53,32 @@
             <el-form-item label="标题">
                 <el-input v-model="form.title" style="width:400px;"></el-input>
             </el-form-item>
+            <el-form-item label="封面">
+                <el-upload
+                        class="avatar-uploader"
+                         action="/file/upload"
+                        :show-file-list="false"
+                        :on-success="handleAvatarSuccess"
+                        :auto-upload="true"
+                        :name="coverFile"
+                        :limit="1"
+                        :on-change="changeFile"
+                        :before-upload="beforeAvatarUpload">
+                    <img v-if="form.cover" :src="form.cover" class="avatar">
+                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+                <el-dialog :visible.sync="dialogVisible">
+                    <img width="100%" :src="dialogImageUrl" alt="">
+                </el-dialog>
+            </el-form-item>
             <el-form-item label="所属菜单">
-                <el-select v-model="form.menu" placeholder="">
-                    <el-option v-for="(item) in menus" :label="item.name" :value="item"></el-option>
+                <el-select v-model="form.menuId" placeholder="">
+                    <el-option v-for="(item) in menus" :label="item.name" :value="item.id"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="分类">
-                <el-select v-model="form.tags" placeholder="">
-                    <el-option v-for="(item) in tags" :label="item.name" :value="item"></el-option>
+                <el-select v-model="form.tagId" placeholder="">
+                    <el-option v-for="(item) in tags" :label="item.name" :value="item.id"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="内容">
@@ -59,9 +101,13 @@
                     id:"",
                     title:"",
                     content:"",
-                    menu:"",
-                    tags:""
+                    menuId:"",
+                    tagId:"",
+                    cover:""
                 },
+                base64:"",
+                 dialogImageUrl:"",
+                 dialogVisible: false,
                 menus:[],
                 tags:[],
                  editorOption: {
@@ -118,16 +164,35 @@
                             var info = response.data;
                             self.form.title = info.title;
                             self.form.content = info.content;
-                            self.form.menu = info.menu;
-                            self.form.tags = info.tags;
+                            self.form.menuId = info.menu.id;
+                            self.form.tagId = info.tags.id;
                         }
                     });
                 },
+                changeFile:function(file, fileList){
+                    console.log(file);
+                },
+                handleAvatarSuccess(res, file) {
+                  console.log(file);
+                    this.form.cover = URL.createObjectURL(file.raw);
+                    console.log(this.form.cover)
+                },
+                beforeAvatarUpload(file) {
+                    const isJPG = file.type === 'image/jpeg';
+                    const isLt2M = file.size / 1024 / 1024 < 2;
+                    if (!isJPG) {
+                        this.$message.error('上传头像图片只能是 JPG 格式!');
+                    }
+                    if (!isLt2M) {
+                        this.$message.error('上传头像图片大小不能超过 2MB!');
+                    }
+                    return isJPG && isLt2M;
+                }
             },
             mounted:function(){
                 this.initData();
-                 var param = GetRequest();
-                if(param != null){
+                var param = GetRequest();
+                if(Object.keys(param).length > 0){
                     this.form.id = param.id;
                     this.findOne();
                 }

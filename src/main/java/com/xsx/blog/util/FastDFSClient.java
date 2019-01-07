@@ -7,10 +7,13 @@ import org.csource.fastdfs.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.Base64Utils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 
 
 /**
@@ -35,6 +38,26 @@ public class FastDFSClient {
             logger.error("FastDFS Client Init Fail!",e);
         }
     }
+
+    public static String[] upload(String base64, HttpServletRequest request) throws Exception {
+        String suffixStr = base64.split(",")[0];
+        String data = base64.split(",")[1];
+        String fileName = UUID.randomUUID().toString().replace("-","") + ImageUtils.getSuffix(suffixStr.split(";")[0]);
+        byte[] bs = Base64Utils.decodeFromString(data);
+
+        FastDFSFile fastDFSFile = new FastDFSFile();
+        fastDFSFile.setName(fileName);
+        fastDFSFile.setAuthor("xsx");
+        fastDFSFile.setContent(bs);
+        fastDFSFile.setExt(ImageUtils.getSuffix((suffixStr.split(";")[0])));
+
+        String[] files = FastDFSClient.upload(fastDFSFile);
+        for(String file : files){
+            System.out.println(file);
+        }
+        return files;
+    }
+
 
     public static String[] upload(FastDFSFile file) {
         logger.info("File Name: " + file.getName() + "File Length:" + file.getContent().length);
