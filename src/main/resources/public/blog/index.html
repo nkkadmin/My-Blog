@@ -93,8 +93,8 @@
                             <el-col :span="16" class="left_content">
                                 <el-row class="blog_item" :gutter="20" v-for="item in blogList" :key="item.id">
                                     <el-col :span="4">
-                                        <div class="grid-content bg-purple">
-                                            <img class="blog_item_img" src="https://element.faas.ele.me/static/hamburger.50e4091.png"/>
+                                        <div style="cursor: pointer;" @click="blogInfo(item.id)" class="grid-content bg-purple">
+                                            <img class="blog_item_img" :src="item.coverPic"/>
                                         </div>
                                     </el-col>
                                     <el-col :span="20">
@@ -127,7 +127,7 @@
                 loadData(){
                     var self = this;
                     self.tableData = [];
-
+                    self.isAppend = false;
                     axios.post("/blog/index",null).then(function(response){
                         console.log(response);
                         if(response.data != null && response.data.menu != null){
@@ -143,12 +143,23 @@
                 },
                 getBlogByMenuId:function(menuId){
                     var self = this;
+                    if (!self.isAppend){
+                        self.blogList.splice(0,self.blogList.length);
+                    }
                     axios.post("/blog/getBlog",{"pageNo":self.page.pageNo,"pageSize":self.page.pageSize,"selectMenu":menuId}).then(function(response){
                         console.log(response);
                         if(response.data != null && response.data.object != null){
-                            self.blogList = response.data.object.content;
-                            self.totalPage = response.data.object.totalPages;
-                            self.totalSize = response.data.object.totalElements;
+                            for ( var i = 0; i <response.data.object.content.length; i++){
+                                self.blogList.push(response.data.object.content[i]);
+                            }
+                            self.page.totalPage = response.data.object.totalPages;
+                            self.page.totalSize = response.data.object.totalElements;
+                            if (self.page.pageNo >= self.page.totalPage){
+                                $(".load_more").hide();
+                            }else{
+                                $(".load_more").text("加载数据");
+                                $(".load_more").show();
+                            }
                         }
                         self.fullscreenLoading = false;
                     });
@@ -156,16 +167,22 @@
                 handleSelect(key, keyPath) {
                     var menuId = $(".menuItem"+key).attr("menu-id");
                     this.currentMenuId = menuId;
+                    this.isAppend = false;
                     this.getBlogByMenuId(menuId);
                 },
                 loadMoreFun() {
-                    this.fullscreenLoading = true;
                     if(this.page.pageNo < this.page.totalPage){
+                        this.fullscreenLoading = true;
+                        this.isAppend = true;
                         this.page.pageNo += 1;
                         //获取当前选中的菜单
                         this.getBlogByMenuId(this.currentMenuId);
+                    }else{
+                        $(".load_more").text("没有多余的数据");
                     }
-
+                },
+                blogInfo(id){
+                    window.location.href = "blog.html?id="+id;
                 }
             },
             data() {
@@ -179,10 +196,11 @@
                     fullscreenLoading: false,
                     page:{
                         pageNo:1,
-                        pageSize:5,
+                        pageSize:10,
                         totalPage:1,//共几页
                         totalSize:0 //共几条记录
-                    }
+                    },
+                    isAppend:false
                 }
             },
             mounted:function(){

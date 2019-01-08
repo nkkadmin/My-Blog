@@ -22,6 +22,8 @@ public class BlogEditRequest implements Serializable {
 
     private String title;
 
+    private String coverPic = "../img/default_pic.png";
+
     private String content;
 
     private Integer createUserId;
@@ -37,6 +39,14 @@ public class BlogEditRequest implements Serializable {
     private Integer menuId;
 
     private Integer sortIndex = 1;
+
+    public String getCoverPic() {
+        return coverPic;
+    }
+
+    public void setCoverPic(String coverPic) {
+        this.coverPic = coverPic;
+    }
 
     public Integer getId() {
         return id;

@@ -58,13 +58,12 @@
                         class="avatar-uploader"
                          action="/file/upload"
                         :show-file-list="false"
-                        :on-success="handleAvatarSuccess"
                         :auto-upload="true"
-                        :name="coverFile"
-                        :limit="1"
+                        name="file"
+                        :on-success="uploadSuccess"
                         :on-change="changeFile"
                         :before-upload="beforeAvatarUpload">
-                    <img v-if="form.cover" :src="form.cover" class="avatar">
+                    <img v-if="form.coverPic" :src="form.coverPic" class="avatar">
                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
                 <el-dialog :visible.sync="dialogVisible">
@@ -103,7 +102,7 @@
                     content:"",
                     menuId:"",
                     tagId:"",
-                    cover:""
+                    coverPic:""
                 },
                 base64:"",
                  dialogImageUrl:"",
@@ -172,10 +171,8 @@
                 changeFile:function(file, fileList){
                     console.log(file);
                 },
-                handleAvatarSuccess(res, file) {
-                  console.log(file);
-                    this.form.cover = URL.createObjectURL(file.raw);
-                    console.log(this.form.cover)
+                uploadSuccess(response, file, fileList){
+                    this.form.coverPic = response.substring(0,response.length-1);
                 },
                 beforeAvatarUpload(file) {
                     const isJPG = file.type === 'image/jpeg';

@@ -57,7 +57,7 @@ public class BlogServiceImpl extends LoggerService implements BlogService  {
             oldBlog.setContent(blog.getContent());
             oldBlog.setMenu(blog.getMenu());
             oldBlog.setTags(blog.getTags());
-
+            oldBlog.setCoverPic(blog.getCoverPic());
         }else{
             oldBlog = blog;
             oldBlog.setCreateTime(new Date());

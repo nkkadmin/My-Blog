@@ -12,10 +12,7 @@ import com.xsx.blog.util.StringUtils;
 import com.xsx.blog.vo.IndexVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,6 +37,12 @@ public class BlogController {
         return indexVO;
     }
 
+    @RequestMapping(value = "/info/{id}")
+    public Blog getBlogById(@PathVariable Integer id){
+        Blog blog = blogService.findOne(id);
+        return blog;
+    }
+
 
     /**
      * 根据菜单获取博客
@@ -55,6 +58,11 @@ public class BlogController {
         if(page != null || page.getContent() != null){
             for(Blog blog : page.getContent()){
                 String content = StringUtils.delHTMLTag(blog.getContent());
+                if(org.springframework.util.StringUtils.isEmpty(blog.getCoverPic())){
+                    String[] img = StringUtils.getImgs(blog.getContent());
+                    if(img != null && img.length > 0)
+                        blog.setCoverPic(img[0]);
+                }
                 blog.setContent(content.length() >= 150 ? content.substring(0,150)+"..." : content);
             }
         }

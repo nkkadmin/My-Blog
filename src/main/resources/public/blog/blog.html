@@ -1,0 +1,132 @@
+<html>
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+        <style>
+            .el-header, .el-footer {
+                background-color: #B3C0D1;
+                color: #333;
+                text-align: center;
+                line-height: 60px;
+            }
+            .el-header{
+                padding: 0px !important;
+            }
+            .el-aside {
+                background-color: #D3DCE6;
+                color: #333;
+                text-align: center;
+                line-height: 200px;
+            }
+
+
+            body > .el-container {
+                margin-bottom: 40px;
+            }
+
+            .el-container:nth-child(5) .el-aside,
+            .el-container:nth-child(6) .el-aside {
+                line-height: 260px;
+            }
+
+            .el-container:nth-child(7) .el-aside {
+                line-height: 320px;
+            }
+            .el-carousel__item h3 {
+                color: #475669;
+                font-size: 18px;
+                opacity: 0.75;
+                line-height: 300px;
+                margin: 0;
+                background-color: #475669;
+            }
+
+            .title {
+                font-size: 34px;
+                font-weight: 700;
+                line-height: 1.3;
+                text-align: center;
+            }
+            .content{
+                margin: 50px 200px 100px 200px;
+            }
+        </style>
+    </head>
+    <body>
+   <!-- <embed src="../muics/chai.mp3" hidden="true"/>-->
+    <div id="app">
+            <template>
+                <el-container>
+                    <el-header>
+                        <!--<el-menu
+                                :default-active="defaultIndex"
+                                class="el-menu-demo x_right"
+                                mode="horizontal"
+                                @select="handleSelect"
+                                background-color="#545c64"
+                                text-color="#fff"
+                                active-text-color="#ffd04b">
+                            <el-menu-item :class="'menuItem'+index" v-for="(item,index) in menuList" :index="''+index" :menu-id="item.id" >{{item.name}}</el-menu-item>
+                            <el-menu-item style="float: right;margin-right: 100px;">博客名称</el-menu-item>
+                        </el-menu>-->
+                    </el-header>
+                    <el-main>
+                        <el-row>
+                            <el-col :span="24">
+                                <div class="grid-content bg-purple-dark title">
+                                    {{info.title}}
+                                </div>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="24">
+                                <div class="grid-content bg-purple-dark content" v-html="info.content">
+                                </div>
+                            </el-col>
+                        </el-row>
+                    </el-main>
+                    <el-footer>footer</el-footer>
+                </el-container>
+            </template>
+        </div>
+    </body>
+    <script type="text/javascript" src="../js/vue.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/url.js"></script>
+<script>
+    var Main = {
+            methods: {
+                loadData(){
+                    var self = this;
+                    self.tableData = [];
+                    self.isAppend = false;
+                    axios.get("/blog/info/"+self.id,null).then(function(response){
+                        console.log(response);
+                        if(response.data != null && response.data.menu != null){
+                            self.info = response.data;
+                        }
+                    });
+                },
+                initParam(){
+                    var param = GetRequest();
+                    this.id = param.id;
+                }
+            },
+            data() {
+                return {
+                    id:"",
+                    info:null
+                }
+            },
+            mounted:function(){
+                this.initParam();
+                this.loadData();
+            }
+        }
+        var Ctor = Vue.extend(Main)
+        new Ctor().$mount('#app')
+    </script>
+</html>

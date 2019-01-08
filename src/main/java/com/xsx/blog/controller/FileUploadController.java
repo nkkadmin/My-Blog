@@ -3,11 +3,13 @@ package com.xsx.blog.controller;
 import com.xsx.blog.dto.FastDFSFile;
 import com.xsx.blog.entity.Blog;
 import com.xsx.blog.request.BlogSearchRequest;
+import com.xsx.blog.util.Base64Convert;
 import com.xsx.blog.util.FastDFSClient;
 import com.xsx.blog.util.ImageUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.util.Base64Utils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,14 +36,12 @@ public class FileUploadController {
     private String fdfsServerUrl;
 
     @RequestMapping(value = "/upload")
-    public String findAll(@RequestParam("coverFile") MultipartFile coverFile, HttpServletRequest request) throws Exception {
-        File f = File.createTempFile("temp",null);
-        InputStream inputStream = coverFile.getInputStream();
-        String base64=null;
-        byte[] buffer = new byte[(int) f.length()];
-        inputStream.read(buffer);
-        inputStream.close();
-        base64=new BASE64Encoder().encode(buffer);
+    public String findAll(@RequestParam("file") MultipartFile multipartFile, HttpServletRequest request) throws Exception {
+        Base64Convert base64Convert = new Base64Convert();
+
+        String base64 = base64Convert.ioToBase64(multipartFile.getInputStream());
+        if(!StringUtils.isEmpty(base64))
+            base64 = "data:image/jpeg;base64,"+base64;
         String[] paths = FastDFSClient.upload(base64,request);
         String savePath = getFdfsServerUrl();
         for(String path : paths){

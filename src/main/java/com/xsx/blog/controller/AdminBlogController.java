@@ -80,7 +80,6 @@ public class AdminBlogController {
                 }
                 if(!org.springframework.util.StringUtils.isEmpty(savePath))
                     savePath = savePath.substring(0,savePath.length()-1);
-                System.out.println("savePath:"+savePath);
                 content = content.replace(base64,savePath);
             }
             blogEditRequest.setContent(content);

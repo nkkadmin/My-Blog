@@ -24,6 +24,10 @@ public class Blog {
     @NotNull
     private String title;
 
+    @Column(name="cover_pic",length = 200)
+    @NotNull
+    private String coverPic;
+
     @Column(name = "content",columnDefinition = "text")
     @NotNull
     private String content;
@@ -61,6 +65,14 @@ public class Blog {
     @NotNull
     @Column(name = "sort_index")
     private Integer sortIndex = 1;
+
+    public String getCoverPic() {
+        return coverPic;
+    }
+
+    public void setCoverPic(String coverPic) {
+        this.coverPic = coverPic;
+    }
 
     public Integer getId() {
         return id;
