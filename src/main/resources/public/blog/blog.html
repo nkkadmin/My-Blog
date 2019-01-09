@@ -47,9 +47,16 @@
                 font-weight: 700;
                 line-height: 1.3;
                 text-align: center;
+                margin-top: 80px;
             }
             .content{
                 margin: 50px 200px 100px 200px;
+            }
+            .dt_other{
+                text-align: right;
+                margin: 20px 200px 0px 0px;
+                font-size: 12px;
+                color: #969696;
             }
         </style>
     </head>
@@ -81,6 +88,15 @@
                         </el-row>
                         <el-row>
                             <el-col :span="24">
+                                <div class="grid-content bg-purple-dark dt_other">
+                                    <span>发布时间：{{info.createTime}}</span>
+                                    <span>浏览量：0</span>
+                                    <span>点赞量：0</span>
+                                </div>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="24">
                                 <div class="grid-content bg-purple-dark content" v-html="info.content">
                                 </div>
                             </el-col>
@@ -107,6 +123,7 @@
                         console.log(response);
                         if(response.data != null && response.data.menu != null){
                             self.info = response.data;
+                            $("title").text(self.info.title);
                         }
                     });
                 },

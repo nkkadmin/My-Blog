@@ -1,6 +1,7 @@
 package com.xsx.blog.controller;
 
 
+import com.xsx.blog.common.Constants;
 import com.xsx.blog.common.StatuEnum;
 import com.xsx.blog.entity.Blog;
 import com.xsx.blog.entity.Menu;
@@ -62,6 +63,8 @@ public class BlogController {
                     String[] img = StringUtils.getImgs(blog.getContent());
                     if(img != null && img.length > 0)
                         blog.setCoverPic(img[0]);
+                    else
+                        blog.setCoverPic(Constants.DEFAULT_PIC);
                 }
                 blog.setContent(content.length() >= 150 ? content.substring(0,150)+"..." : content);
             }
