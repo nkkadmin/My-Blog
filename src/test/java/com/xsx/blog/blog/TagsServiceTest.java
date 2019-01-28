@@ -1,9 +1,9 @@
 package com.xsx.blog.blog;
 
 import com.alibaba.fastjson.JSON;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 import com.xsx.blog.model.Tags;
+import com.xsx.blog.request.TagRequest;
 import com.xsx.blog.service.TagsService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,8 @@ public class TagsServiceTest extends BlogApplicationTests {
 
     @Test
     public void findAll(){
-        PageInfo<Tags> page = tagsService.findPage(0,10);
+        TagRequest tagRequest = new TagRequest(0,10);
+        PageInfo<Tags> page = tagsService.findPage(tagRequest);
         System.out.println(JSON.toJSON(page));
 
     }

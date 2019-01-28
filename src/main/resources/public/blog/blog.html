@@ -145,9 +145,9 @@
                     var self = this;
                     self.tableData = [];
                     self.isAppend = false;
-                    axios.get("/blog/info/"+self.id,null).then(function(response){
+                    axios.get("/index/blog/info/"+self.id,null).then(function(response){
                         console.log(response);
-                        if(response.data != null && response.data.menu != null){
+                        if(response.data != null && response.data != null){
                             self.info = response.data;
                             $("title").text(self.info.title);
                         }
@@ -190,8 +190,8 @@
                     self.commentList.splice(0,self.commentList.length);
                     axios.post("/comment/getComment",{"blogId":self.id,"pageNo":1,"pageSize":10}).then(function(response){
                         console.log(response);
-                        if(response.data.content != null){
-                            var contentList = response.data.content;
+                        if(response.data != null){
+                            var contentList = response.data.list;
                             for(var index in contentList){
                                 self.commentList.push(contentList[index]);
                             }

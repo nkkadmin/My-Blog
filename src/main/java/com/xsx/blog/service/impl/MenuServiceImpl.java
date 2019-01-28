@@ -1,12 +1,12 @@
 package com.xsx.blog.service.impl;
 
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xsx.blog.common.StatuEnum;
 import com.xsx.blog.mapper.MenuMapper;
 import com.xsx.blog.model.Menu;
+import com.xsx.blog.request.MenuRequest;
 import com.xsx.blog.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,8 +46,8 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public PageInfo<Menu> findPage(Integer pageNo, Integer pageSize) {
-        PageHelper.startPage(pageNo,pageSize);
+    public PageInfo<Menu> findPage(MenuRequest menuRequest) {
+        PageHelper.startPage(menuRequest.startPage(),menuRequest.getPageSize());
         List<Menu> list = menuMapper.findAll();
         PageInfo<Menu> pageInfo = new PageInfo<>(list);
         return pageInfo;

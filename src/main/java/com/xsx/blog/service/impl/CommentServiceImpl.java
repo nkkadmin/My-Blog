@@ -3,6 +3,7 @@ package com.xsx.blog.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.xsx.blog.common.StatuEnum;
 import com.xsx.blog.mapper.CommentMapper;
 import com.xsx.blog.model.Comment;
 import com.xsx.blog.request.CommentEditRequest;
@@ -41,9 +42,10 @@ public class CommentServiceImpl implements CommentService {
         BeanUtils.copyProperties(commentEditRequest,comment);
         if(comment.getId() == null){
             comment.setCreateTime(new Date());
+            comment.setStatu(StatuEnum.OK.getStatu());
         }
         comment.setBlogId(commentEditRequest.getBlogId());
-        return commentMapper.insert(comment) > 1;
+        return commentMapper.insert(comment) > 0;
     }
 
     @Override

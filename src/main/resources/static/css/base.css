@@ -5,7 +5,7 @@
     line-height: 60px;
 }
 .el-footer{
-    position: absolute;
+    position: fixed;
     width: 100%;
     bottom: 0;
 }

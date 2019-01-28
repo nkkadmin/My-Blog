@@ -2,6 +2,7 @@ package com.xsx.blog.service;
 
 import com.github.pagehelper.PageInfo;
 import com.xsx.blog.model.Menu;
+import com.xsx.blog.request.MenuRequest;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public interface MenuService {
 
     public Boolean save(Menu menu);
 
-    public PageInfo<Menu> findPage(Integer pageNo, Integer pageSize);
+    public PageInfo<Menu> findPage(MenuRequest menuRequest);
 
     public Boolean deleteOne(Integer id);
 

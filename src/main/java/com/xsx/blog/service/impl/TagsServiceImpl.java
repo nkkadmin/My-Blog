@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.xsx.blog.common.StatuEnum;
 import com.xsx.blog.mapper.TagsMapper;
 import com.xsx.blog.model.Tags;
+import com.xsx.blog.request.TagRequest;
 import com.xsx.blog.service.TagsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,8 +35,8 @@ public class TagsServiceImpl implements TagsService {
     }
 
     @Override
-    public PageInfo<Tags> findPage(Integer pageNo, Integer pageSize) {
-        PageHelper.startPage(pageNo,pageSize);
+    public PageInfo<Tags> findPage(TagRequest tagRequest) {
+        PageHelper.startPage(tagRequest.startPage(),tagRequest.getPageSize());
         List<Tags> tags = tagsMapper.findAll();
         return new PageInfo<>(tags);
     }

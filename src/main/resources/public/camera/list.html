@@ -81,7 +81,7 @@
                                 self.blogList.push(response.data.list[i]);
                             }
                             self.page.totalPage = response.data.pages;
-                            self.page.totalSize = response.data.totalElements;
+                            self.page.totalSize = response.data.pageSize;
                             if (self.page.pageNo >= self.page.totalPage){
                                 $(".load_more").hide();
                             }else{

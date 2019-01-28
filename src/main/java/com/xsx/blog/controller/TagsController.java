@@ -2,7 +2,7 @@ package com.xsx.blog.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.xsx.blog.model.Tags;
-import com.xsx.blog.request.PageRequest;
+import com.xsx.blog.request.TagRequest;
 import com.xsx.blog.service.TagsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,8 +23,8 @@ public class TagsController {
     private TagsService tagsService;
 
     @RequestMapping(value = "/findAll")
-    public PageInfo<Tags> findAll(@RequestBody PageRequest pageRequest){
-        return tagsService.findPage(pageRequest.getPageNo(),pageRequest.getPageSize());
+    public PageInfo<Tags> findAll(@RequestBody TagRequest tagRequest){
+        return tagsService.findPage(tagRequest);
     }
 
     @RequestMapping(value = "/selectById")

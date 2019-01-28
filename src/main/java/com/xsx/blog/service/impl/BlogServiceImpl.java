@@ -77,13 +77,10 @@ public class BlogServiceImpl extends LoggerService implements BlogService  {
 
     @Override
     public PageInfo<BlogVo> findPage(BlogSearchRequest blogSearchRequest) {
-        PageHelper.startPage(blogSearchRequest.getPageNo(),blogSearchRequest.getPageSize());
-
+        PageHelper.startPage(blogSearchRequest.startPage(),blogSearchRequest.getPageSize());
         List<Blog> list = blogMapper.findAll(blogSearchRequest);
+        PageInfo<Blog> oldPage = new PageInfo<>(list);
         List<BlogVo> resultList = new ArrayList<>();
-        PageInfo<BlogVo> page = new PageInfo<>(resultList);
-
-
         for(Blog blog : list){
             BlogVo blogVo = new BlogVo();
             String content = com.xsx.blog.util.StringUtils.delHTMLTag(blog.getContent());
@@ -100,6 +97,9 @@ public class BlogServiceImpl extends LoggerService implements BlogService  {
             blogVo.setTagName(tagsMapper.findById(blog.getTagId()).getName());
             resultList.add(blogVo);
         }
+        PageInfo<BlogVo> page = new PageInfo<>();
+        BeanUtils.copyProperties(oldPage,page);
+        page.setList(resultList);
         return page;
     }
 

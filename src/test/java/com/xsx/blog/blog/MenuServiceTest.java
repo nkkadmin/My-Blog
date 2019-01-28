@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import java.util.List;
 import com.xsx.blog.model.Menu;
+import com.xsx.blog.request.MenuRequest;
 import com.xsx.blog.service.MenuService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +25,15 @@ public class MenuServiceTest extends BlogApplicationTests {
     @Test
     public void save(){
 
-            Menu menu = new Menu();
-            menu.setName("关于我");
-            menu.setSortIndex(3);
-            menu.setUrl("http://baidu.com");
-            menu.setCreateTime(new Date());
-            menu.setStatu(1);
-            menuService.save(menu);
-
+       for(int i = 0;i<14;i++){
+           Menu menu = new Menu();
+           menu.setName("测试"+i);
+           menu.setSortIndex(3);
+           menu.setUrl("http://baidu.com");
+           menu.setCreateTime(new Date());
+           menu.setStatu(1);
+           menuService.save(menu);
+       }
 
     }
 
@@ -42,7 +44,10 @@ public class MenuServiceTest extends BlogApplicationTests {
 
     @Test
     public void findAll(){
-        PageInfo<Menu> page = menuService.findPage(1,10);
+        MenuRequest menuRequest = new MenuRequest();
+        menuRequest.setPageNo(1);
+        menuRequest.setPageSize(10);
+        PageInfo<Menu> page = menuService.findPage(menuRequest);
         System.out.println(JSON.toJSON(page));
     }
 

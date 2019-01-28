@@ -79,6 +79,7 @@
     <script type="text/javascript" src="../../js/vue.js"></script>
     <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="../../js/url.js"></script>
     <script>
         var Main = {
             methods: {
@@ -94,19 +95,19 @@
                     axios.post("/camera/findAll",{"pageNo":this.form.pageNo,"pageSize":this.form.pageSize}).then(function(response){
                         console.log(response);
                         if(response != null && response.data != null){
-                            var list = response.data.content;
+                            var list = response.data.list;
                             for(var i = 0;i<list.length;i++){
                                 var info = new Object();
                                 info.id = list[i].id;
                                 info.title = list[i].title;
                                 info.subTitle = list[i].title.length >= 8 ? list[i].title.substring(0,8)+"..." : list[i].title;
                                 info.coverPic = list[i].coverPic;
-                                info.createTime = list[i].createTime.split(" ")[0];
+                                info.createTime = list[i].createTime;
                                 info.statu = list[i].statu === 1 ? "有效" : "删除";
                                 info.distName = list[i].distName;
                                 self.tableData.push(info);
                             }
-                            self.totals = response.data.totalElements;
+                            self.totals = response.data.total;
                         }
                     });
                 },

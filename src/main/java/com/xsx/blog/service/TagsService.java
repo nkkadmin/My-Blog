@@ -4,6 +4,7 @@ package com.xsx.blog.service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 import com.xsx.blog.model.Tags;
+import com.xsx.blog.request.TagRequest;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public interface TagsService {
 
     public boolean save(Tags tag);
 
-    public PageInfo<Tags> findPage(Integer pageNo, Integer pageSize);
+    public PageInfo<Tags> findPage(TagRequest tagRequest);
 
     public boolean deleteOne(Integer id);
 

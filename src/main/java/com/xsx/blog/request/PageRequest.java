@@ -11,11 +11,23 @@ public class PageRequest implements Serializable {
 
     private Integer pageSize;
 
+    public PageRequest() {
+    }
+
+    public PageRequest(Integer pageNo, Integer pageSize) {
+        this.pageNo = pageNo;
+        this.pageSize = pageSize;
+    }
+
     public Integer getPageNo() {
         if(pageNo < 1)
             return 0;
         else
             return pageNo - 1;
+    }
+
+    public Integer startPage(){
+        return (pageNo - 1) * pageSize;
     }
 
     public void setPageNo(Integer pageNo) {

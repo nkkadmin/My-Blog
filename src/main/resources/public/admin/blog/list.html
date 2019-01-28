@@ -99,9 +99,9 @@
                                 info.statu = list[i].statu === 1 ? "有效" : "删除";
                                 self.tableData.push(info);
                             }
-                            self.totals = response.data.totalElements;
-                            self.pageSize = response.data.numberOfElements;
-                            self.pageNo = response.data.number + 1;
+                            self.totals = response.data.total;
+                            self.pageSize = response.data.pageSize;
+                            self.pageNo = response.data.pageNum;
                         }
                     });
                 },

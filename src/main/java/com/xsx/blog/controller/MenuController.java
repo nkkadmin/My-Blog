@@ -3,12 +3,12 @@ package com.xsx.blog.controller;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 import com.xsx.blog.model.Menu;
+import com.xsx.blog.request.MenuRequest;
 import com.xsx.blog.request.PageRequest;
 import com.xsx.blog.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 
 /**
  * @Description:
@@ -23,8 +23,8 @@ public class MenuController {
     private MenuService menuService;
 
     @RequestMapping(value = "/findAll")
-    public PageInfo<Menu> findAll(@RequestBody PageRequest pageRequest){
-        PageInfo<Menu> pageInfo = menuService.findPage(pageRequest.getPageNo(),pageRequest.getPageSize());
+    public PageInfo<Menu> findAll(@RequestBody MenuRequest menuRequest){
+        PageInfo<Menu> pageInfo = menuService.findPage(menuRequest);
         return pageInfo;
     }
 
