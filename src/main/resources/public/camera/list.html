@@ -5,44 +5,20 @@
         <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
         <link rel="stylesheet" href="../css/base.css">
         <style>
-
-
-            .el-container:nth-child(5) .el-aside,
-            .el-container:nth-child(6) .el-aside {
-                line-height: 260px;
-            }
-
-            .el-container:nth-child(7) .el-aside {
-                line-height: 320px;
-            }
             .el-carousel__item h3 {
                 color: #475669;
-                font-size: 18px;
-                opacity: 0.75;
-                line-height: 300px;
-                margin: 0;
-                background-color: #475669;
-            }
-
-            .text {
                 font-size: 14px;
-            }
-            .left_content .right_content{
-                background-color: #fdfdfd;
-                min-height: 500px;
+                opacity: 0.75;
+                line-height: 200px;
+                margin: 0;
             }
 
-            .blog_item{
-                margin-bottom: 20px;
+            .el-carousel__item:nth-child(2n) {
+                background-color: #99a9bf;
             }
-            .blog_item_img{
-                max-width: 100%;
-                height: auto;
-                border-radius: 5px;
-            }
-            .load_more{
-                width: 400px;
-                margin: 50px 0px 50px 300px;
+
+            .el-carousel__item:nth-child(2n+1) {
+                background-color: #d3dce6;
             }
         </style>
     </head>
@@ -54,33 +30,14 @@
                 <el-container>
 
                     <el-main>
-                        <el-carousel indicator-position="outside">
-                            <el-carousel-item v-for="item in 4" :key="item">
-                                <h3>{{ item }}</h3>
-                            </el-carousel-item>
-                        </el-carousel>
-                        <el-row :gutter="20">
-                            <el-col :span="16" class="left_content">
-                                <el-row class="blog_item" :gutter="20" v-for="item in blogList" :key="item.id">
-                                    <el-col :span="4">
-                                        <div style="cursor: pointer;" @click="blogInfo(item.id)" class="grid-content bg-purple">
-                                            <img class="blog_item_img" :src="item.coverPic"/>
-                                        </div>
-                                    </el-col>
-                                    <el-col :span="20">
-                                        <div class="grid-content bg-purple">
-                                            <div height="10px">标题：{{item.title}}</div>
-                                            <div>发布日期：{{item.createTime}}</div>
-                                            <div>内容：{{item.content}}</div>
-                                        </div>
-                                    </el-col>
-                                </el-row>
-                                <el-button @click="loadMoreFun" v-loading.fullscreen.lock="fullscreenLoading" class="load_more" type="warning" round>加载更多</el-button>
-                            </el-col>
-                            <el-col :span="8" class="right_content">
+                        <template>
+                            <el-carousel :interval="4000" type="card" height="300px">
+                                <el-carousel-item v-for="item in 6" :key="item">
+                                    <h3>{{ item }}</h3>
+                                </el-carousel-item>
+                            </el-carousel>
+                        </template>
 
-                            </el-col>
-                        </el-row>
                     </el-main>
                 </el-container>
                 <footer-content></footer-content>
@@ -101,14 +58,14 @@
                     self.isAppend = false;
                     axios.post("/index/blog/index",null).then(function(response){
                         console.log(response);
-                        if(response != null && response.data.menu != null){
+                        if(response.data != null && response.data.menu != null){
                             self.menuList = response.data.menu;
                         }
                         if(self.menuList.length > 0){
                             //获取第一个菜单
                             var menuId = self.menuList[0].id;
                             self.currentMenuId = menuId;
-                            self.getBlogByMenuId(menuId);
+                            self.getBlogByMenuId(2);
                         }
                     });
                 },
@@ -119,7 +76,7 @@
                     }
                     axios.post("/index/blog/getBlog",{"pageNo":self.page.pageNo,"pageSize":self.page.pageSize,"menuId":menuId}).then(function(response){
                         console.log(response);
-                        if(response.data != null && response.data.list != null){
+                        if(response.data != null && response.data != null){
                             for ( var i = 0; i <response.data.list.length; i++){
                                 self.blogList.push(response.data.list[i]);
                             }
@@ -134,6 +91,12 @@
                         }
                         self.fullscreenLoading = false;
                     });
+                },
+                handleSelect(key, keyPath) {
+                    var menuId = $(".menuItem"+key).attr("menu-id");
+                    this.currentMenuId = menuId;
+                    this.isAppend = false;
+                    this.getBlogByMenuId(menuId);
                 },
                 loadMoreFun() {
                     if(this.page.pageNo < this.page.totalPage){

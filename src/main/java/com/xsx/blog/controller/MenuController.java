@@ -1,10 +1,11 @@
 package com.xsx.blog.controller;
 
-import com.xsx.blog.entity.Menu;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageInfo;
+import com.xsx.blog.model.Menu;
 import com.xsx.blog.request.PageRequest;
 import com.xsx.blog.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -22,9 +23,9 @@ public class MenuController {
     private MenuService menuService;
 
     @RequestMapping(value = "/findAll")
-    public Page<Menu> findAll(@RequestBody PageRequest pageRequest){
-        Page<Menu> page = menuService.findPage(pageRequest.getPageNo(),pageRequest.getPageSize());
-        return page;
+    public PageInfo<Menu> findAll(@RequestBody PageRequest pageRequest){
+        PageInfo<Menu> pageInfo = menuService.findPage(pageRequest.getPageNo(),pageRequest.getPageSize());
+        return pageInfo;
     }
 
     @RequestMapping(value = "/selectById")
@@ -34,9 +35,6 @@ public class MenuController {
 
     @RequestMapping(value = "/edit",method = RequestMethod.POST)
     public Boolean edit(@RequestBody Menu menu){
-        if(menu != null && menu.getId() == null){
-            menu.setCreateTime(new Date());
-        }
         return menuService.save(menu);
     }
 

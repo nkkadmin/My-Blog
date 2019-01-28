@@ -59,7 +59,7 @@
                     axios.post("/menus/findAll",{"pageNo":this.pageNo,"pageSize":this.pageSize}).then(function(response){
                         console.log(response);
                         if(response != null && response.data != null){
-                            var list = response.data.content;
+                            var list = response.data.list;
                             for(var i = 0;i<list.length;i++){
                                 var info = new Object();
                                 info.id = list[i].id;

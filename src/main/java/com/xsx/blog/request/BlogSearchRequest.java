@@ -8,8 +8,17 @@ package com.xsx.blog.request;
 public class BlogSearchRequest extends PageRequest {
 
     private String blogTitle;
-    private Integer selectMenu;
-    private Integer selectTag;
+    private Integer menuId;
+    private Integer tagId;
+    private Integer statu;
+
+    public Integer getStatu() {
+        return statu;
+    }
+
+    public void setStatu(Integer statu) {
+        this.statu = statu;
+    }
 
     public String getBlogTitle() {
         return blogTitle;
@@ -19,19 +28,19 @@ public class BlogSearchRequest extends PageRequest {
         this.blogTitle = blogTitle;
     }
 
-    public Integer getSelectMenu() {
-        return selectMenu;
+    public Integer getMenuId() {
+        return menuId;
     }
 
-    public void setSelectMenu(Integer selectMenu) {
-        this.selectMenu = selectMenu;
+    public void setMenuId(Integer menuId) {
+        this.menuId = menuId;
     }
 
-    public Integer getSelectTag() {
-        return selectTag;
+    public Integer getTagId() {
+        return tagId;
     }
 
-    public void setSelectTag(Integer selectTag) {
-        this.selectTag = selectTag;
+    public void setTagId(Integer tagId) {
+        this.tagId = tagId;
     }
 }

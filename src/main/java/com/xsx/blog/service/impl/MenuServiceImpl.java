@@ -1,16 +1,17 @@
 package com.xsx.blog.service.impl;
 
-import com.xsx.blog.entity.Menu;
-import com.xsx.blog.repository.MenuRepository;
+
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.xsx.blog.common.StatuEnum;
+import com.xsx.blog.mapper.MenuMapper;
+import com.xsx.blog.model.Menu;
 import com.xsx.blog.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,38 +23,49 @@ import java.util.List;
 public class MenuServiceImpl implements MenuService {
 
     @Autowired
-    private MenuRepository menuRepository;
+    private MenuMapper menuMapper;
 
     @Override
     public Menu findOne(Integer id) {
-        return menuRepository.findById(id).get();
+        return menuMapper.findById(id);
     }
 
     @Override
     public Boolean save(Menu menu) {
-        return menuRepository.save(menu).getId() != null;
+        if(menu.getId() == null){
+            menu.setCreateTime(new Date());
+            menu.setStatu(StatuEnum.OK.getStatu());
+            return menuMapper.insert(menu) > 0;
+        }else{
+            Menu oldMenu = menuMapper.findById(menu.getId());
+            oldMenu.setName(menu.getName());
+            oldMenu.setSortIndex(menu.getSortIndex());
+            oldMenu.setUrl(menu.getUrl());
+            return menuMapper.update(oldMenu) > 0;
+        }
     }
 
     @Override
-    public Page<Menu> findPage(Integer pageNo,Integer pageSize) {
-        Sort sort = new Sort(Sort.Direction.DESC,"createTime");
-        System.out.println("pageNo："+pageNo+"，pageSize："+pageSize);
-        Pageable pageable = new PageRequest(pageNo,pageSize,sort);
-        Page<Menu> page = menuRepository.findAll(pageable);
-        return page;
+    public PageInfo<Menu> findPage(Integer pageNo, Integer pageSize) {
+        PageHelper.startPage(pageNo,pageSize);
+        List<Menu> list = menuMapper.findAll();
+        PageInfo<Menu> pageInfo = new PageInfo<>(list);
+        return pageInfo;
     }
 
     @Override
     public Boolean deleteOne(Integer id) {
-        Menu menu = menuRepository.findById(id).get();
+        Menu menu = menuMapper.findById(id);
+        if(menu == null)
+            return true;
         menu.setStatu(0);
-        Menu m = menuRepository.save(menu);
+        menuMapper.update(menu);
         return true;
     }
 
     @Override
     public List<Menu> findByStatu(Integer statu) {
-        return menuRepository.findByStatuOrderBySortIndexAsc(statu);
+        return menuMapper.findByStatuOrderBySortIndexAsc(statu);
     }
 
 }

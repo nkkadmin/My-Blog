@@ -1,30 +1,27 @@
 package com.xsx.blog.controller;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageInfo;
+import com.xsx.blog.common.Constants;
 import com.xsx.blog.common.StatuEnum;
-import com.xsx.blog.dto.FastDFSFile;
-import com.xsx.blog.entity.Blog;
-import com.xsx.blog.entity.Menu;
-import com.xsx.blog.entity.Tags;
+import com.xsx.blog.model.Blog;
+import com.xsx.blog.model.Menu;
+import com.xsx.blog.model.Tags;
 import com.xsx.blog.request.BlogEditRequest;
 import com.xsx.blog.request.BlogSearchRequest;
-import com.xsx.blog.request.PageRequest;
 import com.xsx.blog.result.Result;
 import com.xsx.blog.service.BlogService;
 import com.xsx.blog.service.MenuService;
 import com.xsx.blog.service.TagsService;
 import com.xsx.blog.util.FastDFSClient;
-import com.xsx.blog.util.ImageUtils;
 import com.xsx.blog.util.StringUtils;
+import com.xsx.blog.vo.BlogVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.awt.*;
 import java.util.*;
-import java.util.List;
 
 @RestController
 @RequestMapping("/adminBlog")
@@ -36,8 +33,7 @@ public class AdminBlogController {
     private TagsService tagsService;
     @Autowired
     private BlogService blogService;
-    @Value("${fdfs_server_url}")
-    private String fdfsServerUrl;
+
 
 
     @RequestMapping(value = "/initData",method = RequestMethod.POST)
@@ -55,8 +51,8 @@ public class AdminBlogController {
     }
 
     @RequestMapping(value = "/findAll")
-    public Page<Blog> findAll(@RequestBody BlogSearchRequest blogSearchRequest){
-        Page<Blog> page = blogService.findPage(blogSearchRequest);
+    public PageInfo<BlogVo> findAll(@RequestBody BlogSearchRequest blogSearchRequest){
+        PageInfo<BlogVo> page = blogService.findPage(blogSearchRequest);
         return page;
     }
 
@@ -88,7 +84,7 @@ public class AdminBlogController {
     }
 
     private String getFdfsServerUrl(){
-        return "http://"+fdfsServerUrl+"/";
+        return Constants.FDFS_SERVER_URL;
     }
 
 

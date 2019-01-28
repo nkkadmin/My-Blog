@@ -1,26 +1,26 @@
 package com.xsx.blog.service.impl;
 
-import com.xsx.blog.entity.Blog;
-import com.xsx.blog.entity.Menu;
-import com.xsx.blog.entity.Tags;
-import com.xsx.blog.repository.BlogRepository;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.xsx.blog.common.Constants;
+import com.xsx.blog.mapper.BlogMapper;
+import com.xsx.blog.mapper.MenuMapper;
+import com.xsx.blog.mapper.TagsMapper;
+import com.xsx.blog.model.Blog;
+import com.xsx.blog.model.Menu;
 import com.xsx.blog.request.BlogEditRequest;
 import com.xsx.blog.request.BlogSearchRequest;
 import com.xsx.blog.service.BlogService;
 import com.xsx.blog.service.LoggerService;
 import com.xsx.blog.service.MenuService;
 import com.xsx.blog.service.TagsService;
+import com.xsx.blog.vo.BlogVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.springframework.util.CollectionUtils;
 
-import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,15 +36,15 @@ public class BlogServiceImpl extends LoggerService implements BlogService  {
 
 
     @Autowired
-    private BlogRepository blogRepository;
+    private BlogMapper blogMapper;
     @Autowired
-    private MenuService menuService;
+    private MenuMapper menuMapper;
     @Autowired
-    private TagsService tagsService;
+    private TagsMapper tagsMapper;
 
     @Override
     public Blog findOne(Integer id) {
-        return blogRepository.findById(id).get();
+        return blogMapper.findById(id);
     }
 
     @Override
@@ -55,8 +55,8 @@ public class BlogServiceImpl extends LoggerService implements BlogService  {
             oldBlog = findOne(blog.getId());
             oldBlog.setTitle(blog.getTitle());
             oldBlog.setContent(blog.getContent());
-            oldBlog.setMenu(blog.getMenu());
-            oldBlog.setTags(blog.getTags());
+            oldBlog.setMenuId(blog.getId());
+            oldBlog.setTagId(blog.getTagId());
             oldBlog.setCoverPic(blog.getCoverPic());
         }else{
             oldBlog = blog;
@@ -64,62 +64,54 @@ public class BlogServiceImpl extends LoggerService implements BlogService  {
         }
 
         oldBlog.setUpdateTime(new Date());
-        return blogRepository.save(oldBlog).getId() != null;
+        return blogMapper.insert(oldBlog) > 0;
     }
 
     private Blog coverBlog(BlogEditRequest blogEditRequest) {
         Blog blog = new Blog();
         BeanUtils.copyProperties(blogEditRequest,blog);
-        Menu menu = menuService.findOne(blogEditRequest.getMenuId());
-        blog.setMenu(menu);
-        Tags tags = tagsService.findOne(blogEditRequest.getTagId());
-        blog.setTags(tags);
+        blog.setMenuId(blogEditRequest.getMenuId());
+        blog.setTagId(blogEditRequest.getTagId());
         return blog;
     }
 
     @Override
-    public Page<Blog> findPage(BlogSearchRequest blogSearchRequest) {
-        Sort sort = new Sort(Sort.Direction.DESC,"createTime");
-        Pageable pageable = new PageRequest(blogSearchRequest.getPageNo(),blogSearchRequest.getPageSize(),sort);
-        Specification<BlogSearchRequest> specification = new Specification<BlogSearchRequest>() {
-            @Override
-            public Predicate toPredicate(Root<BlogSearchRequest> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                List<Predicate> requestParamList = new ArrayList<>();
-                if(!StringUtils.isEmpty(blogSearchRequest.getBlogTitle())){
-                    Predicate p = criteriaBuilder.like(root.get("title").as(String.class),"%" + blogSearchRequest.getBlogTitle() + "%");
-                    requestParamList.add(p);
-                }
+    public PageInfo<BlogVo> findPage(BlogSearchRequest blogSearchRequest) {
+        PageHelper.startPage(blogSearchRequest.getPageNo(),blogSearchRequest.getPageSize());
 
-                Join<BlogSearchRequest,Tags> tagsJoin = root.join("tags",JoinType.INNER);
-                if(!StringUtils.isEmpty(blogSearchRequest.getSelectTag())){
-                    Predicate p = criteriaBuilder.equal(tagsJoin.get("id").as(String.class),blogSearchRequest.getSelectTag());
-                    requestParamList.add(p);
-                }
+        List<Blog> list = blogMapper.findAll(blogSearchRequest);
+        List<BlogVo> resultList = new ArrayList<>();
+        PageInfo<BlogVo> page = new PageInfo<>(resultList);
 
-                Join<BlogSearchRequest, Menu> standardJoin = root.join("menu",JoinType.INNER);
-                if(blogSearchRequest.getSelectMenu() !=null){
-                    Predicate p = criteriaBuilder.equal(standardJoin.get("id").as(String.class),blogSearchRequest.getSelectMenu());
-                    requestParamList.add(p);
-                }
 
-                return criteriaBuilder.and(requestParamList.toArray(new Predicate[0]));
+        for(Blog blog : list){
+            BlogVo blogVo = new BlogVo();
+            String content = com.xsx.blog.util.StringUtils.delHTMLTag(blog.getContent());
+            if(org.springframework.util.StringUtils.isEmpty(blog.getCoverPic())){
+                String[] img = com.xsx.blog.util.StringUtils.getImgs(blog.getContent());
+                if(img != null && img.length > 0)
+                    blog.setCoverPic(img[0]);
+                else
+                    blog.setCoverPic(Constants.DEFAULT_PIC);
             }
-        };
-        Page<Blog> page = blogRepository.findAll(specification,pageable);
+            blog.setContent(content.length() >= 150 ? content.substring(0,150)+"..." : content);
+            BeanUtils.copyProperties(blog,blogVo);
+            blogVo.setMenuName(menuMapper.findById(blog.getMenuId()).getName());
+            blogVo.setTagName(tagsMapper.findById(blog.getTagId()).getName());
+            resultList.add(blogVo);
+        }
         return page;
     }
 
     @Override
     public Boolean deleteOne(Integer id) {
-        Blog menu = blogRepository.findById(id).get();
-        menu.setStatu(0);
-        Blog m = blogRepository.save(menu);
+        Blog blog = blogMapper.findById(id);
+        if(blog == null)
+            return true;
+        blog.setStatu(0);
+        blogMapper.update(blog);
         return true;
     }
 
-    @Override
-    public List<Blog> findByStatu(Integer statu) {
-        return null;
-    }
 
 }

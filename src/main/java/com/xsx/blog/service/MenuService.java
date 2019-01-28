@@ -1,7 +1,7 @@
 package com.xsx.blog.service;
 
-import com.xsx.blog.entity.Menu;
-import org.springframework.data.domain.Page;
+import com.github.pagehelper.PageInfo;
+import com.xsx.blog.model.Menu;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public interface MenuService {
 
     public Boolean save(Menu menu);
 
-    public Page<Menu> findPage(Integer pageNo,Integer pageSize);
+    public PageInfo<Menu> findPage(Integer pageNo, Integer pageSize);
 
     public Boolean deleteOne(Integer id);
 

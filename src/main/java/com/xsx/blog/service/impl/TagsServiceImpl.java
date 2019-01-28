@@ -1,13 +1,12 @@
 package com.xsx.blog.service.impl;
 
-import com.xsx.blog.entity.Tags;
-import com.xsx.blog.repository.TagsRepository;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.xsx.blog.common.StatuEnum;
+import com.xsx.blog.mapper.TagsMapper;
+import com.xsx.blog.model.Tags;
 import com.xsx.blog.service.TagsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,36 +20,39 @@ import java.util.List;
 public class TagsServiceImpl implements TagsService {
 
     @Autowired
-    private TagsRepository tagsRepository;
+    private TagsMapper tagsMapper;
 
     @Override
     public Tags findOne(Integer id) {
-        return tagsRepository.findById(id).get();
+        return tagsMapper.findById(id);
     }
 
     @Override
     public boolean save(Tags tag) {
-        return tagsRepository.save(tag).getId() != null;
+        tag.setStatu(StatuEnum.OK.getStatu());
+        return tagsMapper.insert(tag) > 0;
     }
 
     @Override
-    public Page<Tags> findPage(Integer pageNo,Integer pageSize) {
-        Sort sort = new Sort(Sort.Direction.DESC,"createTime");
-        Pageable pageable = new PageRequest(pageNo,pageSize,sort);
-        return tagsRepository.findAll(pageable);
+    public PageInfo<Tags> findPage(Integer pageNo, Integer pageSize) {
+        PageHelper.startPage(pageNo,pageSize);
+        List<Tags> tags = tagsMapper.findAll();
+        return new PageInfo<>(tags);
     }
 
     @Override
     public boolean deleteOne(Integer id) {
-        Tags tag = tagsRepository.findById(id).get();
+        Tags tag = tagsMapper.findById(id);
+        if(tag == null)
+            return true;
         tag.setStatu(0);
-        tagsRepository.save(tag);
-        return true;
+        Integer num = tagsMapper.update(tag);
+        return num > 0;
     }
 
     @Override
     public List<Tags> findByStatu(Integer statu) {
-        return tagsRepository.findByStatuOrderByCreateTimeAsc(statu);
+        return tagsMapper.findByStatuOrderByCreateTimeAsc(statu);
     }
 
 }

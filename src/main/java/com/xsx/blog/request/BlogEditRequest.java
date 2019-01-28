@@ -1,12 +1,8 @@
 package com.xsx.blog.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.xsx.blog.common.StatuEnum;
-import com.xsx.blog.entity.Menu;
-import com.xsx.blog.entity.Tags;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import com.xsx.blog.common.StatuEnum;
+
 import java.io.Serializable;
 import java.util.Date;
 

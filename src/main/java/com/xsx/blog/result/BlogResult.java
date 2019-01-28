@@ -1,6 +1,7 @@
 package com.xsx.blog.result;
 
-import com.xsx.blog.entity.Blog;
+
+import com.xsx.blog.model.Blog;
 
 /**
  * @Description:

@@ -1,10 +1,10 @@
 package com.xsx.blog.controller;
 
-import com.xsx.blog.entity.Tags;
+import com.github.pagehelper.PageInfo;
+import com.xsx.blog.model.Tags;
 import com.xsx.blog.request.PageRequest;
 import com.xsx.blog.service.TagsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,7 +23,7 @@ public class TagsController {
     private TagsService tagsService;
 
     @RequestMapping(value = "/findAll")
-    public Page<Tags> findAll(@RequestBody PageRequest pageRequest){
+    public PageInfo<Tags> findAll(@RequestBody PageRequest pageRequest){
         return tagsService.findPage(pageRequest.getPageNo(),pageRequest.getPageSize());
     }
 

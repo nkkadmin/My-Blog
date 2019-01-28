@@ -63,7 +63,7 @@
             },
             mounted:function(){
                 var param = GetRequest();
-                if(param != null){
+                if(Object.keys(param).length > 0){
                     this.form.id = param.id;
                     this.findOne();
                 }

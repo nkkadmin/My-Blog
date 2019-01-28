@@ -1,6 +1,7 @@
 package com.xsx.blog.vo;
 
-import com.xsx.blog.entity.Menu;
+
+import com.xsx.blog.model.Menu;
 
 import java.io.Serializable;
 import java.util.List;

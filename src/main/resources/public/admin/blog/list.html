@@ -11,7 +11,7 @@
         <template>
             <el-form ref="form" :model="form" label-width="450px">
                 <el-input v-model="form.blogTitle" placeholder="请输入标题关键词" style="width: 200px;"></el-input>
-                <el-select v-model="form.selectMenu" placeholder="所属菜单">
+                <el-select v-model="form.menuId" placeholder="所属菜单">
                     <el-option
                             v-for="item in menus"
                             :key="item.id"
@@ -19,7 +19,7 @@
                             :value="item.id">
                     </el-option>
                 </el-select>
-                <el-select v-model="form.selectTag" placeholder="分类">
+                <el-select v-model="form.tagId" placeholder="分类">
                     <el-option
                             v-for="item in tags"
                             :key="item.id"
@@ -88,13 +88,13 @@
                     axios.post("/adminBlog/findAll",this.form).then(function(response){
                         console.log(response);
                         if(response != null && response.data != null){
-                            var list = response.data.content;
+                            var list = response.data.list;
                             for(var i = 0;i<list.length;i++){
                                 var info = new Object();
                                 info.id = list[i].id;
                                 info.title = list[i].title;
-                                info.menuName = list[i].menu.name;
-                                info.tagName = list[i].tags.name;
+                                info.menuName = list[i].menuName;
+                                info.tagName = list[i].tagName;
                                 info.createTime = list[i].createTime;
                                 info.statu = list[i].statu === 1 ? "有效" : "删除";
                                 self.tableData.push(info);
@@ -150,8 +150,8 @@
                     form:{
                         pageSize:10,
                         pageNo:1,
-                        selectMenu:null,
-                        selectTag:null,
+                        menuId:null,
+                        tagId:null,
                         blogTitle:null
                     }
 
