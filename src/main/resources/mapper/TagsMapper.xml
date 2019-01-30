@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xsx.blog.mapper.TagsMapper" >
+  <resultMap id="BaseResultMap" type="com.xsx.blog.model.Tags" >
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="pid" property="pid" jdbcType="INTEGER" />
+    <result column="statu" property="statu" jdbcType="INTEGER" />
+  </resultMap>
+  <select id="findById" resultMap="BaseResultMap">
+    select * from tags where id=#{id,jdbcType=INTEGER}
+  </select>
+  <select id="findAll" resultMap="BaseResultMap">
+    select * from tags
+  </select>
+  <select id="findByStatuOrderByCreateTimeAsc" resultMap="BaseResultMap">
+    select * from tags where tags.statu=#{statu,jdbcType=INTEGER} order by create_time asc
+  </select>
+  <update id="update" parameterType="com.xsx.blog.model.Tags">
+    update tags set
+    create_time = #{createTime,jdbcType=TIMESTAMP},
+    name = #{name,jdbcType=VARCHAR},
+    pid =  #{pid,jdbcType=INTEGER},
+    statu = #{statu,jdbcType=INTEGER}
+    where
+    id = #{id,jdbcType=INTEGER}
+  </update>
+  <insert id="insert" parameterType="com.xsx.blog.model.Tags" >
+    insert into tags (id, create_time, name,
+      pid, statu)
+    values (#{id,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{name,jdbcType=VARCHAR},
+      #{pid,jdbcType=INTEGER}, #{statu,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xsx.blog.model.Tags" >
+    insert into tags
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="pid != null" >
+        pid,
+      </if>
+      <if test="statu != null" >
+        statu,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null" >
+        #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="statu != null" >
+        #{statu,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xsx.blog.mapper.MenuMapper" >
+  <resultMap id="BaseResultMap" type="com.xsx.blog.model.Menu" >
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sort_index" property="sortIndex" jdbcType="INTEGER" />
+    <result column="statu" property="statu" jdbcType="INTEGER" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="findById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select * from menu where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="findByStatuOrderBySortIndexAsc" resultMap="BaseResultMap">
+    select * from menu where statu = #{statu,jdbcType=INTEGER} order by sort_index asc
+  </select>
+  <select id="findAll" resultMap="BaseResultMap">
+    select * from menu
+  </select>
+  <update id="update" parameterType="com.xsx.blog.model.Menu">
+    update menu set create_time = #{createTime,jdbcType=TIMESTAMP},
+    name = #{name,jdbcType=VARCHAR},sort_index=#{sortIndex,jdbcType=INTEGER},statu=#{statu,jdbcType=INTEGER},
+    url=#{url,jdbcType=VARCHAR} where id=#{id,jdbcType=INTEGER}
+  </update>
+  <insert id="insert" parameterType="com.xsx.blog.model.Menu" >
+    insert into menu (id, create_time, name, 
+      sort_index, statu, url
+      )
+    values (#{id,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{name,jdbcType=VARCHAR}, 
+      #{sortIndex,jdbcType=INTEGER}, #{statu,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.xsx.blog.model.Menu" >
+    insert into menu
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="sortIndex != null" >
+        sort_index,
+      </if>
+      <if test="statu != null" >
+        statu,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sortIndex != null" >
+        #{sortIndex,jdbcType=INTEGER},
+      </if>
+      <if test="statu != null" >
+        #{statu,jdbcType=INTEGER},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>
