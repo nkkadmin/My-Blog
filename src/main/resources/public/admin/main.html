@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        .transition-box {
+            margin-bottom: 10px;
+            width: 200px;
+            height: 100px;
+            border-radius: 4px;
+            background-color: #409EFF;
+            text-align: center;
+            color: #fff;
+            padding: 40px 20px;
+            box-sizing: border-box;
+            margin-right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <template>
+            <el-row :gutter="20">
+                <el-col :span="12">
+                    <div class="transition-box">
+                        <div>文章数量</div>
+                        <div>{{articleNum}}</div>
+                    </div>
+                </el-col>
+                <el-col :span="12">
+                    <div class="transition-box">
+                        <div>评论数量</div>
+                        <div>{{commentNum}}</div>
+                    </div>
+                </el-col>
+            </el-row>
+        </template>
+    </div>
+</body>
+    <script type="text/javascript" src="../../js/vue.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script>
+        var Main = {
+            data() {
+                return {
+                    articleNum:0, //文章数量
+                    commentNum:0  //评论数量
+                }
+            },
+            methods: {
+                loadData:function(){
+                    var self = this;
+                    axios.get("/admin/main/loadData",null).then(function (response) {
+                        if(response.data.success){
+                            self.articleNum = response.data.articleNum;
+                            self.commentNum = response.data.commentNum;
+                        }
+                    })
+                }
+            },
+            mounted:function(){
+                this.loadData();
+            }
+        }
+        var Ctor = Vue.extend(Main)
+        new Ctor().$mount('#app')
+    </script>
+</html>

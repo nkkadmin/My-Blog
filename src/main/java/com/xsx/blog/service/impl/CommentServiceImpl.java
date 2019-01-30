@@ -54,4 +54,9 @@ public class CommentServiceImpl implements CommentService {
         List<Comment> list = commentMapper.findAll(commentSearchRequest);
         return new PageInfo<>(list);
     }
+
+    @Override
+    public Integer count() {
+        return commentMapper.count();
+    }
 }

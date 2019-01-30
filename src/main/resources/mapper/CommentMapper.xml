@@ -10,6 +10,9 @@
     <result column="blog_id" property="blogId" jdbcType="INTEGER" />
   </resultMap>
 
+  <select id="count" resultType="java.lang.Integer">
+    select count(*) from comment
+  </select>
   <select id="findAll" parameterType="com.xsx.blog.request.CommentSearchRequest" resultMap="BaseResultMap">
     select * from comment
     <where>

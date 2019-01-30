@@ -5,7 +5,7 @@ body {
 
 .left {
 	background: #313541;
-	width: 15%;
+	width: 11%;
 	float: left;
 	position: absolute;
 	top: 0px;
@@ -13,7 +13,7 @@ body {
 }
 
 .top {
-	width: 85%;
+	width: 100%;
 	float: right;
 	height: 48px;
 	line-height: 48px;
@@ -22,7 +22,7 @@ body {
 
 .content {
 	float: right;
-	width: 85%;
+	width: 89%;
 	height: 600px;
 	min-height: 600px;
 }

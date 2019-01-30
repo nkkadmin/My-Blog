@@ -15,4 +15,6 @@ public interface BlogMapper {
     int update(Blog blog);
 
     List<Blog> findAll(BlogSearchRequest blogSearchRequest);
+
+    Integer count();
 }

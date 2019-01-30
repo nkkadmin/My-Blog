@@ -20,6 +20,9 @@
   <sql id="Blob_Column_List" >
     id,cover_pic,create_time,create_user_id,dist_name,sort_index,statu,title,update_time,menu_id,tag_id,content
   </sql>
+  <select id="count" resultType="java.lang.Integer">
+    select count(*) from blog
+  </select>
   <select id="findById" resultMap="BaseResultMap">
     select <include refid="Blob_Column_List"/>
     from blog where id=#{id,jdbcType=INTEGER}

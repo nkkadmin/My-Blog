@@ -113,5 +113,10 @@ public class BlogServiceImpl extends LoggerService implements BlogService  {
         return true;
     }
 
+    @Override
+    public Integer count() {
+        return blogMapper.count();
+    }
+
 
 }

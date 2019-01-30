@@ -16,4 +16,6 @@ public interface CommentService {
     public Boolean saveOrderUpdate(CommentEditRequest commentEditRequest);
 
     public PageInfo<Comment> queryAll(CommentSearchRequest commentSearchRequest);
+
+    Integer count();
 }

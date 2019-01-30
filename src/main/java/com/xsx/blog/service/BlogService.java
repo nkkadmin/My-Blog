@@ -22,5 +22,5 @@ public interface BlogService {
 
     public Boolean deleteOne(Integer id);
 
-
+    Integer count();
 }

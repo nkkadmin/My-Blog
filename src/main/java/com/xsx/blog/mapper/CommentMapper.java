@@ -11,4 +11,6 @@ public interface CommentMapper {
     int insertSelective(Comment record);
 
     List<Comment> findAll(CommentSearchRequest commentSearchRequest);
+
+    Integer count();
 }
