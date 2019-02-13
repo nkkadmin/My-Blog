@@ -50,7 +50,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public PageInfo<Comment> queryAll(CommentSearchRequest commentSearchRequest) {
-        PageHelper.startPage(commentSearchRequest.getPageNo(),commentSearchRequest.getPageSize());
+        PageHelper.startPage(commentSearchRequest.startPage(),commentSearchRequest.getPageSize());
         List<Comment> list = commentMapper.findAll(commentSearchRequest);
         return new PageInfo<>(list);
     }
@@ -58,5 +58,18 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Integer count() {
         return commentMapper.count();
+    }
+
+    @Override
+    public Integer delete(Integer commentId) {
+        if(commentId == null){
+            return 0;
+        }
+        Comment comment = commentMapper.findOne(commentId);
+        if(comment != null){
+            comment.setStatu(StatuEnum.DELETE.getStatu());
+            return commentMapper.update(comment);
+        }
+        return null;
     }
 }

@@ -122,9 +122,13 @@
                                         {{item.content}}
                                     </div>
                                 </div>
+                                <div v-if="commentList.length == 0" style="color: #ada4a4;">暂无评论</div>
+                                <div v-if="commentList.length > 0 && commentForm.pageNo < commentForm.totalPage" style="margin-top: 50px;text-align: center;color: #ada4a4;cursor: pointer;" @click="more">加载更多</div>
+                                <div v-if="commentList.length > 0 &&commentForm.pageNo >= commentForm.totalPage" style="margin-top: 50px;text-align: center;color: #ada4a4;">已全部加载</div>
                                 </el-card>
                              </el-col>
                         </el-row>
+
                     </el-main>
 
                 </el-container>
@@ -141,7 +145,7 @@
 <script>
     var Main = {
             methods: {
-                loadData(){
+                loadData:function(){
                     var self = this;
                     self.tableData = [];
                     self.isAppend = false;
@@ -154,11 +158,12 @@
                         self.loadComment();
                     });
                 },
-                initParam(){
+                initParam:function(){
                     var param = GetRequest();
                     this.id = param.id;
+                    this.commentForm.blogId = param.id;
                 },
-                onSubmit(){
+                onSubmit:function(){
                     var self = this;
                     if(self.form.commonDesc == null || self.form.commonDesc === ""){
                         this.$message({
@@ -172,7 +177,7 @@
                         blogId:self.id,
                         content:self.form.commonDesc
                     }
-                    axios.post("/comment/save",params).then(function(response){
+                    axios.post("/index/comment/save",params).then(function(response){
                         console.log(response);
                         self.$message({
                             showClose: true,
@@ -185,20 +190,24 @@
                         }
                     });
                 },
-                loadComment(){
+                loadComment:function(){
                     var self = this;
-                    self.commentList.splice(0,self.commentList.length);
-                    axios.post("/comment/getComment",{"blogId":self.id,"pageNo":1,"pageSize":10}).then(function(response){
-                        console.log(response);
+                    // self.commentList.splice(0,self.commentList.length);
+                    axios.post("/index/comment/getComment",this.commentForm).then(function(response){
                         if(response.data != null){
                             var contentList = response.data.list;
                             for(var index in contentList){
                                 self.commentList.push(contentList[index]);
                             }
-
+                            self.commentForm.totalPage = response.data.pages;
                         }
-
                     });
+                },
+                more:function(){
+                    if(this.commentForm.totalPage > this.commentForm.pageNo){
+                        this.commentForm.pageNo = this.commentForm.pageNo + 1;
+                        this.loadComment();
+                    }
                 }
             },
             data() {
@@ -207,6 +216,12 @@
                     info:null,
                     form:{
                         commonDesc:null
+                    },
+                    commentForm:{
+                      blogId:"",
+                      pageNo:1,
+                      pageSize:10,
+                      totalPage:0
                     },
                     commentList:[]
                 }

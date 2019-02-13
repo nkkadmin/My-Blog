@@ -1,25 +1,21 @@
 package com.xsx.blog.service.impl;
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xsx.blog.common.Constants;
+import com.xsx.blog.dto.BlogDTO;
 import com.xsx.blog.mapper.BlogMapper;
 import com.xsx.blog.mapper.MenuMapper;
 import com.xsx.blog.mapper.TagsMapper;
 import com.xsx.blog.model.Blog;
-import com.xsx.blog.model.Menu;
 import com.xsx.blog.request.BlogEditRequest;
 import com.xsx.blog.request.BlogSearchRequest;
 import com.xsx.blog.service.BlogService;
 import com.xsx.blog.service.LoggerService;
-import com.xsx.blog.service.MenuService;
-import com.xsx.blog.service.TagsService;
 import com.xsx.blog.vo.BlogVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,8 +28,6 @@ import java.util.List;
  */
 @Service
 public class BlogServiceImpl extends LoggerService implements BlogService  {
-
-
 
     @Autowired
     private BlogMapper blogMapper;
@@ -58,13 +52,14 @@ public class BlogServiceImpl extends LoggerService implements BlogService  {
             oldBlog.setMenuId(blog.getId());
             oldBlog.setTagId(blog.getTagId());
             oldBlog.setCoverPic(blog.getCoverPic());
+            oldBlog.setUpdateTime(new Date());
+            return blogMapper.update(oldBlog) > 0;
         }else{
             oldBlog = blog;
             oldBlog.setCreateTime(new Date());
+            oldBlog.setUpdateTime(new Date());
+            return blogMapper.insert(oldBlog) > 0;
         }
-
-        oldBlog.setUpdateTime(new Date());
-        return blogMapper.insert(oldBlog) > 0;
     }
 
     private Blog coverBlog(BlogEditRequest blogEditRequest) {
@@ -78,10 +73,10 @@ public class BlogServiceImpl extends LoggerService implements BlogService  {
     @Override
     public PageInfo<BlogVo> findPage(BlogSearchRequest blogSearchRequest) {
         PageHelper.startPage(blogSearchRequest.startPage(),blogSearchRequest.getPageSize());
-        List<Blog> list = blogMapper.findAll(blogSearchRequest);
-        PageInfo<Blog> oldPage = new PageInfo<>(list);
+        List<BlogDTO> list = blogMapper.findAll(blogSearchRequest);
+        PageInfo<BlogDTO> oldPage = new PageInfo<>(list);
         List<BlogVo> resultList = new ArrayList<>();
-        for(Blog blog : list){
+        for(BlogDTO blog : list){
             BlogVo blogVo = new BlogVo();
             String content = com.xsx.blog.util.StringUtils.delHTMLTag(blog.getContent());
             if(org.springframework.util.StringUtils.isEmpty(blog.getCoverPic())){

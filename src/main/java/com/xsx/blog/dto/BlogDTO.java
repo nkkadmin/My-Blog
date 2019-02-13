@@ -1,17 +1,10 @@
-package com.xsx.blog.vo;
+package com.xsx.blog.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.io.Serializable;
 import java.util.Date;
 
-/**
- * @Description:
- * @Date: 2019-01-28 07:58
- * @Auther: xieshengxiang
- */
-public class BlogVo implements Serializable {
-
+public class BlogDTO {
     private Integer id;
 
     private String coverPic;
@@ -37,11 +30,7 @@ public class BlogVo implements Serializable {
 
     private String content;
 
-    private String menuName;
-
-    private String tagName;
-
-    private Integer commentNum; //评论数
+    private Integer commentNum;
 
     public Integer getCommentNum() {
         return commentNum;
@@ -64,7 +53,7 @@ public class BlogVo implements Serializable {
     }
 
     public void setCoverPic(String coverPic) {
-        this.coverPic = coverPic;
+        this.coverPic = coverPic == null ? null : coverPic.trim();
     }
 
     public Date getCreateTime() {
@@ -88,7 +77,7 @@ public class BlogVo implements Serializable {
     }
 
     public void setDistName(String distName) {
-        this.distName = distName;
+        this.distName = distName == null ? null : distName.trim();
     }
 
     public Integer getSortIndex() {
@@ -112,7 +101,7 @@ public class BlogVo implements Serializable {
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.title = title == null ? null : title.trim();
     }
 
     public Date getUpdateTime() {
@@ -144,22 +133,6 @@ public class BlogVo implements Serializable {
     }
 
     public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getMenuName() {
-        return menuName;
-    }
-
-    public void setMenuName(String menuName) {
-        this.menuName = menuName;
-    }
-
-    public String getTagName() {
-        return tagName;
-    }
-
-    public void setTagName(String tagName) {
-        this.tagName = tagName;
+        this.content = content == null ? null : content.trim();
     }
 }

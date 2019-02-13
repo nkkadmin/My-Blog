@@ -27,22 +27,22 @@
     select <include refid="Blob_Column_List"/>
     from blog where id=#{id,jdbcType=INTEGER}
   </select>
-  <select id="findAll" parameterType="com.xsx.blog.request.BlogSearchRequest" resultMap="BaseResultMap">
-    select <include refid="Blob_Column_List"/>
-    from blog
+  <select id="findAll" parameterType="com.xsx.blog.request.BlogSearchRequest" resultType="com.xsx.blog.dto.BlogDTO">
+    select b.id,b.content,b.cover_pic as coverPic,b.create_time as createTime,b.dist_name as distName,b.menu_id as menuId,b.tag_id as tagId,b.title,t.commentNum,b.statu as statu
+    from blog b left join (select count(1) as commentNum,c.blog_id from comment c group by blog_id) t on b.id = t.blog_id
     <where>
       1=1
       <if test="blogTitle != null and blogTitle != ''">
-        and title = #{blogTitle}
+        and b.title = #{blogTitle}
       </if>
       <if test="menuId != null">
-        and menu_id = #{menuId,jdbcType=INTEGER}
+        and b.menu_id = #{menuId,jdbcType=INTEGER}
       </if>
       <if test="tagId != null">
-        and tag_id = #{tagId,jdbcType=INTEGER}
+        and b.tag_id = #{tagId,jdbcType=INTEGER}
       </if>
       <if test="statu != null">
-        and statu = #{statu,jdbcType=INTEGER}
+        and b.statu = #{statu,jdbcType=INTEGER}
       </if>
     </where>
   </select>

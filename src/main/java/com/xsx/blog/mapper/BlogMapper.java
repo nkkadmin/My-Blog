@@ -1,6 +1,8 @@
 package com.xsx.blog.mapper;
 
 import java.util.List;
+
+import com.xsx.blog.dto.BlogDTO;
 import com.xsx.blog.model.Blog;
 import com.xsx.blog.request.BlogSearchRequest;
 import org.apache.ibatis.annotations.Param;
@@ -14,7 +16,7 @@ public interface BlogMapper {
 
     int update(Blog blog);
 
-    List<Blog> findAll(BlogSearchRequest blogSearchRequest);
+    List<BlogDTO> findAll(BlogSearchRequest blogSearchRequest);
 
     Integer count();
 }

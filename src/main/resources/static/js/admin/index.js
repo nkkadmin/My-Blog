@@ -4,6 +4,27 @@ $(function(){
             pageClick($(this));
         }
     });
+    //获取登录信息
+    $.ajax({
+        url:'/admin/login/currentLoginUser',
+        type:'post',
+        success:function (response) {
+            console.log(response);
+            if(response != null){
+                $("#userName").text(response.username);
+            }
+        }
+    });
+    //退出
+    $("#logout").click(function(){
+        $.ajax({
+            url:'/admin/login/logout',
+            type:'post',
+            success:function (response) {
+                window.location.href="/admin/login.html";
+            }
+        });
+    })
 })
 function pageClick(k) {
 	$(k).parent().find("div").removeClass("active");
@@ -11,3 +32,4 @@ function pageClick(k) {
     $("#flTitle").text($(k).text());
     $("#content_iframe").attr("src",$(k).attr("src"));
 }
+

@@ -13,4 +13,8 @@ public interface CommentMapper {
     List<Comment> findAll(CommentSearchRequest commentSearchRequest);
 
     Integer count();
+
+    Comment findOne(Integer commentId);
+
+    Integer update(Comment comment);
 }

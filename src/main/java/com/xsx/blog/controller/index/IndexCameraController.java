@@ -1,6 +1,5 @@
 package com.xsx.blog.controller.index;
 
-import com.sun.tools.javac.util.List;
 import com.xsx.blog.request.BlogSearchRequest;
 import com.xsx.blog.result.Result;
 import com.xsx.blog.service.BlogService;
@@ -9,6 +8,8 @@ import com.xsx.blog.vo.CameraCoverVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @Description:

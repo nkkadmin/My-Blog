@@ -18,4 +18,6 @@ public interface CommentService {
     public PageInfo<Comment> queryAll(CommentSearchRequest commentSearchRequest);
 
     Integer count();
+
+    Integer delete(Integer commentId);
 }

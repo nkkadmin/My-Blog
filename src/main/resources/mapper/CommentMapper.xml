@@ -10,6 +10,12 @@
     <result column="blog_id" property="blogId" jdbcType="INTEGER" />
   </resultMap>
 
+  <select id="findOne" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select * from comment where id=#{commentId,jdbcType=INTEGER}
+  </select>
+  <update id="update" parameterType="com.xsx.blog.model.Comment">
+    update comment set content=#{content,jdbcType=VARCHAR},statu=#{statu,jdbcType=INTEGER} where id=#{id,jdbcType=INTEGER}
+  </update>
   <select id="count" resultType="java.lang.Integer">
     select count(*) from comment
   </select>
@@ -20,7 +26,11 @@
       <if test="blogId != null">
         and blog_id = #{blogId,jdbcType=INTEGER}
       </if>
+      <if test="isAdmin != 1">
+        and statu = 1
+      </if>
     </where>
+    order by create_time desc
   </select>
 
   <insert id="insert" parameterType="com.xsx.blog.model.Comment" >
