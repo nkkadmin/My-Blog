@@ -9,9 +9,8 @@ $(function(){
         url:'/admin/login/currentLoginUser',
         type:'post',
         success:function (response) {
-            console.log(response);
             if(response != null){
-                $("#userName").text(response.username);
+                $("#userName").text(response.userName);
             }
         }
     });

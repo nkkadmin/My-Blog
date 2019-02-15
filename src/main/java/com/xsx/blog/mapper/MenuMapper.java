@@ -3,6 +3,7 @@ package com.xsx.blog.mapper;
 
 import java.util.List;
 import com.xsx.blog.model.Menu;
+import org.apache.ibatis.annotations.Param;
 
 public interface MenuMapper {
     int insert(Menu record);
@@ -16,4 +17,6 @@ public interface MenuMapper {
     int update(Menu menu);
 
     List<Menu> findByStatuOrderBySortIndexAsc(Integer statu);
+
+    Menu findByName(@Param("name") String name);
 }

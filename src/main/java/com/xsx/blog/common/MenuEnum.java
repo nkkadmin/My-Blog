@@ -5,10 +5,11 @@ package com.xsx.blog.common;
  * @Date: 2019-01-23 07:04
  * @Auther: xieshengxiang
  */
-public enum MenuEnum {;
+public enum MenuEnum {
 
-    /*TECHNOLOGY_MENU("技术博客"),
-    CEMARE_MENU("摄影作品");*/
+    TECHNOLOGY_MENU("技术博客"),
+    CEMARE_MENU("摄影作品"),
+    ABOUT_MENU("关于我");
 
 
     MenuEnum(String name){

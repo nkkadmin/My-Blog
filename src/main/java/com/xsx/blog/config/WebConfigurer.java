@@ -26,6 +26,8 @@ public class WebConfigurer implements WebMvcConfigurer{
         passUrl.add("/blog/index.html");
         passUrl.add("/blog/blog.html");
         passUrl.add("/index/**");
+        passUrl.add("/about/index.html");
+        passUrl.add("/camera/list.html");
     }
 
 

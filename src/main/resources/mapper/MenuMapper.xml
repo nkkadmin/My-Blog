@@ -9,6 +9,9 @@
     <result column="statu" property="statu" jdbcType="INTEGER" />
     <result column="url" property="url" jdbcType="VARCHAR" />
   </resultMap>
+  <select id="findByName" resultMap="BaseResultMap">
+    select * from menu where name = #{name,jdbcType=VARCHAR}
+  </select>
   <select id="findById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select * from menu where id = #{id,jdbcType=INTEGER}
   </select>

@@ -22,4 +22,6 @@ public interface MenuService {
     public Boolean deleteOne(Integer id);
 
     List<Menu> findByStatu(Integer statu);
+
+    Menu findByName(String name);
 }

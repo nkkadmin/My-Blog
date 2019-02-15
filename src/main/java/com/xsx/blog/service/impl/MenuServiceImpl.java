@@ -68,4 +68,9 @@ public class MenuServiceImpl implements MenuService {
         return menuMapper.findByStatuOrderBySortIndexAsc(statu);
     }
 
+    @Override
+    public Menu findByName(String name) {
+        return menuMapper.findByName(name);
+    }
+
 }

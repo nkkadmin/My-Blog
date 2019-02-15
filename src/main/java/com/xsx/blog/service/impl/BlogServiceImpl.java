@@ -66,6 +66,7 @@ public class BlogServiceImpl extends LoggerService implements BlogService  {
         Blog blog = new Blog();
         BeanUtils.copyProperties(blogEditRequest,blog);
         blog.setMenuId(blogEditRequest.getMenuId());
+        blog.setId(blog.getMenuId());
         blog.setTagId(blogEditRequest.getTagId());
         return blog;
     }

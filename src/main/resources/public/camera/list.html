@@ -32,8 +32,8 @@
                     <el-main>
                         <template>
                             <el-carousel :interval="4000" type="card" height="300px">
-                                <el-carousel-item v-for="item in 6" :key="item">
-                                    <h3>{{ item }}</h3>
+                                <el-carousel-item v-for="item in cameraList" :key="item">
+                                    <img :src="item.url"/>
                                 </el-carousel-item>
                             </el-carousel>
                         </template>
@@ -54,27 +54,27 @@
             methods: {
                 loadData(){
                     var self = this;
-                    self.tableData = [];
-                    self.isAppend = false;
-                    axios.post("/index/blog/index",null).then(function(response){
-                        console.log(response);
-                        if(response.data != null && response.data.menu != null){
-                            self.menuList = response.data.menu;
-                        }
-                        if(self.menuList.length > 0){
-                            //获取第一个菜单
-                            var menuId = self.menuList[0].id;
-                            self.currentMenuId = menuId;
-                            self.getBlogByMenuId(2);
+                    self.cameraList = [];
+                    axios.post("/index/camrea/searchTop5Cover",null).then(function(response){
+                        if(response.data.success){
+                            self.cameraList = response.data.object;
                         }
                     });
                 },
-                getBlogByMenuId:function(menuId){
-                    var self = this;
+                initParam:function(){
+                    var param = GetRequest();
+                    this.index = param.index;
+                    this.getBlogByMenuId();
+                },
+                getBlogByMenuId:function(){
+                    var clzz = "menuItem"+this.index;
+                    console.log($("."+clzz));
+
+                   /* var self = this;
                     if (!self.isAppend){
                         self.blogList.splice(0,self.blogList.length);
                     }
-                    axios.post("/index/blog/getBlog",{"pageNo":self.page.pageNo,"pageSize":self.page.pageSize,"menuId":menuId}).then(function(response){
+                    axios.post("/index/camrea/searchList",{"pageNo":self.page.pageNo,"pageSize":self.page.pageSize,"menuId":menuId}).then(function(response){
                         console.log(response);
                         if(response.data != null && response.data != null){
                             for ( var i = 0; i <response.data.list.length; i++){
@@ -90,7 +90,7 @@
                             }
                         }
                         self.fullscreenLoading = false;
-                    });
+                    });*/
                 },
                 handleSelect(key, keyPath) {
                     var menuId = $(".menuItem"+key).attr("menu-id");
@@ -115,13 +115,8 @@
             },
             data() {
                 return {
-                    currentMenuId:'',
-                    defaultIndex:'0',
-                    currentDate: new Date(),
-                    menuList:[],
-                    blogList:[],
-                    searchKey:'', //搜索关键字
-                    fullscreenLoading: false,
+                    index:"",
+                    cameraList:[], //滚动图片数据
                     page:{
                         pageNo:1,
                         pageSize:10,
@@ -133,6 +128,7 @@
             },
             mounted:function(){
                 this.loadData();
+                this.initParam();
             }
         }
         var Ctor = Vue.extend(Main)

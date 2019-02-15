@@ -11,6 +11,15 @@ public class CameraCoverVo implements Serializable {
 
     private String url;
     private Integer coverId;
+    private String title;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public String getUrl() {
         return url;
