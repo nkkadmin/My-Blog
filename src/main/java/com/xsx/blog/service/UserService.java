@@ -4,6 +4,7 @@ package com.xsx.blog.service;
 import com.xsx.blog.dto.UserInfo;
 import com.xsx.blog.model.Users;
 import com.xsx.blog.request.LoginRequest;
+import com.xsx.blog.result.Result;
 
 public interface UserService {
 
@@ -11,5 +12,7 @@ public interface UserService {
 
     int update(Users users);
 
-    UserInfo login(LoginRequest loginRequest);
+    Result<UserInfo> login(String loginType, LoginRequest loginRequest);
+
+    void sendCode(String email,Result result);
 }

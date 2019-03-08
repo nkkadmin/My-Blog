@@ -13,15 +13,20 @@
 	<script src="../../js/html5.js"></script>
 	<![endif]-->
 	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+	<style>
+		html{
+			height: 100%;
+		}
+	</style>
 </head>
-<body>
+<body class="bg_class">
 		<div class="container demo-1" id="app">
 			<div class="content">
 				<div id="large-header" class="large-header">
 					<canvas id="demo-canvas"></canvas>
 					<div class="logo_box">
-						<h3>欢迎你</h3>
-						<form action="#" name="f" method="post">
+
+						<form v-if="isUserPassLogin" action="#" name="f" method="post">
 							<div class="input_outer">
 								<span class="u_user"></span>
 								<input v-model="form.username" class="text" style="color: #FFFFFF !important" type="text" placeholder="请输入账户">
@@ -30,8 +35,21 @@
 								<span class="us_uer"></span>
 								<input v-model="form.password" class="text" style="color: #FFFFFF !important; position:absolute; z-index:100;"value="" type="password" placeholder="请输入密码">
 							</div>
-							<div class="mb2"><a class="act-but submit" href="javascript:;" style="color: #FFFFFF" @click="login()">登录</a></div>
 						</form>
+						<form v-if="!isUserPassLogin && isEmailLogin" action="#" name="f" method="post">
+							<div class="input_outer">
+								<span class="us_email"></span>
+								<input v-model="form.email" class="text" style="color: #FFFFFF !important" type="text" placeholder="请输入邮箱">
+							</div>
+							<div class="input_outer" style="width: 180px;">
+								<span class="us_email"></span>
+								<input v-model="form.code" class="text" style="color: #FFFFFF !important; position:absolute; z-index:100;width: 90px;" value="" type="text" placeholder="请输入验证码">
+								<a v-if="!showCountDown" class="act-but" href="javascript:;" @click="sendCode" style="color: #FFFFFF;width: 147px;padding: 13px;margin: -2px 0px 0px 177px;display: block;font-size: 16px;">获取验证码</a>
+								<a v-else class="act-but" href="javascript:;" style="background: rgba(0,0,0,.3);color: #FFFFFF;width: 147px;padding: 13px;margin: -2px 0px 0px 177px;display: block;font-size: 16px;">{{countDown}}</a>
+							</div>
+						</form>
+						<div v-if="isUserPassLogin && isEmailLogin" class="mb2"><a class="act-but submit" href="javascript:;" style="color: #FFFFFF" @click="login()">下一步</a></div>
+						<div v-else class="mb2"><a class="act-but submit" href="javascript:;" style="color: #FFFFFF" @click="login()">登录</a></div>
 					</div>
 				</div>
 			</div>
@@ -48,13 +66,24 @@
 				methods: {
 					valid:function(){
 						var self = this;
-						if(self.form.username == null){
-							self.error = "用户名不能为空";
-						}else if(self.form.password == null){
-							self.error = "密码不能为空";
+						if(self.loginType == "userpass"){
+							if(self.form.username == null){
+								self.error = "用户名不能为空";
+							}else if(self.form.password == null){
+								self.error = "密码不能为空";
+							}else{
+								self.error = "ok";
+							}
 						}else{
-							self.error = "ok";
+							if(self.form.email == null){
+								self.error = "邮箱不能为空";
+							}else if(self.form.code == null){
+								self.error = "验证码不能为空";
+							}else{
+								self.error = "ok";
+							}
 						}
+
 					},
 					login:function(){
 						var self = this;
@@ -67,27 +96,96 @@
 							});
 							return;
 						}
-						axios.post("/admin/login/login",self.form).then(function (value) {
+						axios.post("/admin/login/login/"+self.loginType,self.form).then(function (value) {
 							console.log(value);
+							if(value.data.success && self.loginType == "userpass" && self.isEmailLogin){
+								self.isUserPassLogin = false;
+								self.loginType = "email";
+							}else{
+								self.$message({
+									showClose: true,
+									message: value.data.msg,
+									type: value.data.success ? "success" : 'error'
+								});
+								if(value.data.success){
+									window.location.href = "/admin/index.html";
+								}
+							}
+
+						})
+					},
+					getLoginType:function(){
+						var self = this;
+						axios.post("/admin/login/loginType",null).then(function (value) {
+							console.log(value);
+							if(value.data.success){
+								self.isUserPassLogin = (value.data.content == "userpass" || value.data.content == "both");
+								self.isEmailLogin = (value.data.content == "email" || value.data.content == "both");
+								if(value.data.content == "userpass" || value.data.content == "both"){
+									self.loginType = "userpass";
+								}else{
+									self.loginType = "email";
+								}
+							}
+
+						})
+					},
+					sendCode:function () {
+						var self = this;
+						if(self.form.email == null || self.form.email == ""){
 							self.$message({
 								showClose: true,
-								message: value.data.msg,
-								type: value.data.success ? "success" : 'error'
+								message: "请输入邮箱",
+								type: 'error'
 							});
+							return false;
+						}
+						//todo 校验邮箱
+
+						axios.get("/admin/login/sendCode/"+self.form.email,null).then(function (value) {
 							if(value.data.success){
-								window.location.href = "/admin/index.html";
+								self.showCountDown=true;
+								self.countDown = 20;
+								self.countDownNum(self.countDown);
+							}else{
+								self.$message({
+									showClose: true,
+									message: value.data.msg,
+									type: 'error'
+								});
 							}
 						})
 					},
+					countDownNum:function(val){
+						var self = this;
+						if(val == 0){
+							self.showCountDown=false;
+						}else{
+							self.countDown--;
+							setTimeout(function () {
+								self.countDownNum(self.countDown)
+							},1000)
+						}
+					}
 				},
 				data() {
 					return {
 						error:"",
+						isUserPassLogin:false,
+						isEmailLogin:false,
+						showCountDown:false,
+						countDown:60,  //倒计时60s
+						loginType:"",  //登录方式
                         form:{
                         	username:null,
-							password:null
+							password:null,
+							email:null,
+							code:null
 						}
 					}
+				},
+				mounted:function(){
+					this.getLoginType();
 				}
 			}
 			var Ctor = Vue.extend(Main)

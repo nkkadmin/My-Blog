@@ -5,16 +5,20 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
     <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="statu" property="statu" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, user_name, password, create_time, statu
+    id, user_name, password, create_time, statu,email,phone
   </sql>
   <sql id="Login_Column_List" >
-    id, user_name, create_time, statu
+    id, user_name, create_time, statu, email, phone
   </sql>
-
+  <select id="selectByEmail" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Login_Column_List"/> from users where email = #{email,jdbcType=VARCHAR}
+  </select>
   <select id="login" resultMap="BaseResultMap">
     select <include refid="Login_Column_List"/> from users where user_name = #{userName} and password = #{password} and statu = 1
   </select>

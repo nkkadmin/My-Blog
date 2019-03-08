@@ -17,4 +17,6 @@ public interface CommentMapper {
     Comment findOne(Integer commentId);
 
     Integer update(Comment comment);
+
+    Integer countByBlogId(Integer blogId);
 }

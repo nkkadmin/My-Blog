@@ -43,6 +43,26 @@ public class BlogVo implements Serializable {
 
     private Integer commentNum; //评论数
 
+    private Integer lookNum; //浏览量
+
+    private Integer zanNum; //点赞量
+
+    public Integer getLookNum() {
+        return lookNum;
+    }
+
+    public void setLookNum(Integer lookNum) {
+        this.lookNum = lookNum;
+    }
+
+    public Integer getZanNum() {
+        return zanNum;
+    }
+
+    public void setZanNum(Integer zanNum) {
+        this.zanNum = zanNum;
+    }
+
     public Integer getCommentNum() {
         return commentNum;
     }

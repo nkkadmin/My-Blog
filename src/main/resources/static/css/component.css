@@ -1,15 +1,13 @@
 /* Header */
 .large-header {
-	position: relative;
 	width: 100%;
-	background: #333;
 	overflow: hidden;
 	background-size: cover;
 	background-position: center center;
 	z-index: 1;
 }
 
-.demo-1 .large-header {
+.bg_class {
 	background-image: url('../img/demo-1-bg.jpg');
 }
 .logo_box{
@@ -66,6 +64,15 @@
 	position: absolute;
 	margin: 10px 13px;
 }
+.us_email{
+	width: 25px;
+	height: 25px;
+	background-image: url(../img/login_ico.png);
+	background-position: -84px 0px;
+	position: absolute;
+	margin: 10px 13px;
+}
+
 .l-login{
 	position: absolute;
 	z-index: 1;

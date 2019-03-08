@@ -32,6 +32,32 @@ public class BlogDTO {
 
     private Integer commentNum;
 
+    /**
+     * 点赞量
+     */
+    private Integer zanNum;
+
+    /**
+     * 浏览量
+     */
+    private Integer lookNum;
+
+    public Integer getZanNum() {
+        return zanNum;
+    }
+
+    public void setZanNum(Integer zanNum) {
+        this.zanNum = zanNum;
+    }
+
+    public Integer getLookNum() {
+        return lookNum;
+    }
+
+    public void setLookNum(Integer lookNum) {
+        this.lookNum = lookNum;
+    }
+
     public Integer getCommentNum() {
         return commentNum;
     }

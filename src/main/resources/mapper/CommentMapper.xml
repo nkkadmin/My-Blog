@@ -33,6 +33,10 @@
     order by create_time desc
   </select>
 
+  <select id="countByBlogId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select count(1) from comment where statu=1 and blog_id=#{blogId}
+  </select>
+
   <insert id="insert" parameterType="com.xsx.blog.model.Comment" >
     insert into comment (id, content, create_time, 
       pid, statu, blog_id)

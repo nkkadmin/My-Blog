@@ -33,7 +33,9 @@
             }
 
             .blog_item{
-                margin-bottom: 20px;
+                border-bottom: 1px solid #f0f0f0;
+                min-height: 131px;
+                margin-top: 30px;
             }
             .blog_item_img{
                 max-width: 100%;
@@ -43,6 +45,27 @@
             .load_more{
                 width: 400px;
                 margin: 50px 0px 50px 300px;
+            }
+            .blog_content_list{
+                margin-top: 50px;
+                margin-bottom: 100px;
+            }
+            .blog_item_title{
+                height: 30px;
+                font-size: 20px;
+                font-weight: bold;
+            }
+            .blog_item_content{
+                font-size: 13px;
+                line-height: 24px;
+                color: #999;
+            }
+            .blog_item_icon{
+                font-size: 12px;
+                color: #999;
+            }
+            .blog_item_icon img{
+                margin-left: 15px;
             }
         </style>
     </head>
@@ -54,12 +77,17 @@
                 <el-container>
 
                     <el-main>
-                        <el-carousel indicator-position="outside">
-                            <el-carousel-item v-for="item in 4" :key="item">
-                                <h3>{{ item }}</h3>
-                            </el-carousel-item>
-                        </el-carousel>
-                        <el-row :gutter="20">
+                        <el-row>
+                            <el-col :gutter="20" :span="10">
+                                <el-input v-model="searchKey" placeholder="请输入关键字"></el-input>
+                            </el-col>
+                            <el-col :gutter="20" :span="4">
+                                <el-button @click="search" >搜索</el-button>
+                            </el-col>
+                            <el-col :gutter="20" :span="5">
+                            </el-col>
+                        </el-row>
+                        <el-row :gutter="20" class="blog_content_list">
                             <el-col :span="16" class="left_content">
                                 <el-row class="blog_item" :gutter="20" v-for="item in blogList" :key="item.id">
                                     <el-col :span="4">
@@ -69,11 +97,16 @@
                                     </el-col>
                                     <el-col :span="20">
                                         <div class="grid-content bg-purple">
-                                            <div height="10px">标题：{{item.title}}</div>
-                                            <div>发布日期：{{item.createTime}}</div>
-                                            <div>内容：{{item.content}}</div>
+                                            <div class="blog_item_title">{{item.title}}</div>
+                                            <div class="blog_item_content">{{item.content}}</div>
+                                            <div class="blog_item_icon">
+                                                <img src="../img/index/look-icon-16.png"/><span>{{item.lookNum == null ? 0 : item.lookNum}}</span>
+                                                <img src="../img/index/comment-16-icon.png"/><span>{{item.commentNum == null ? 0 : item.commentNum}}</span>
+                                                <img src="../img/index/dianzan-16-icon.png"/><span>{{item.zanNum == null ? 0 : item.zanNum}}</span>
+                                            </div>
                                         </div>
                                     </el-col>
+
                                 </el-row>
                                 <el-button @click="loadMoreFun" v-loading.fullscreen.lock="fullscreenLoading" class="load_more" type="warning" round>加载更多</el-button>
                             </el-col>
@@ -95,7 +128,11 @@
 <script>
     var Main = {
             methods: {
-                loadData(){
+                search:function(){
+                    this.blogTitle = this.searchKey;
+                    this.getBlogByMenuId(this.currentMenuId);
+                },
+                loadData:function(){
                     var self = this;
                     self.tableData = [];
                     self.isAppend = false;
@@ -117,7 +154,7 @@
                     if (!self.isAppend){
                         self.blogList.splice(0,self.blogList.length);
                     }
-                    axios.post("/index/blog/getBlog",{"pageNo":self.page.pageNo,"pageSize":self.page.pageSize,"menuId":menuId}).then(function(response){
+                    axios.post("/index/blog/getBlog",{"pageNo":self.page.pageNo,"pageSize":self.page.pageSize,"menuId":menuId,"blogTitle":self.blogTitle}).then(function(response){
                         console.log(response);
                         if(response.data != null && response.data.list != null){
                             for ( var i = 0; i <response.data.list.length; i++){
@@ -152,8 +189,10 @@
             },
             data() {
                 return {
+                    searchKey:"",
                     currentMenuId:'',
                     defaultIndex:'0',
+                    blogTitle:"",
                     currentDate: new Date(),
                     menuList:[],
                     blogList:[],

@@ -16,4 +16,6 @@ public interface UsersMapper {
     int updateByPrimaryKey(Users users);
 
     Users login(@Param("userName") String userName,@Param("password") String password);
+
+    Users selectByEmail(String email);
 }

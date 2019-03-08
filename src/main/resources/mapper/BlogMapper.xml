@@ -13,12 +13,30 @@
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="menu_id" property="menuId" jdbcType="INTEGER" />
     <result column="tag_id" property="tagId" jdbcType="INTEGER" />
+    <result column="zan_num" property="zanNum" jdbcType="INTEGER" />
+    <result column="look_num" property="lookNum" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="BaseResultDTOMap" type="com.xsx.blog.dto.BlogDTO" >
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="cover_pic" property="coverPic" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="dist_name" property="distName" jdbcType="VARCHAR" />
+    <result column="sort_index" property="sortIndex" jdbcType="INTEGER" />
+    <result column="statu" property="statu" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="menu_id" property="menuId" jdbcType="INTEGER" />
+    <result column="tag_id" property="tagId" jdbcType="INTEGER" />
+    <result column="zan_num" property="zanNum" jdbcType="INTEGER" />
+    <result column="look_num" property="lookNum" jdbcType="INTEGER" />
+    <result column="commentNum" property="commentNum" jdbcType="INTEGER" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.xsx.blog.model.Blog" extends="BaseResultMap" >
     <result column="content" property="content" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Blob_Column_List" >
-    id,cover_pic,create_time,create_user_id,dist_name,sort_index,statu,title,update_time,menu_id,tag_id,content
+    id,cover_pic,create_time,create_user_id,dist_name,sort_index,statu,title,update_time,menu_id,tag_id,content,zan_num,look_num
   </sql>
   <select id="count" resultType="java.lang.Integer">
     select count(*) from blog
@@ -27,13 +45,13 @@
     select <include refid="Blob_Column_List"/>
     from blog where id=#{id,jdbcType=INTEGER}
   </select>
-  <select id="findAll" parameterType="com.xsx.blog.request.BlogSearchRequest" resultType="com.xsx.blog.dto.BlogDTO">
-    select b.id,b.content,b.cover_pic as coverPic,b.create_time as createTime,b.dist_name as distName,b.menu_id as menuId,b.tag_id as tagId,b.title,t.commentNum,b.statu as statu
+  <select id="findAll" parameterType="com.xsx.blog.request.BlogSearchRequest" resultMap="BaseResultDTOMap">
+    select b.id,b.content,b.cover_pic,b.create_time,b.dist_name,b.menu_id,b.tag_id,b.title,b.statu,b.look_num,b.zan_num,t.commentNum
     from blog b left join (select count(1) as commentNum,c.blog_id from comment c group by blog_id) t on b.id = t.blog_id
     <where>
       1=1
       <if test="blogTitle != null and blogTitle != ''">
-        and b.title = #{blogTitle}
+        and b.title like #{blogTitle}
       </if>
       <if test="menuId != null">
         and b.menu_id = #{menuId,jdbcType=INTEGER}
@@ -58,19 +76,49 @@
     update_time=#{updateTime,jdbcType=TIMESTAMP},
     menu_id=#{menuId,jdbcType=INTEGER},
     tag_id=#{tagId,jdbcType=INTEGER},
+    zan_num=#{zanNum,jdbcType=INTEGER},
+    look_num=#{lookNum,jdbcType=INTEGER},
     content=#{content,jdbcType=LONGVARCHAR}
     where id=#{id,jdbcType=INTEGER}
   </update>
+
+  <update id="batchUpdateBlog" parameterType="com.xsx.blog.model.Blog">
+     update blog
+     <trim prefix="set" suffixOverrides=",">
+       <trim prefix="zan_num=case id" suffix="end,">
+         <foreach collection="list" item="item">
+           <if test="item.zanNum != null">
+             when #{item.id,jdbcType=INTEGER} then zan_num + #{item.zanNum,jdbcType=INTEGER}
+           </if>
+         </foreach>
+       </trim>
+
+       <trim prefix="look_num=case id" suffix="end,">
+         <foreach collection="list" item="item">
+           <if test="item.lookNum != null">
+             when #{item.id,jdbcType=INTEGER} then look_num + #{item.lookNum,jdbcType=INTEGER}
+           </if>
+         </foreach>
+       </trim>
+
+     </trim>
+     where id in
+      <foreach collection="list" separator="," close=")" open="(" item="item">
+        #{item.id,jdbcType=INTEGER}
+      </foreach>
+  </update>
+
   <insert id="insert" parameterType="com.xsx.blog.model.Blog" >
     insert into blog (cover_pic, create_time,
       create_user_id, dist_name, sort_index, 
       statu, title, update_time, 
-      menu_id, tag_id, content
+      menu_id, tag_id, content,zan_num,look_num
       )
     values (#{coverPic,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
       #{createUserId,jdbcType=INTEGER}, #{distName,jdbcType=VARCHAR}, #{sortIndex,jdbcType=INTEGER}, 
       #{statu,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
-      #{menuId,jdbcType=INTEGER}, #{tagId,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR}
+      #{menuId,jdbcType=INTEGER}, #{tagId,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR},
+      #{zanNum,jdbcType=INTEGER}, #{lookNum,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.xsx.blog.model.Blog" >
@@ -112,6 +160,13 @@
       <if test="content != null" >
         content,
       </if>
+      <if test="zanNum != null" >
+        zan_num,
+      </if>
+      <if test="lookNum != null" >
+        look_num,
+      </if>
+
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -149,6 +204,12 @@
       </if>
       <if test="content != null" >
         #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="zanNum != null" >
+        #{zanNum,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="lookNum != null" >
+        #{lookNum,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>

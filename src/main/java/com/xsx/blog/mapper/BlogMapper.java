@@ -19,4 +19,6 @@ public interface BlogMapper {
     List<BlogDTO> findAll(BlogSearchRequest blogSearchRequest);
 
     Integer count();
+
+    Integer batchUpdateBlog(List<BlogDTO> blogList);
 }

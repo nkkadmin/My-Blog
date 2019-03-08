@@ -19,7 +19,9 @@ public class WebConfigurer implements WebMvcConfigurer{
 
     static {
         passUrl.add("/admin/login.html");
-        passUrl.add("/admin/login/login");
+        passUrl.add("/admin/login/login/*");
+        passUrl.add("/admin/login/loginType");
+        passUrl.add("/admin/login/sendCode/*");
         passUrl.add("/img/**");
         passUrl.add("/js/**");
         passUrl.add("/css/**");

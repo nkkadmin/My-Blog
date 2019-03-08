@@ -20,4 +20,6 @@ public interface CommentService {
     Integer count();
 
     Integer delete(Integer commentId);
+
+    Integer countByBlogId(Integer blogId);
 }

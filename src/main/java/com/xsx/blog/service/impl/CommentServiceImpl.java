@@ -72,4 +72,9 @@ public class CommentServiceImpl implements CommentService {
         }
         return null;
     }
+
+    @Override
+    public Integer countByBlogId(Integer blogId) {
+        return commentMapper.countByBlogId(blogId);
+    }
 }

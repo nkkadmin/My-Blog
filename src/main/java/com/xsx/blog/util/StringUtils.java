@@ -2,6 +2,7 @@ package com.xsx.blog.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -73,8 +74,16 @@ public class StringUtils {
     }
 
     public static void main(String[] args) {
-        String str = "<p>asdadsasasdsf阿道夫水电费水电费asdasd<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAACEQAAAS6CAYAAABZBy6NAAAMKWlDQ1BJQ0MgUHJvZmlsZQAASImVlwdUk8kWgOcvSUhIaIEISAm9CdKr1NAiCEgVbIQkkFBiTAgidmRRwbWgIoIVXRVRdC2ALCpiL4tg7w8LKsq6WLCh8iYJoKvnvXfePWf+/8udO3fuvZl/zgwA6jEc6vKII=\"></p>";
-        System.out.println(delHTMLTag(str));
+        System.out.println(getCode());
 
+    }
+
+    /**
+     * 生成4位数
+     * @return
+     */
+    public static String getCode() {
+        Integer random = (int)(Math.random() * 9000) + 1000;
+        return random.toString();
     }
 }

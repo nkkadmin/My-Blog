@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        .transition-box {
+            margin-bottom: 10px;
+            border-radius: 5px;
+            text-align: center;
+            padding: 40px 20px;
+            box-sizing: border-box;
+            border: 2px dashed;
+            border-color: #3d598a;
+        }
+        .check_option{
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <template>
+            <el-row :gutter="20">
+                <el-col :span="12">
+                    <div class="transition-box">
+                        <div>登录设置</div>
+                        <div class="check_option">
+                            <el-radio @change="edit" v-model="loginValue" label="userpass">账户密码校验</el-radio>
+                            <el-radio @change="edit" v-model="loginValue" label="email">邮箱校验</el-radio>
+                            <el-radio @change="edit" v-model="loginValue" label="both">两者双重校验</el-radio>
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="12">
+                    <div class="transition-box">
+                        <div>空白</div>
+                        <div></div>
+                    </div>
+                </el-col>
+            </el-row>
+        </template>
+    </div>
+</body>
+    <script type="text/javascript" src="../../js/vue.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script>
+        var Main = {
+            data() {
+                return {
+                    loginValue:""
+                }
+            },
+            methods: {
+                loadData:function(){
+                    var self = this;
+                    axios.get("/admin/systemSetting/getByType/loginType",null).then(function (response) {
+                        if(response.data.success){
+                            self.loginValue=response.data.object.value;
+                        }
+                    })
+                },
+                edit:function(){
+                    var self = this;
+                    var param = {
+                        type:"loginType",
+                        value:self.loginValue
+                    }
+                    axios.post("/admin/systemSetting/edit",param).then(function (response) {
+                        if(response.data.success){
+                            self.$message({
+                                showClose: true,
+                                message: '设置成功',
+                                type: 'success'
+                            });
+                        }
+                    })
+                }
+            },
+            watch:{
+
+            },
+            mounted:function(){
+                this.loadData();
+            }
+        }
+        var Ctor = Vue.extend(Main)
+        new Ctor().$mount('#app')
+    </script>
+</html>

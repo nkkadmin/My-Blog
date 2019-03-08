@@ -68,6 +68,13 @@
                 font-size: 12px;
                 margin-top: 10px;
             }
+            .dianzan img{
+                width: 50px;
+                margin-left: 200px;
+                margin-top: -40px;
+                margin-bottom: 20px;
+                cursor: pointer;
+            }
         </style>
     </head>
     <body>
@@ -89,8 +96,8 @@
                             <el-col :span="24">
                                 <div class="grid-content bg-purple-dark dt_other">
                                     <span>发布时间：{{info.createTime}}</span>
-                                    <span>浏览量：0</span>
-                                    <span>点赞量：0</span>
+                                    <span>浏览量：{{info.lookNum}}</span>
+                                    <span>点赞量：{{info.zanNum}}</span>
                                 </div>
                             </el-col>
                         </el-row>
@@ -98,6 +105,11 @@
                             <el-col :span="24">
                                 <div class="grid-content bg-purple-dark content" v-html="info.content">
                                 </div>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col>
+                                <div @click="dianzan" class="dianzan"><img src="../img/good.png" title="点个赞吧"/></div>
                             </el-col>
                         </el-row>
                         <el-row>
@@ -145,17 +157,37 @@
 <script>
     var Main = {
             methods: {
+                dianzan:function(){
+                    var self = this;
+                    axios.get("/index/blog/dianZan/"+self.id,null).then(function(response){
+                        if(response.data > -1 ){
+                            self.$message({
+                                showClose: true,
+                                message: '点赞成功',
+                                type: 'success'
+                            });
+                        }
+                        console.log(response);
+
+                    });
+                },
                 loadData:function(){
                     var self = this;
                     self.tableData = [];
                     self.isAppend = false;
                     axios.get("/index/blog/info/"+self.id,null).then(function(response){
-                        console.log(response);
                         if(response.data != null && response.data != null){
                             self.info = response.data;
                             $("title").text(self.info.title);
                         }
                         self.loadComment();
+                    });
+                },
+                addLookNum:function(){ //添加浏览量
+                    axios.get("/index/blog/look/"+this.id,null).then(function(response){
+                        if(response.data != null && response.data != null){
+
+                        }
                     });
                 },
                 initParam:function(){
@@ -178,7 +210,6 @@
                         content:self.form.commonDesc
                     }
                     axios.post("/index/comment/save",params).then(function(response){
-                        console.log(response);
                         self.$message({
                             showClose: true,
                             message: response.data.success ? "评论成功" : "评论失败",
@@ -186,13 +217,18 @@
                         });
                         if(response.data.success){
                             self.form.commonDesc = null;
+                            self.appendComent = false;
                             self.loadComment();
                         }
                     });
                 },
                 loadComment:function(){
                     var self = this;
-                    // self.commentList.splice(0,self.commentList.length);
+                    if(!self.appendComent){
+                        self.commentList.splice(0,self.commentList.length);
+                        self.appendComent = true;
+                    }
+
                     axios.post("/index/comment/getComment",this.commentForm).then(function(response){
                         if(response.data != null){
                             var contentList = response.data.list;
@@ -223,12 +259,14 @@
                       pageSize:10,
                       totalPage:0
                     },
-                    commentList:[]
+                    commentList:[],
+                    appendComent:true
                 }
             },
             mounted:function(){
                 this.initParam();
                 this.loadData();
+                this.addLookNum();
             }
         }
         var Ctor = Vue.extend(Main)
