@@ -5,8 +5,6 @@
         <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
         <link rel="stylesheet" href="../css/base.css">
         <style>
-
-
             .el-container:nth-child(5) .el-aside,
             .el-container:nth-child(6) .el-aside {
                 line-height: 260px;
@@ -35,7 +33,7 @@
             .blog_item{
                 border-bottom: 1px solid #f0f0f0;
                 min-height: 131px;
-                margin-top: 30px;
+                margin-bottom: 30px;
             }
             .blog_item_img{
                 max-width: 100%;
@@ -47,7 +45,6 @@
                 margin: 50px 0px 50px 300px;
             }
             .blog_content_list{
-                margin-top: 50px;
                 margin-bottom: 100px;
             }
             .blog_item_title{
@@ -66,6 +63,9 @@
             }
             .blog_item_icon img{
                 margin-left: 15px;
+                position: relative;
+                top: 4px;
+                right: 2px;
             }
         </style>
     </head>
@@ -75,28 +75,18 @@
             <template>
                 <header-content></header-content>
                 <el-container>
-
                     <el-main>
-                        <el-row>
-                            <el-col :gutter="20" :span="10">
-                                <el-input v-model="searchKey" placeholder="请输入关键字"></el-input>
-                            </el-col>
-                            <el-col :gutter="20" :span="4">
-                                <el-button @click="search" >搜索</el-button>
-                            </el-col>
-                            <el-col :gutter="20" :span="5">
-                            </el-col>
-                        </el-row>
+                        <!--左侧列表-->
                         <el-row :gutter="20" class="blog_content_list">
                             <el-col :span="16" class="left_content">
-                                <el-row class="blog_item" :gutter="20" v-for="item in blogList" :key="item.id">
+                                <el-row  class="blog_item" :gutter="20" v-for="item in blogList" :key="item.id">
                                     <el-col :span="4">
                                         <div style="cursor: pointer;" @click="blogInfo(item.id)" class="grid-content bg-purple">
                                             <img class="blog_item_img" :src="item.coverPic"/>
                                         </div>
                                     </el-col>
                                     <el-col :span="20">
-                                        <div class="grid-content bg-purple">
+                                        <div style="cursor: pointer;" @click="blogInfo(item.id)" class="grid-content bg-purple">
                                             <div class="blog_item_title">{{item.title}}</div>
                                             <div class="blog_item_content">{{item.content}}</div>
                                             <div class="blog_item_icon">
@@ -106,12 +96,19 @@
                                             </div>
                                         </div>
                                     </el-col>
-
                                 </el-row>
-                                <el-button @click="loadMoreFun" v-loading.fullscreen.lock="fullscreenLoading" class="load_more" type="warning" round>加载更多</el-button>
+                                <el-button v-if="showLoadMore" @click="loadMoreFun" v-loading.fullscreen.lock="fullscreenLoading" class="load_more" type="warning" round>加载更多</el-button>
                             </el-col>
-                            <el-col :span="8" class="right_content">
-
+                            <!--右侧内容-->
+                            <el-col :span="8">
+                                <el-row>
+                                    <el-col :gutter="20" :span="18">
+                                        <el-input v-model="searchKey" placeholder="请输入关键字"></el-input>
+                                    </el-col>
+                                    <el-col :gutter="20" :span="6">
+                                        <el-button @click="search" >搜索</el-button>
+                                    </el-col>
+                                </el-row>
                             </el-col>
                         </el-row>
                     </el-main>
@@ -163,10 +160,10 @@
                             self.page.totalPage = response.data.pages;
                             self.page.totalSize = response.data.total;
                             if (self.page.pageNo >= self.page.totalPage){
-                                $(".load_more").hide();
+                                self.showLoadMore = false;
                             }else{
                                 $(".load_more").text("加载数据");
-                                $(".load_more").show();
+                                self.showLoadMore = true;
                             }
                         }
                         self.fullscreenLoading = false;
@@ -197,6 +194,7 @@
                     menuList:[],
                     blogList:[],
                     searchKey:'', //搜索关键字
+                    showLoadMore:false,
                     fullscreenLoading: false,
                     page:{
                         pageNo:1,

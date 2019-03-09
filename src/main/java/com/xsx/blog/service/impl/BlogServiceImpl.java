@@ -91,8 +91,6 @@ public class BlogServiceImpl extends LoggerService implements BlogService  {
                 String[] img = com.xsx.blog.util.StringUtils.getImgs(blog.getContent());
                 if(img != null && img.length > 0)
                     blog.setCoverPic(img[0]);
-                else
-                    blog.setCoverPic(Constants.DEFAULT_PIC);
             }
             blog.setContent(content.length() >= 250 ? content.substring(0,250)+"..." : content);
             BeanUtils.copyProperties(blog,blogVo);

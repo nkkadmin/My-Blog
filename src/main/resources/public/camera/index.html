@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Document</title>
+
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/timelinr/jquery.timelinr-2.0.0.js"></script>
+    <script type="text/javascript" src="../js/timelinr/jquery.mousewheel.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.css"/>
+    <link rel="stylesheet" href="../css/timelinr/course.css"/>
+    <link rel="stylesheet" href="../css/timelinr/main.css"/>
+</head>
+<body>
+<div id="app">
+    <template>
+        <header-content></header-content>
+        <el-container>
+            <el-main>
+                <div id="main">
+                    <div id="timeline" class="timeline">
+                        <button id="prev" class="prev">
+                            <i class=""><img src="../img/timelinr/icon_time_arrow_left.png" alt=""/></i>
+                        </button>
+                        <button id="next" class="next">
+                            <i class=""><img src="../img/timelinr/icon_time_arrow_right.png" alt=""/></i>
+                        </button>
+                        <ul id="dates" class="dates">
+                            <li v-for="(value,key) in listData" :key="key">
+                                <a :href="'#'+key" :name="key">{{key}}</a>
+                                <hr class="onepx"/>
+                            </li>
+                        </ul>
+                        <hr class="hrLine"/>
+                        <div class="wrap">
+                            <ul class="issues" id="issues">
+                                <li v-for="(list,key) in listData" :key="key" :id="key">
+                                    <item v-for="(item,index) in list" :key="index">
+                                        <!--往右-->
+                                        <div v-if="index % 2 == 0" class="left"></div>
+                                        <div v-if="index % 2 == 0" class="right">
+                                            <h5>{{item.createTime}}</h5>
+                                            <hr class="yearLine"/>
+                                            <span class="textArea">
+                                                <img class="item_content_img" :src="item.url"/>
+                                            </span>
+                                        </div>
+                                        <!--往左-->
+                                        <div v-if="index % 2 != 0" class="left">
+                                            <h5>{{item.createTime}}-{{index}}</h5>
+                                            <hr class="yearLine"/>
+                                            <span class="textArea">
+                                              <img class="item_content_img" :src="item.url"/>
+                                            </span>
+                                        </div>
+                                        <div v-if="index % 2 != 0" class="right"></div>
+                                    </item>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </el-main>
+        </el-container>
+        <footer-content></footer-content>
+    </template>
+</div>
+
+</body>
+<script type="text/javascript" src="../js/vue.js"></script>
+<script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="../js/index/component.js"></script>
+<script type="text/javascript">
+    $(function () {
+
+    });
+</script>
+
+<script>
+    var Main = {
+        methods: {
+            loadTimeLinr:function(){
+                $().timelinr({
+                    autoPlay: false,
+                    autoPlayDirection: "forward",
+                    startAt: 1,
+                    mousewheel: 'true'
+                });
+            },
+            loadData: function () {
+                var self = this;
+                self.tableData = [];
+                self.isAppend = false;
+                axios.post("/index/blog/index", null).then(function (response) {
+                    console.log(response);
+                    if (response != null && response.data.menu != null) {
+                        self.menuList = response.data.menu;
+                    }
+                    if (self.menuList.length > 0) {
+                        //获取第一个菜单
+                        var menuId = self.menuList[0].id;
+                        self.currentMenuId = menuId;
+                    }
+                });
+            },
+            loadCream:function () {
+                var self = this;
+                self.issuesHeight = 0;
+                self.tableData = [];
+                self.isAppend = false;
+                axios.post("/index/camrea/searchList", null).then(function (response) {
+                    self.listData = response.data.object;
+                    var datas = self.listData;
+                    var itemSize = 0;
+                    for(var key in datas){
+                        itemSize += datas[key].length;
+                    }
+                    self.issuesHeight = itemSize * 250;
+                    console.log(self.issuesHeight);
+                    $(".issues").css("height",self.issuesHeight+"px !important");
+                    self.loadTimeLinr();
+                });
+            }
+
+        },
+        data() {
+            return {
+                issuesHeight:0, //数据条数
+                currentMenuId: '',
+                menuList: [],
+                listData: []
+            }
+        },
+        mounted: function () {
+            this.loadData();
+            this.loadCream();
+        }
+    }
+    var Ctor = Vue.extend(Main)
+    new Ctor().$mount('#app')
+</script>
+</html>

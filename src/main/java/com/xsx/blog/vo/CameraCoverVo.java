@@ -12,6 +12,15 @@ public class CameraCoverVo implements Serializable {
     private String url;
     private Integer coverId;
     private String title;
+    private String createTime; //格式为yyyyMMdd
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
 
     public String getTitle() {
         return title;
