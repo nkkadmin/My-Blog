@@ -38,12 +38,12 @@
                         </ul>
                         <hr class="hrLine"/>
                         <div class="wrap">
-                            <ul class="issues" id="issues">
+                            <ul class="issues" id="issues2">
                                 <li v-for="(list,key) in listData" :key="key" :id="key">
                                     <item v-for="(item,index) in list" :key="index">
                                         <!--往右-->
                                         <div v-if="index % 2 == 0" class="left"></div>
-                                        <div v-if="index % 2 == 0" class="right">
+                                        <div style="cursor: pointer;" @click="info(item.coverId)" v-if="index % 2 == 0" class="right">
                                             <h5>{{item.createTime}}</h5>
                                             <hr class="yearLine"/>
                                             <span class="textArea">
@@ -51,8 +51,8 @@
                                             </span>
                                         </div>
                                         <!--往左-->
-                                        <div v-if="index % 2 != 0" class="left">
-                                            <h5>{{item.createTime}}-{{index}}</h5>
+                                        <div style="cursor: pointer;" @click="info(item.coverId)" v-if="index % 2 != 0" class="left">
+                                            <h5>{{item.createTime}}</h5>
                                             <hr class="yearLine"/>
                                             <span class="textArea">
                                               <img class="item_content_img" :src="item.url"/>
@@ -63,6 +63,7 @@
                                 </li>
                             </ul>
                         </div>
+                        <div v-if="hasNextPage" @click="nextPage" style="margin-top: 50px;text-align: center;color: #ada4a4;cursor: pointer;" >加载更多</div>
                     </div>
                 </div>
             </el-main>
@@ -76,11 +77,6 @@
 <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script src="../js/index/component.js"></script>
-<script type="text/javascript">
-    $(function () {
-
-    });
-</script>
 
 <script>
     var Main = {
@@ -112,33 +108,58 @@
             loadCream:function () {
                 var self = this;
                 self.issuesHeight = 0;
-                self.tableData = [];
-                self.isAppend = false;
-                axios.post("/index/camrea/searchList", null).then(function (response) {
-                    self.listData = response.data.object;
+                if(!self.isAppend)
+                    self.listData = [];
+
+                var param = {
+                    "pageNo":self.pageNo,
+                    "pageSize":self.pageSize
+                }
+                axios.post("/index/camrea/searchList", param).then(function (response) {
+                    // self.listData = self.listData.concat(response.data.object);
+                    if(self.listData.length > 0){
+                        self.listData = self.listData.concat(response.data.object);
+                    }else{
+                        self.listData = response.data.object;
+                    }
+
                     var datas = self.listData;
                     var itemSize = 0;
                     for(var key in datas){
                         itemSize += datas[key].length;
                     }
                     self.issuesHeight = itemSize * 250;
-                    console.log(self.issuesHeight);
+                    self.pageNo = response.data.pageNo;
+                    self.hasNextPage = response.data.hasNextPage;
                     $(".issues").css("height",self.issuesHeight+"px !important");
                     self.loadTimeLinr();
                 });
+            },
+            info(id){
+                window.location.href = "/blog/blog.html?id="+id;
+            },
+            nextPage:function () {
+                this.pageNo++;
+                this.isAppend = true;
+                this.loadCream();
             }
 
         },
         data() {
             return {
                 issuesHeight:0, //数据条数
+                pageNo:1,
+                pageSize:10,
+                hasNextPage:false,
                 currentMenuId: '',
                 menuList: [],
-                listData: []
+                listData: [],
+                isAppend:false
             }
         },
         mounted: function () {
             this.loadData();
+            self.isAppend = false;
             this.loadCream();
         }
     }

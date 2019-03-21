@@ -10,6 +10,15 @@ public class AbstractResult<T> implements Serializable {
     private Integer statu;
     private T content;
     private Object object;
+    private Boolean success;
+
+    public Boolean getSuccess() {
+        return success;
+    }
+
+    public void setSuccess(Boolean success) {
+        this.success = success;
+    }
 
     public Object getObject() {
         return object;

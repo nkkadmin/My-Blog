@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.xsx.blog.common.MenuEnum;
 import com.xsx.blog.model.Menu;
 import com.xsx.blog.request.BlogSearchRequest;
+import com.xsx.blog.result.CameraIndexResult;
 import com.xsx.blog.result.Result;
 import com.xsx.blog.service.BlogService;
 import com.xsx.blog.service.MenuService;
@@ -13,6 +14,7 @@ import com.xsx.blog.vo.BlogVo;
 import com.xsx.blog.vo.CameraCoverVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,62 +40,31 @@ public class IndexCameraController {
      * @return
      */
     @RequestMapping("/searchList")
-    public Result searchList(BlogSearchRequest blogSearchRequest){
-        Result listResult = new Result<>();
+    public CameraIndexResult searchList(@RequestBody BlogSearchRequest blogSearchRequest){
+        CameraIndexResult result = new CameraIndexResult();
         try {
-            blogSearchRequest.setPageNo(1);
-            blogSearchRequest.setPageSize(100);
             blogSearchRequest.setMenuId(2);
             PageInfo<BlogVo> pageInfo = blogService.findPage(blogSearchRequest);
-            coverToResult(pageInfo,listResult);
+            coverToResult(pageInfo,result);
         } catch (Exception e) {
             e.printStackTrace();
-            listResult.setSuccess(false);
-            listResult.setMsg(e.getMessage());
+            result.setSuccess(false);
+            result.setMsg(e.getMessage());
         }
-        return listResult;
+        return result;
     }
 
-    /**
-     * 获取最新5个摄影作品封面
-     * @return
-     */
-    @RequestMapping("/searchTop5Cover")
-    public Result<List<CameraCoverVo>> searchTop5Cover(){
-        Result<List<CameraCoverVo>> listResult = new Result<>();
-       try{
-           BlogSearchRequest blogSearchRequest = new BlogSearchRequest();
-           Integer menuId = getCameraMenuId();
-           blogSearchRequest.setMenuId(menuId);
-           blogSearchRequest.setPageNo(1);
-           blogSearchRequest.setPageSize(5);
-           PageInfo<BlogVo> pageInfo = blogService.findPage(blogSearchRequest);
-           coverToResult(pageInfo,listResult);
-       }catch (Exception e){
-           e.printStackTrace();
-           listResult.setSuccess(false);
-           listResult.setMsg(e.getMessage());
-       }
-       return listResult;
-    }
 
-    private Integer getCameraMenuId() throws Exception{
-        Menu menu = menuService.findByName(MenuEnum.CEMARE_MENU.getName());
-        if(menu != null)
-            return menu.getId();
-        else
-            throw new Exception("获取菜单id失败");
-    }
 
     /**
      * 封装数据返回前端
      * @param pageInfo
-     * @param listResult
+     * @param result
      */
-    private void coverToResult(PageInfo<BlogVo> pageInfo, Result<List<CameraCoverVo>> listResult) {
-        listResult.setSuccess(true);
+    private void coverToResult(PageInfo<BlogVo> pageInfo, CameraIndexResult result) {
+        result.setSuccess(true);
         if(pageInfo == null || CollectionUtils.isEmpty(pageInfo.getList())){
-            listResult.setMsg("返回结果为空");
+            result.setMsg("返回结果为空");
         }else{
             Map<String,List<CameraCoverVo>> map = new LinkedHashMap<>();
             for(BlogVo blogVo : pageInfo.getList()){
@@ -106,9 +77,19 @@ public class IndexCameraController {
                     map.put(year,list);
                 }
             }
-            listResult.setObject(map);
+            result.setObject(map);
+            coverToResultPage(pageInfo, result);
         }
     }
+
+    private void coverToResultPage(PageInfo<BlogVo> pageInfo, CameraIndexResult result) {
+        result.setPageNo(pageInfo.getPageNum());
+        result.setPages(pageInfo.getPageSize());
+        result.setPages(pageInfo.getPages());
+        result.setHasNextPage(pageInfo.isHasNextPage());
+        result.setHasPreviousPage(pageInfo.isHasPreviousPage());
+    }
+
 
     /**
      * 转换成CameraCoverVo对象

@@ -113,6 +113,7 @@
                         </el-row>
                     </el-main>
                 </el-container>
+                <top></top>
                 <footer-content></footer-content>
             </template>
         </div>
@@ -129,30 +130,12 @@
                     this.blogTitle = this.searchKey;
                     this.getBlogByMenuId(this.currentMenuId);
                 },
-                loadData:function(){
-                    var self = this;
-                    self.tableData = [];
-                    self.isAppend = false;
-                    axios.post("/index/blog/index",null).then(function(response){
-                        console.log(response);
-                        if(response != null && response.data.menu != null){
-                            self.menuList = response.data.menu;
-                        }
-                        if(self.menuList.length > 0){
-                            //获取第一个菜单
-                            var menuId = self.menuList[0].id;
-                            self.currentMenuId = menuId;
-                            self.getBlogByMenuId(menuId);
-                        }
-                    });
-                },
                 getBlogByMenuId:function(menuId){
                     var self = this;
                     if (!self.isAppend){
                         self.blogList.splice(0,self.blogList.length);
                     }
                     axios.post("/index/blog/getBlog",{"pageNo":self.page.pageNo,"pageSize":self.page.pageSize,"menuId":menuId,"blogTitle":self.blogTitle}).then(function(response){
-                        console.log(response);
                         if(response.data != null && response.data.list != null){
                             for ( var i = 0; i <response.data.list.length; i++){
                                 self.blogList.push(response.data.list[i]);
@@ -206,7 +189,7 @@
                 }
             },
             mounted:function(){
-                this.loadData();
+                this.getBlogByMenuId(1);
             }
         }
         var Ctor = Vue.extend(Main)

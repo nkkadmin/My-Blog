@@ -20,10 +20,7 @@ public class PageRequest implements Serializable {
     }
 
     public Integer getPageNo() {
-        if(pageNo < 1)
-            return 0;
-        else
-            return pageNo - 1;
+        return pageNo;
     }
 
     public Integer startPage(){

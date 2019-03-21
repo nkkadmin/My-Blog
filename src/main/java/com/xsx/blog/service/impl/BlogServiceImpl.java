@@ -2,7 +2,6 @@ package com.xsx.blog.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.xsx.blog.common.Constants;
 import com.xsx.blog.dto.BlogDTO;
 import com.xsx.blog.mapper.BlogMapper;
 import com.xsx.blog.mapper.MenuMapper;
@@ -54,7 +53,7 @@ public class BlogServiceImpl extends LoggerService implements BlogService  {
             oldBlog = findOne(blog.getId());
             oldBlog.setTitle(blog.getTitle());
             oldBlog.setContent(blog.getContent());
-            oldBlog.setMenuId(blog.getId());
+            oldBlog.setMenuId(blog.getMenuId());
             oldBlog.setTagId(blog.getTagId());
             oldBlog.setCoverPic(blog.getCoverPic());
             oldBlog.setUpdateTime(new Date());
@@ -77,7 +76,7 @@ public class BlogServiceImpl extends LoggerService implements BlogService  {
 
     @Override
     public PageInfo<BlogVo> findPage(BlogSearchRequest blogSearchRequest) {
-        PageHelper.startPage(blogSearchRequest.startPage(),blogSearchRequest.getPageSize());
+        PageHelper.startPage(blogSearchRequest.getPageNo(),blogSearchRequest.getPageSize());
         if(!StringUtils.isEmpty(blogSearchRequest.getBlogTitle())){
             blogSearchRequest.setBlogTitle("%"+blogSearchRequest.getBlogTitle()+"%");
         }

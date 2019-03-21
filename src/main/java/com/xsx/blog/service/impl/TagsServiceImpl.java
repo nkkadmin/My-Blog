@@ -36,7 +36,7 @@ public class TagsServiceImpl implements TagsService {
 
     @Override
     public PageInfo<Tags> findPage(TagRequest tagRequest) {
-        PageHelper.startPage(tagRequest.startPage(),tagRequest.getPageSize());
+        PageHelper.startPage(tagRequest.getPageNo(),tagRequest.getPageSize());
         List<Tags> tags = tagsMapper.findAll();
         return new PageInfo<>(tags);
     }

@@ -1,3 +1,10 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+.el-main {
+    overflow: hidden;
+}
 .el-header, .el-footer {
     background-color: #B3C0D1;
     color: #333;
@@ -16,6 +23,12 @@
     color: #333;
     text-align: center;
     line-height: 200px;
+}
+.top{
+    position: fixed;
+    top: 80%;
+    right: 5%;
+    cursor: pointer;
 }
 
 

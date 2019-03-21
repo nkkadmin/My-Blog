@@ -1,29 +1,10 @@
 <html>
     <head>
-        <title></title>
+        <title>xx</title>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+        <link rel="stylesheet" href="../css/base.css">
         <style>
-            .el-header, .el-footer {
-                background-color: #B3C0D1;
-                color: #333;
-                text-align: center;
-                line-height: 60px;
-            }
-            .el-header{
-                padding: 0px !important;
-            }
-            .el-aside {
-                background-color: #D3DCE6;
-                color: #333;
-                text-align: center;
-                line-height: 200px;
-            }
-
-
-            body > .el-container {
-                margin-bottom: 40px;
-            }
 
             .el-container:nth-child(5) .el-aside,
             .el-container:nth-child(6) .el-aside {
@@ -51,6 +32,10 @@
             }
             .content{
                 margin: 50px 200px 100px 200px;
+            }
+            .content img{
+                max-width: 100%;
+                height: auto;
             }
             .dt_other{
                 text-align: right;
@@ -87,8 +72,7 @@
                     <el-main>
                         <el-row>
                             <el-col :span="24">
-                                <div class="grid-content bg-purple-dark title">
-                                    {{info.title}}
+                                <div class="grid-content bg-purple-dark title" v-text="info.title">
                                 </div>
                             </el-col>
                         </el-row>
@@ -96,8 +80,8 @@
                             <el-col :span="24">
                                 <div class="grid-content bg-purple-dark dt_other">
                                     <span>发布时间：{{info.createTime}}</span>
-                                    <span>浏览量：{{info.lookNum}}</span>
-                                    <span>点赞量：{{info.zanNum}}</span>
+                                    <span>浏览量：{{info.lookNum == null ? 0 : info.lookNum}}</span>
+                                    <span>点赞量：{{info.zanNum == null ? 0 : info.zanNum}}</span>
                                 </div>
                             </el-col>
                         </el-row>
@@ -129,8 +113,8 @@
                                     <span>评论</span>
                                 </div>
                                 <div class="grid-content bg-purple">
-                                    <div v-for="item in commentList" :key="item.id" class="text item comment_content">
-                                        {{item.createTime}}<br/>
+                                    <div v-for="(item,index) in commentList" :key="item.id" class="text item comment_content">
+                                        #{{index+1}} {{item.createTime}}<br/>
                                         {{item.content}}
                                     </div>
                                 </div>
@@ -142,6 +126,7 @@
                         </el-row>
                     </el-main>
                 </el-container>
+                <top></top>
                 <footer-content></footer-content>
             </template>
         </div>
@@ -165,11 +150,9 @@
                                 type: 'success'
                             });
                         }
-                        console.log(response);
-
                     });
                 },
-                loadData:function(){
+                getInfo:function(){
                     var self = this;
                     self.tableData = [];
                     self.isAppend = false;
@@ -247,7 +230,7 @@
             data() {
                 return {
                     id:"",
-                    info:null,
+                    info:"",
                     form:{
                         commonDesc:null
                     },
@@ -263,7 +246,7 @@
             },
             mounted:function(){
                 this.initParam();
-                this.loadData();
+                this.getInfo();
                 this.addLookNum();
             }
         }

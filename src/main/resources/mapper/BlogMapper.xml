@@ -63,6 +63,7 @@
         and b.statu = #{statu,jdbcType=INTEGER}
       </if>
     </where>
+    ORDER BY b.create_time desc
   </select>
   <update id="update" parameterType="com.xsx.blog.model.Blog">
     update blog set

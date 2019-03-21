@@ -47,7 +47,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public PageInfo<Menu> findPage(MenuRequest menuRequest) {
-        PageHelper.startPage(menuRequest.startPage(),menuRequest.getPageSize());
+        PageHelper.startPage(menuRequest.getPageNo(),menuRequest.getPageSize());
         List<Menu> list = menuMapper.findAll();
         PageInfo<Menu> pageInfo = new PageInfo<>(list);
         return pageInfo;
