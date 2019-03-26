@@ -21,4 +21,10 @@ public interface BlogMapper {
     Integer count();
 
     Integer batchUpdateBlog(List<BlogDTO> blogList);
+
+    /**
+     * 获取所有年份
+     * @return
+     */
+    List<String> groupByCreateTime();
 }

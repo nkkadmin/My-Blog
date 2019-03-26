@@ -31,6 +31,11 @@ public class TagsServiceImpl implements TagsService {
     @Override
     public boolean save(Tags tag) {
         tag.setStatu(StatuEnum.OK.getStatu());
+        if(null != tag.getId()){
+            Tags dbtags = tagsMapper.findById(tag.getId());
+            dbtags.setName(tag.getName());
+            return tagsMapper.update(dbtags) > 0;
+        }
         return tagsMapper.insert(tag) > 0;
     }
 
@@ -54,6 +59,15 @@ public class TagsServiceImpl implements TagsService {
     @Override
     public List<Tags> findByStatu(Integer statu) {
         return tagsMapper.findByStatuOrderByCreateTimeAsc(statu);
+    }
+
+    @Override
+    public Boolean recoverById(Integer id) {
+        Tags tag = tagsMapper.findById(id);
+        if(tag == null)
+            return false;
+        tag.setStatu(StatuEnum.OK.getStatu());
+        return tagsMapper.update(tag) > 0;
     }
 
 }

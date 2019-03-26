@@ -1,5 +1,7 @@
 package com.xsx.blog.request;
 
+import com.xsx.blog.util.StringUtils;
+
 /**
  *
  * 博客搜索
@@ -11,6 +13,19 @@ public class BlogSearchRequest extends PageRequest {
     private Integer menuId;
     private Integer tagId;
     private Integer statu;
+    private String year;
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public void setLikeYear(String year){
+        this.year = year + "%";
+    }
 
     public Integer getStatu() {
         return statu;

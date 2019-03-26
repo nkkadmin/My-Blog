@@ -24,4 +24,11 @@ public interface MenuService {
     List<Menu> findByStatu(Integer statu);
 
     Menu findByName(String name);
+
+    /**
+     * 恢复菜单
+     * @param id
+     * @return
+     */
+    Boolean recoverById(Integer id);
 }

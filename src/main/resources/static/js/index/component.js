@@ -36,7 +36,7 @@ Vue.component('header-content', {
                     'background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">' +
                     '<el-menu-item @click="hrefTo(item.url,index)" :class="\'menuItem\'+index" v-for="(item,index) in menuList" ' +
                     ':index="\'\'+index" :menu-id="item.id" >{{item.name}}</el-menu-item>' +
-                    '<el-menu-item style="float: right;margin-right: 100px;" index="10" disabled>博客名称</el-menu-item>' +
+                    '<el-menu-item style="float: right;margin-right: 100px;" index="10" disabled>不加班的程序员</el-menu-item>' +
                 '</el-menu>' +
               '</el-header>'
 });

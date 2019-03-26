@@ -1,4 +1,4 @@
-package com.xsx.blog.controller;
+package com.xsx.blog.controller.admin;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
  * @Date: 2018/12/9 19:00
  */
 @RestController
-@RequestMapping(value = "/menus")
+@RequestMapping(value = "/admin/menus")
 public class MenuController {
 
     @Autowired
@@ -42,5 +42,9 @@ public class MenuController {
     @RequestMapping(value = "/deleteById")
     public Boolean deleteById(@RequestParam(name = "id",required = true) Integer id){
         return menuService.deleteOne(id);
+    }
+    @RequestMapping(value = "/recoverById")
+    public Boolean recoverById(@RequestParam(name = "id",required = true) Integer id){
+        return menuService.recoverById(id);
     }
 }

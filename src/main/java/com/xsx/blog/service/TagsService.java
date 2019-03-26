@@ -24,4 +24,11 @@ public interface TagsService {
     public boolean deleteOne(Integer id);
 
     List<Tags> findByStatu(Integer statu);
+
+    /**
+     * 恢复
+     * @param id
+     * @return
+     */
+    Boolean recoverById(Integer id);
 }

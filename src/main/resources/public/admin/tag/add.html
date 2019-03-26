@@ -30,7 +30,7 @@
                 },
                 save(){
                     var self = this;
-                    axios.post("/tags/edit",this.form).then(function(response){
+                    axios.post("/admin/tags/edit",this.form).then(function(response){
                         console.log(response);
                         if(response.data){
                            self.$message({
@@ -43,7 +43,7 @@
                 },
                 findOne(){
                     var self = this;
-                    axios.get("/tags/selectById",{params:{"id":this.form.id}}).then(function(response){
+                    axios.get("/admin/tags/selectById",{params:{"id":this.form.id}}).then(function(response){
                         console.log(response);
                         if(response != null && response.data != null){
                             var info = response.data;

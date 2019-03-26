@@ -73,4 +73,13 @@ public class MenuServiceImpl implements MenuService {
         return menuMapper.findByName(name);
     }
 
+    @Override
+    public Boolean recoverById(Integer id) {
+        Menu menu = menuMapper.findById(id);
+        if(menu == null)
+            return false;
+        menu.setStatu(StatuEnum.OK.getStatu());
+        return menuMapper.update(menu) > 0;
+    }
+
 }

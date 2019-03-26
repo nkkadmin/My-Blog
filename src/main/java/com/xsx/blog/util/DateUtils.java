@@ -31,4 +31,8 @@ public class DateUtils {
     public static String dateYear(Date date){
         return dateToStr(date,"yyyy");
     }
+
+    public static String currentDate(){
+        return dateToStr(new Date(),"yyyy");
+    }
 }

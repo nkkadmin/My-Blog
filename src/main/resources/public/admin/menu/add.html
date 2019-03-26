@@ -36,7 +36,7 @@
                 },
                 save(){
                     var self = this;
-                    axios.post("/menus/edit",this.form).then(function(response){
+                    axios.post("/admin/menus/edit",this.form).then(function(response){
                         console.log(response);
                         if(response.data){
                            self.$message({
@@ -49,7 +49,7 @@
                 },
                 findOne(){
                     var self = this;
-                    axios.get("/menus/selectById",{params:{"id":this.form.id}}).then(function(response){
+                    axios.get("/admin/menus/selectById",{params:{"id":this.form.id}}).then(function(response){
                         console.log(response);
                         if(response != null && response.data != null){
                             var info = response.data;

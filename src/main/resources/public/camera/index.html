@@ -31,16 +31,16 @@
                             <i class=""><img src="../img/timelinr/icon_time_arrow_right.png" alt=""/></i>
                         </button>
                         <ul id="dates" class="dates">
-                            <li v-for="(value,key) in listData" :key="key">
-                                <a :href="'#'+key" :name="key">{{key}}</a>
+                            <li v-for="value in years" :key="value">
+                                <a @click="clickYear(value)" :href="'#'+value" :name="value">{{value}}</a>
                                 <hr class="onepx"/>
                             </li>
                         </ul>
                         <hr class="hrLine"/>
                         <div class="wrap">
                             <ul class="issues" id="issues2">
-                                <li v-for="(list,key) in listData" :key="key" :id="key">
-                                    <item v-for="(item,index) in list" :key="index">
+                                <li>
+                                    <item v-for="(item,index) in listData" :key="index">
                                         <!--往右-->
                                         <div v-if="index % 2 == 0" class="left"></div>
                                         <div style="cursor: pointer;" @click="info(item.coverId)" v-if="index % 2 == 0" class="right">
@@ -77,34 +77,20 @@
 <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script src="../js/index/component.js"></script>
-
+<script>
+    $(function () {
+        $().timelinr({
+            autoPlay: false,
+            autoPlayDirection: "forward",
+            startAt: 1,
+            mousewheel: 'true'
+        });
+    })
+</script>
 <script>
     var Main = {
         methods: {
-            loadTimeLinr:function(){
-                $().timelinr({
-                    autoPlay: false,
-                    autoPlayDirection: "forward",
-                    startAt: 1,
-                    mousewheel: 'true'
-                });
-            },
-            loadData: function () {
-                var self = this;
-                self.tableData = [];
-                self.isAppend = false;
-                axios.post("/index/blog/index", null).then(function (response) {
-                    console.log(response);
-                    if (response != null && response.data.menu != null) {
-                        self.menuList = response.data.menu;
-                    }
-                    if (self.menuList.length > 0) {
-                        //获取第一个菜单
-                        var menuId = self.menuList[0].id;
-                        self.currentMenuId = menuId;
-                    }
-                });
-            },
+
             loadCream:function () {
                 var self = this;
                 self.issuesHeight = 0;
@@ -113,7 +99,8 @@
 
                 var param = {
                     "pageNo":self.pageNo,
-                    "pageSize":self.pageSize
+                    "pageSize":self.pageSize,
+                    "year":self.year
                 }
                 axios.post("/index/camrea/searchList", param).then(function (response) {
                     // self.listData = self.listData.concat(response.data.object);
@@ -122,7 +109,7 @@
                     }else{
                         self.listData = response.data.object;
                     }
-
+                    self.years = response.data.years;
                     var datas = self.listData;
                     var itemSize = 0;
                     for(var key in datas){
@@ -132,16 +119,21 @@
                     self.pageNo = response.data.pageNo;
                     self.hasNextPage = response.data.hasNextPage;
                     $(".issues").css("height",self.issuesHeight+"px !important");
-                    self.loadTimeLinr();
                 });
             },
-            info(id){
+            info:function(id){
                 window.location.href = "/blog/blog.html?id="+id;
             },
             nextPage:function () {
                 this.pageNo++;
                 this.isAppend = true;
                 this.loadCream();
+            },
+            clickYear:function (year) {
+                this.year = year;
+                this.isAppend = false;
+                this.loadCream();
+
             }
 
         },
@@ -154,11 +146,12 @@
                 currentMenuId: '',
                 menuList: [],
                 listData: [],
-                isAppend:false
+                isAppend:false,
+                years:[],
+                year:null
             }
         },
         mounted: function () {
-            this.loadData();
             self.isAppend = false;
             this.loadCream();
         }

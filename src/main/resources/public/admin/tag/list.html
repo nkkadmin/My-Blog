@@ -23,6 +23,7 @@
                     <template slot-scope="scope">
                         <el-button @click="edit(scope.row.id)" type="text" size="small">编辑</el-button>
                         <el-button v-if="scope.row.statu == '有效'" @click="deleteById(scope.row.id)" type="text" size="small">删除</el-button>
+                        <el-button v-if="scope.row.statu == '删除'" @click="recoverById(scope.row.id)" type="text" size="small">恢复</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -52,7 +53,7 @@
                     var self = this;
                     self.tableData = [];
 
-                    axios.post("/tags/findAll",{"pageNo":this.pageNo,"pageSize":this.pageSize}).then(function(response){
+                    axios.post("/admin/tags/findAll",{"pageNo":this.pageNo,"pageSize":this.pageSize}).then(function(response){
                         console.log(response);
                         if(response != null && response.data != null){
                             var list = response.data.list;
@@ -73,12 +74,26 @@
                 },
                 deleteById(id){
                     var self = this;
-                    axios.get("/tags/deleteById",{params:{"id":id}}).then(function(response){
+                    axios.get("/admin/tags/deleteById",{params:{"id":id}}).then(function(response){
                         console.log(response);
                         if(response.data){
                            self.$message({
                               showClose: true,
                               message: '删除成功',
+                              type: 'success'
+                            });
+                            self.loadData();
+                        }
+                    });
+                },
+                recoverById(id){
+                    var self = this;
+                    axios.get("/admin/tags/recoverById",{params:{"id":id}}).then(function(response){
+                        console.log(response);
+                        if(response.data){
+                           self.$message({
+                              showClose: true,
+                              message: '操作成功',
                               type: 'success'
                             });
                             self.loadData();

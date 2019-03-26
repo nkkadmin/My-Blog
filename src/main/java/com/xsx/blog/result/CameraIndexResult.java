@@ -1,5 +1,6 @@
 package com.xsx.blog.result;
 
+import java.util.List;
 import com.xsx.blog.vo.CameraCoverVo;
 
 /**
@@ -9,4 +10,13 @@ import com.xsx.blog.vo.CameraCoverVo;
  */
 public class CameraIndexResult extends AbstractPageResult<CameraCoverVo> {
 
+    private List<String> years;
+
+    public List<String> getYears() {
+        return years;
+    }
+
+    public void setYears(List<String> years) {
+        this.years = years;
+    }
 }

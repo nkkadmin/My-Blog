@@ -14,6 +14,7 @@ import com.xsx.blog.vo.BlogVo;
 import com.xsx.blog.vo.CameraCoverVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,15 +44,35 @@ public class IndexCameraController {
     public CameraIndexResult searchList(@RequestBody BlogSearchRequest blogSearchRequest){
         CameraIndexResult result = new CameraIndexResult();
         try {
+
+            List<String> allYears = blogService.getAllYear();
             blogSearchRequest.setMenuId(2);
+            if(StringUtils.isEmpty(blogSearchRequest.getYear()))
+                blogSearchRequest.setLikeYear(getCurrentYear(allYears));
+            else
+                blogSearchRequest.setLikeYear(blogSearchRequest.getYear());
             PageInfo<BlogVo> pageInfo = blogService.findPage(blogSearchRequest);
             coverToResult(pageInfo,result);
+            result.setYears(allYears);
         } catch (Exception e) {
             e.printStackTrace();
             result.setSuccess(false);
             result.setMsg(e.getMessage());
         }
         return result;
+    }
+
+    private String getCurrentYear(List<String> allYears){
+        String currentDate = DateUtils.currentDate();
+        if(allYears == null || allYears.size() == 0)
+            return currentDate;
+
+        if(allYears.contains(currentDate)){
+            return currentDate;
+        }else{
+            return allYears.get(allYears.size()-1);
+        }
+
     }
 
 
@@ -66,18 +87,11 @@ public class IndexCameraController {
         if(pageInfo == null || CollectionUtils.isEmpty(pageInfo.getList())){
             result.setMsg("返回结果为空");
         }else{
-            Map<String,List<CameraCoverVo>> map = new LinkedHashMap<>();
+            List<CameraCoverVo> list = new ArrayList<>();
             for(BlogVo blogVo : pageInfo.getList()){
-                String year = DateUtils.dateYear(blogVo.getCreateTime());
-                if(map.containsKey(year)){
-                    map.get(year).add(coverToCameraVO(blogVo));
-                }else{
-                    List<CameraCoverVo> list = new ArrayList<>();
-                    list.add(coverToCameraVO(blogVo));
-                    map.put(year,list);
-                }
+                list.add(coverToCameraVO(blogVo));
             }
-            result.setObject(map);
+            result.setObject(list);
             coverToResultPage(pageInfo, result);
         }
     }

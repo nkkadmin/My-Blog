@@ -1,4 +1,4 @@
-package com.xsx.blog.controller;
+package com.xsx.blog.controller.admin;
 
 import com.github.pagehelper.PageInfo;
 import com.xsx.blog.model.Tags;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Date: 2018/12/9 19:00
  */
 @RestController
-@RequestMapping("/tags")
+@RequestMapping("/admin/tags")
 public class TagsController {
 
     @Autowired
@@ -40,5 +40,9 @@ public class TagsController {
     @RequestMapping(value = "/deleteById")
     public Boolean deleteById(@RequestParam(name = "id",required = true) Integer id){
         return tagsService.deleteOne(id);
+    }
+    @RequestMapping(value = "/recoverById")
+    public Boolean recoverById(@RequestParam(name = "id",required = true) Integer id){
+        return tagsService.recoverById(id);
     }
 }

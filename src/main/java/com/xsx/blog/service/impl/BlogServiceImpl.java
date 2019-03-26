@@ -138,5 +138,10 @@ public class BlogServiceImpl extends LoggerService implements BlogService  {
         return blogMapper.batchUpdateBlog(blogList);
     }
 
+    @Override
+    public List<String> getAllYear() {
+        return blogMapper.groupByCreateTime();
+    }
+
 
 }

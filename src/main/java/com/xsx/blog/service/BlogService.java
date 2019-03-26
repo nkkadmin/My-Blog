@@ -41,4 +41,6 @@ public interface BlogService {
      * @return
      */
     Integer batchUpdateBlog(List<BlogDTO> blogList);
+
+    List<String> getAllYear();
 }
