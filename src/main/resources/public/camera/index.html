@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.css"/>
     <link rel="stylesheet" href="../css/timelinr/course.css"/>
-    <link rel="stylesheet" href="../css/timelinr/main.css"/>
+    <!--<link rel="stylesheet" href="../css/timelinr/main.css"/>-->
 </head>
 <body>
 <div id="app">
@@ -63,7 +63,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div v-if="hasNextPage" @click="nextPage" style="margin-top: 50px;text-align: center;color: #ada4a4;cursor: pointer;" >加载更多</div>
+                        <div v-if="hasNextPage" @click="nextPage" class="more">MORE ↓</div>
                     </div>
                 </div>
             </el-main>
