@@ -32,8 +32,12 @@
 
             .blog_item{
                 border-bottom: 1px solid #f0f0f0;
-                min-height: 131px;
-                margin-bottom: 30px;
+                /*min-height: 131px;*/
+                padding-bottom: 35px;
+                margin-bottom: 35px;
+            }
+            .blog_item:last-child {
+                border-bottom: none;
             }
             .blog_item_img{
                 max-width: 100%;
@@ -45,27 +49,24 @@
                 margin: 50px 0px 50px 300px;
             }
             .blog_content_list{
-                margin-bottom: 100px;
+                margin: 60px 0;
             }
             .blog_item_title{
+                color: #6e7da2;
                 height: 30px;
                 font-size: 20px;
                 font-weight: bold;
+                margin-bottom: 10px;
+            }
+            .blog_item_date {
+                color: rgba(110, 125, 162, .4);
+                font-size: 12px;
+                margin-bottom: 10px;
             }
             .blog_item_content{
                 font-size: 13px;
                 line-height: 24px;
-                color: #999;
-            }
-            .blog_item_icon{
-                font-size: 12px;
-                color: #999;
-            }
-            .blog_item_icon img{
-                margin-left: 15px;
-                position: relative;
-                top: 4px;
-                right: 2px;
+                color: rgba(110, 125, 162, .8);
             }
         </style>
     </head>
@@ -77,8 +78,8 @@
                 <el-container>
                     <el-main>
                         <!--左侧列表-->
-                        <el-row :gutter="20" class="blog_content_list">
-                            <el-col :span="16" class="left_content">
+                        <el-row class="blog_content_list">
+                            <el-col class="left_content">
                                 <el-row  class="blog_item" :gutter="20" v-for="item in blogList" :key="item.id">
                                     <el-col :span="4">
                                         <div style="cursor: pointer;" @click="blogInfo(item.id)" class="grid-content bg-purple">
@@ -88,11 +89,15 @@
                                     <el-col :span="20">
                                         <div style="cursor: pointer;" @click="blogInfo(item.id)" class="grid-content bg-purple">
                                             <div class="blog_item_title">{{item.title}}</div>
+                                            <div class="blog_item_date">{{item.createTime}}</div>
                                             <div class="blog_item_content">{{item.content}}</div>
                                             <div class="blog_item_icon">
-                                                <img src="../img/index/look-icon-16.png"/><span>{{item.lookNum == null ? 0 : item.lookNum}}</span>
-                                                <img src="../img/index/comment-16-icon.png"/><span>{{item.commentNum == null ? 0 : item.commentNum}}</span>
-                                                <img src="../img/index/dianzan-16-icon.png"/><span>{{item.zanNum == null ? 0 : item.zanNum}}</span>
+                                                <svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16715"><path d="M512 133.338844c-215.438701 0-407.359778 148.474566-489.868957 378.661156 82.508155 230.185566 274.430256 378.661156 489.868957 378.661156s407.359778-148.47559 489.868957-378.661156C919.359778 281.812387 727.437677 133.338844 512 133.338844zM512 836.452533c-186.740078 0-359.12931-125.555577-439.446567-319.869145l-1.793856-4.583388 1.793856-4.584412c80.316234-194.312544 252.706489-319.869145 439.446567-319.869145 186.540534 0 359.130334 125.555577 439.248046 319.869145l1.992377 4.584412-1.992377 4.583388C871.130334 710.895933 698.53951 836.452533 512 836.452533zM512 343.992565c-93.070722 0-168.802544 75.732845-168.802544 169.003112 0 93.070722 75.731822 168.802544 168.802544 168.802544s168.803567-75.731822 168.803567-168.802544C680.803567 419.726433 605.070722 343.992565 512 343.992565zM512 637.953643c-68.955488 0-124.956943-56.199976-124.956943-124.956943 0-68.956511 56.002478-124.95899 124.956943-124.95899 68.756967 0 124.95899 56.001455 124.95899 124.95899C636.957966 581.753667 580.756967 637.953643 512 637.953643z" p-id="16716"></path></svg>
+                                                <span>{{item.lookNum == null ? 0 : item.lookNum}}</span>
+                                                <svg class="icon" style="width: 16px; height: 16px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="12433"><path d="M755.2 389.12c-33.28 0-61.44 28.16-61.44 61.44 0 33.28 28.16 61.44 61.44 61.44 33.28 0 61.44-28.16 61.44-61.44C816.64 417.28 788.48 389.12 755.2 389.12L755.2 389.12 755.2 389.12zM512 816.64c-35.84 0-69.12-5.12-102.4-10.24l-143.36 87.04 2.56-140.8c-110.08-66.56-181.76-174.08-181.76-299.52C87.04 250.88 276.48 87.04 512 87.04c235.52 0 424.96 163.84 424.96 363.52C936.96 652.8 747.52 816.64 512 816.64L512 816.64 512 816.64zM512 25.6C243.2 25.6 25.6 215.04 25.6 450.56c0 133.12 71.68 253.44 181.76 332.8L207.36 998.4l212.48-130.56c30.72 5.12 58.88 7.68 92.16 7.68 268.8 0 486.4-189.44 486.4-424.96C998.4 215.04 780.8 25.6 512 25.6L512 25.6 512 25.6zM268.8 389.12c-33.28 0-61.44 28.16-61.44 61.44 0 33.28 28.16 61.44 61.44 61.44 33.28 0 61.44-28.16 61.44-61.44C330.24 417.28 302.08 389.12 268.8 389.12L268.8 389.12 268.8 389.12zM512 389.12c-33.28 0-61.44 28.16-61.44 61.44 0 33.28 28.16 61.44 61.44 61.44 33.28 0 61.44-28.16 61.44-61.44C573.44 417.28 545.28 389.12 512 389.12L512 389.12 512 389.12zM512 389.12" p-id="12434"></path></svg>
+                                                <span>{{item.commentNum == null ? 0 : item.commentNum}}</span>
+                                                <svg class="icon" style="width: 16px; height: 16px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1035 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="14600"><path d="M676.928307 372.09153l235.957013 0c33.059953 0 63.695694 20.154016 84.021625 47.140647 20.595061 27.353998 27.329439 65.360614 17.998933 97.80863L897.701502 922.509515c-12.734022 46.774303-55.124482 75.846432-102.976326 75.846432L122.774231 998.355947c-58.871829 0-119.181403-37.917588-119.181403-96.788393L3.592828 520.397251c0-60.683081 62.318324-123.745349 119.181403-123.745349l107.212814 0c135.350664 0 224.883817-94.108355 224.883817-231.906767L454.870862 136.65538c0-56.643068 63.913659-115.556852 122.466216-115.556852l2.865257 0c44.839231 0 86.053911 34.343179 100.257401 76.92909l7.150864 22.093181c21.354354 64.11218 22.796192 154.603147 8.391111 203.419969M645.689838 311.601854c13.787004-55.1736 11.895935-118.29215-6.250354-172.754552l-6.757914-24.399713c-7.54279-22.602787-29.288047-43.207058-52.479235-43.207058l-2.865257 0c-30.733978 0-72.324212 36.543288-72.324212 65.414849l0 28.088732c0 166.401868-111.072725 282.048771-275.02582 282.048771L122.774231 446.792882c-29.607318 0-69.039399 40.225143-69.039399 73.603345L53.734832 901.56653c0 31.198559 37.84084 46.64639 69.039399 46.64639l671.951969 0c24.880667 0 47.89994-13.123902 54.683437-38.029128l117.30159-407.139767c5.069459-17.656125 1.469468-39.830147-9.868765-54.891168-10.775414-14.301727-26.79118-25.920346-43.957141-25.920346L605.296873 422.23251l0-40.932248M229.231845 983.237621c-13.860682 0-25.071002-11.216459-25.071002-25.077142L204.160843 456.627878c0-13.860682 11.210319-25.077142 25.071002-25.077142s25.071002 11.215436 25.071002 25.077142l0 501.533624C254.302847 972.021162 243.092527 983.237621 229.231845 983.237621z" p-id="14601"></path></svg>
+                                                <span>{{item.zanNum == null ? 0 : item.zanNum}}</span>
                                             </div>
                                         </div>
                                     </el-col>
@@ -100,7 +105,7 @@
                                 <el-button v-if="showLoadMore" @click="loadMoreFun" v-loading.fullscreen.lock="fullscreenLoading" class="load_more" type="warning" round>加载更多</el-button>
                             </el-col>
                             <!--右侧内容-->
-                            <el-col :span="8">
+                           <!-- <el-col :span="8">
                                 <el-row>
                                     <el-col :gutter="20" :span="18">
                                         <el-input v-model="searchKey" placeholder="请输入关键字"></el-input>
@@ -109,7 +114,7 @@
                                         <el-button @click="search" >搜索</el-button>
                                     </el-col>
                                 </el-row>
-                            </el-col>
+                            </el-col>-->
                         </el-row>
                     </el-main>
                 </el-container>

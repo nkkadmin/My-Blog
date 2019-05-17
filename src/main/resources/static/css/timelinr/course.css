@@ -1,3 +1,29 @@
+
+h5 {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent;
+}
+
+#main {
+  min-height: 600px;
+  margin: 20px auto 0 auto;
+}
+.left{
+  float: left;
+  border-right: 1px #eee solid;
+}
+
+.right{
+  float: right;
+}
+
+
+
 #timeline {
   width: 900px;
   /* height: 300px; */
@@ -34,16 +60,17 @@
 
 #dates a {
   line-height: 50px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 400;
+  color: #6e7da2;
 }
 
 #dates .selected {
-  font-size: 38px;
-  line-height: 30px;
-  color: #4f96f5;
-  display: block;
-  margin-bottom: 20px;
+  /*font-size: 38px;*/
+  /*line-height: 30px;*/
+  color: #db996c;
+  /*display: block;*/
+  /*margin-bottom: 20px;*/
 }
 
 #issues {
@@ -74,6 +101,7 @@
   z-index: 9999;
   border-radius: 59px;
   width: 75px;
+  background: transparent;
 }
 
 .timeline > button > i{
@@ -113,26 +141,40 @@
   position: relative;
 }
 
-.issues > li .right > h5{
-  background: url(../../img/timelinr/icon_current_year_point.png) no-repeat;
-  background-size: contain;
-  text-align: left;
-  padding-left: 60px;
-  font-size: 14px;
+.issues > li .left > h5,
+.issues > li .right > h5 {
+  color: rgba(110, 125, 162, .8);
+}
+.issues > li .left > h5:after,
+.issues > li .right > h5:before {
+  content: '';
   position: absolute;
-  left: -7px;
-  z-index: 9;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 3px solid #aedadd;
+}
+.issues > li .left > h5:after {
+  right: 35px;
+}
+.issues > li .right > h5:before {
+  left: 35px;
+  border-color: rgba(219, 153, 108, .6);
 }
 
-.issues > li .left > h5{
-  background: url(../../img/timelinr/icon_current_year_point.png) 89.5px 0 no-repeat;
-  background-size: contain;
-  text-align: left;
-  padding-right: 60px;
+.issues > li .left > h5,
+.issues > li .right > h5{
   font-size: 14px;
   position: absolute;
-  right: -7px;
   z-index: 9;
+}
+.issues > li .right > h5 {
+  padding-left: 60px;
+  left: -7px;
+}
+.issues > li .left > h5{
+  padding-right: 60px;
+  right: -7px;
 }
 
 .issues > li .right .textArea{
@@ -151,6 +193,7 @@
 .item_content_img{
   width: 300px;
   max-height: 190px;
+  border-radius: 5px;
 }
 
 .issues > li .left .textArea{
@@ -181,4 +224,18 @@
   top: 0;
   left: 0;
   margin:8px 0;
+}
+
+
+.more {
+  margin-top: 50px;
+  text-align: center;
+  color: rgba(219, 153, 108, .8);
+  cursor: pointer;
+  line-height: 30px;
+  font-size: 18px;
+}
+.more:hover,
+.more:active {
+  color: #aedadd;
 }

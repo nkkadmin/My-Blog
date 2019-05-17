@@ -7,8 +7,10 @@
     <link rel="stylesheet" href="../css/base.css">
     <style>
         .content{
-            text-align: center;
+            display: flex;
             margin: 150px;
+            color: rgba(110, 125, 162, 1);
+            font-size: 14px;
         }
         .left{
             float: left;
@@ -19,16 +21,31 @@
             height: auto;
             margin: 0px 20px 0px 0px;
         }
-        .introduction{
-            text-indent: 2em;
-            text-align: left;
+        .subtitle {
+            position: relative;
             font-size: 18px;
-            margin-top: 20px;
+            font-weight: 800;
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+        .subtitle:before {
+            content: '#';
+            position: absolute;
+            left: 0;
+            color: #db996c;
+
+        }
+        .introduction,
+        .contact{
+            margin-left: 20px;
+            margin-bottom: 30px;
+        }
+        .introduction{
+            text-align: left;
+            margin-bottom: 30px;
         }
         .contact{
             text-align: left;
-            font-size: 18px;
-            color: #696868;
         }
     </style>
 </head>
@@ -37,15 +54,20 @@
     <template>
         <header-content></header-content>
         <div class="content">
-            <div class="left">
+            <div>
                 <img class="portail" src="../img/me-portail.jpeg"/>
             </div>
-            <div class="introduction">
-                <p>90后程序员一枚，现任某互联网公司开发职位。</p>
+            <div>
+                <div class="introduction">
+                    <p class="subtitle">我</p>
+                    <p>90后程序员一枚，现任某互联网公司开发职位。</p>
+                </div>
+                <div class="contact">
+                    <p class="subtitle">联系我</p>
+                    <p>邮箱：15821292493@163.com</p>
+                </div>
             </div>
-            <div class="contact">
-                个人邮箱：15821292493@163.com
-            </div>
+
         </div>
         <footer-content></footer-content>
     </template>
