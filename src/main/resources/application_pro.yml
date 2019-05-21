@@ -5,9 +5,9 @@ spring:
   datasource:
     name: blog
     # type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://39.96.176.80:3306/blog_dev
-    username: dev
-    password: Dev@1234
+    url: jdbc:mysql://39.96.176.80:3306/blog
+    username: blog
+    password: Blog@1234
     driver-class-name: com.mysql.jdbc.Driver
     #   filters: stat
     #   maxActive: 20
