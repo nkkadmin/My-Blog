@@ -2,6 +2,7 @@ package com.xsx.blog.util;
 
 
 import com.xsx.blog.dto.FastDFSFile;
+import org.csource.common.MyException;
 import org.csource.common.NameValuePair;
 import org.csource.fastdfs.*;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetSocketAddress;
 import java.util.UUID;
 
 
@@ -30,8 +32,27 @@ public class FastDFSClient {
 
     static {
         try {
-            String filePath = new ClassPathResource("fdfs_client.conf").getFile().getAbsolutePath();;
-            ClientGlobal.init(filePath);
+//            String filePath = new ClassPathResource("fdfs_client.conf").getFile().getAbsolutePath();;
+//            ClientGlobal.init(filePath);
+            //由于SpringBoot jar部署后无法读取fdfs_client.conf 文件，所以改成一下设置参数方法
+            ClientGlobal.setG_connect_timeout(600);
+            ClientGlobal.setG_network_timeout(600);
+            ClientGlobal.setG_charset("UTF-8");
+            ClientGlobal.setG_tracker_http_port(82);
+            ClientGlobal.setG_anti_steal_token(false);
+            ClientGlobal.setG_secret_key("123456");
+            String[] szTrackerServers = {"39.96.176.80:22122"};
+            InetSocketAddress[] tracker_servers = new InetSocketAddress[szTrackerServers.length];
+            for(int i = 0; i < szTrackerServers.length; ++i) {
+                String[] parts = szTrackerServers[i].split("\\:", 2);
+                if (parts.length != 2) {
+                    throw new MyException("the value of item \"tracker_server\" is invalid, the correct format is host:port");
+                }
+                tracker_servers[i] = new InetSocketAddress(parts[0].trim(), Integer.parseInt(parts[1].trim()));
+            }
+            TrackerGroup trackerGroup = new TrackerGroup(tracker_servers);
+            ClientGlobal.setG_tracker_group(trackerGroup);
+
             storageClient = getTrackerClient();
             trackerServer = getTrackerServer();
         } catch (Exception e) {
