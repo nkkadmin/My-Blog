@@ -17,13 +17,24 @@ public class RedisTest extends BlogApplicationTests {
     private RedisUtils redisUtils;
 
     @Test
-    public void set(){
+    public void setTest(){
+        redisUtils.set("testPro","1234",1*60l);
+        System.out.println(redisUtils.get("testPro"));
+       /* System.out.println(redisUtils.hmget(Constants.REDIS_DIANZAN_MAP_FLAG));
+        redisUtils.del(Constants.REDIS_DIANZAN_MAP_FLAG);
+        System.out.println(redisUtils.hmget(Constants.REDIS_DIANZAN_MAP_FLAG));*/
+    }
+
+    @Test
+    public void setCode(){
         redisUtils.set(Constants.SNED_CODE_REDIS_FLAG,"1234",1*60l);
         System.out.println(redisUtils.get(Constants.SNED_CODE_REDIS_FLAG));
         System.out.println(redisUtils.hmget(Constants.REDIS_DIANZAN_MAP_FLAG));
         redisUtils.del(Constants.REDIS_DIANZAN_MAP_FLAG);
         System.out.println(redisUtils.hmget(Constants.REDIS_DIANZAN_MAP_FLAG));
     }
+
+
 
 }
 

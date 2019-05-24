@@ -29,7 +29,7 @@ spring:
   redis:
     database: 0  # Redis数据库索引（默认为0）
     host: 39.96.176.80
-    port: 6379
+    port: 6399
     password: redis@1234
     jedis:
       pool:
