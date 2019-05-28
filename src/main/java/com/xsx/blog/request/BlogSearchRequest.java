@@ -15,6 +15,13 @@ public class BlogSearchRequest extends PageRequest {
     private Integer statu;
     private String year;
 
+    public BlogSearchRequest() {
+    }
+
+    public BlogSearchRequest(Integer pageNo, Integer pageSize) {
+        super(pageNo, pageSize);
+    }
+
     public String getYear() {
         return year;
     }

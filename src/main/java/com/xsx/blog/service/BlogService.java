@@ -26,7 +26,17 @@ public interface BlogService {
 
     public Boolean deleteOne(Integer id);
 
+    /**
+     * 获取全部博客总数
+     * @return
+     */
     Integer count();
+
+    /**
+     * 获取有效的博客总数
+     * @return
+     */
+    Integer validCount();
 
     /**
      * 点赞，成功返回当前的点赞量，失败返回-1

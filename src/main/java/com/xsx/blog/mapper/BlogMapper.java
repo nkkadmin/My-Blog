@@ -27,4 +27,6 @@ public interface BlogMapper {
      * @return
      */
     List<String> groupByCreateTime();
+
+    Integer validCount();
 }

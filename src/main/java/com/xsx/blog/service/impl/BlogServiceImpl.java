@@ -12,7 +12,10 @@ import com.xsx.blog.request.BlogSearchRequest;
 import com.xsx.blog.service.BlogService;
 import com.xsx.blog.service.CommentService;
 import com.xsx.blog.service.LoggerService;
+import com.xsx.blog.service.RedisService;
 import com.xsx.blog.vo.BlogVo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +34,8 @@ import java.util.List;
 @Service
 public class BlogServiceImpl extends LoggerService implements BlogService  {
 
+    private static final Logger logger = LoggerFactory.getLogger(BlogServiceImpl.class);
+
     @Autowired
     private BlogMapper blogMapper;
     @Autowired
@@ -39,10 +44,20 @@ public class BlogServiceImpl extends LoggerService implements BlogService  {
     private TagsMapper tagsMapper;
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private RedisService redisService;
 
     @Override
     public Blog findOne(Integer id) {
-        return blogMapper.findById(id);
+        //从缓存获取
+        Blog blog = redisService.getBlog(id);
+        if(blog == null){
+            logger.info("缓存里没有{}",id);
+            blog = blogMapper.findById(id);
+            //放入缓存
+            redisService.addBlog(blog);
+        }
+        return blog;
     }
 
     @Override
@@ -57,12 +72,22 @@ public class BlogServiceImpl extends LoggerService implements BlogService  {
             oldBlog.setTagId(blog.getTagId());
             oldBlog.setCoverPic(blog.getCoverPic());
             oldBlog.setUpdateTime(new Date());
-            return blogMapper.update(oldBlog) > 0;
+            Integer updateResult = blogMapper.update(oldBlog);
+            if(updateResult > 0){
+                //删除缓存
+                redisService.delBlogById(oldBlog.getId());
+            }
+            return updateResult > 0;
         }else{
             oldBlog = blog;
             oldBlog.setCreateTime(new Date());
             oldBlog.setUpdateTime(new Date());
-            return blogMapper.insert(oldBlog) > 0;
+            Integer saveResult = blogMapper.insert(oldBlog);
+            if(saveResult > 0){
+                //写入缓存
+                redisService.addBlog(blog);
+            }
+            return saveResult > 0;
         }
     }
 
@@ -116,6 +141,11 @@ public class BlogServiceImpl extends LoggerService implements BlogService  {
     @Override
     public Integer count() {
         return blogMapper.count();
+    }
+
+    @Override
+    public Integer validCount() {
+        return blogMapper.validCount();
     }
 
     @Override

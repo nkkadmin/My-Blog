@@ -1,16 +1,18 @@
 package com.xsx.blog.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.RedisZSetCommands;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @Description:
+ * @Description:redis操作工具类
  * @Date: 2019-02-26 21:51
  * @Auther: xieshengxiang
  */
@@ -20,8 +22,6 @@ public class RedisUtils {
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
-
-
 
     // =============================common============================
 
@@ -150,7 +150,7 @@ public class RedisUtils {
         return redisTemplate.opsForValue().increment(key, -delta);
     }
 
-    // ================================Map=================================
+    // ================================Map=================================0
 
     /**
      * HashGet
@@ -162,6 +162,17 @@ public class RedisUtils {
         return redisTemplate.opsForHash().get(key,item);
     }
 
+
+    public Boolean hset(String key,String item,String value){
+        try {
+            redisTemplate.opsForHash().put(key,item,value);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     /**
      * 获取hashKey对应的所有键值
      * @param key
@@ -169,6 +180,10 @@ public class RedisUtils {
      */
     public Map<Object,Object> hmget(String key){
         return redisTemplate.opsForHash().entries(key);
+    }
+
+    public Object hmget(String key,Object obj){
+        return redisTemplate.opsForHash().get(key,obj);
     }
 
     /**
@@ -180,6 +195,16 @@ public class RedisUtils {
     public boolean hmset(String key, Map<Object, Object> map) {
         try {
             redisTemplate.opsForHash().putAll(key, map);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean hmset(String key, Object item,Object value) {
+        try {
+            redisTemplate.opsForHash().put(key,item,value);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -240,6 +265,42 @@ public class RedisUtils {
          */
     public boolean hHasKey(String key, String item) {
         return redisTemplate.opsForHash().hasKey(key, item);
+    }
+
+    /**
+     * 获取set  size
+     * @param key
+     * @return
+     */
+    public Long sortSetSize(String key){
+        return redisTemplate.opsForZSet().size(key);
+    }
+
+    public Boolean zadd(String key,Object value,Double score){
+        try {
+            return redisTemplate.opsForZSet().add(key,value,score);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public Boolean zdel(String key,Object... item){
+        try {
+            Long remover = redisTemplate.opsForZSet().remove(key,item);
+            return remover > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public Set gzet(String key,int start,int end){
+        return redisTemplate.opsForZSet().rangeByScoreWithScores(key,start,end);
+    }
+
+    public Set range(String key,int start,int end){
+        return redisTemplate.opsForZSet().range(key,start,end);
     }
 
 }

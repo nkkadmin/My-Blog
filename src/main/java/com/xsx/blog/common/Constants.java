@@ -39,6 +39,15 @@ public class Constants {
     public static final String SNED_CODE_REDIS_FLAG = "login:code";
 
     /**
+     * 博客redis key
+     */
+    public static final String REDIS_BLOG_LIST = "blogList";
+    /**
+     * 博客对象 redis key
+     */
+    public static final String REDIS_BLOG_INFO = "blogInfo";
+
+    /**
      * 系统设置:登录设置
      */
     public static enum SyetemSetting_Login{
