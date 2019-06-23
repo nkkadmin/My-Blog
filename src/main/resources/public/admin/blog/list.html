@@ -202,8 +202,7 @@
                 },
                 deleteById:function(id){
                     var self = this;
-                    axios.get("/tags/deleteById",{params:{"id":id}}).then(function(response){
-                        console.log(response);
+                    axios.get("/adminBlog/deleteById",{params:{"id":id}}).then(function(response){
                         if(response.data){
                            self.$message({
                               showClose: true,
