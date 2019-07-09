@@ -37,7 +37,7 @@
     insert into users (id, user_name, password, 
       create_time, statu)
     values (#{id,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{statu,jdbcType=INTEGER})
+      now(), #{statu,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.xsx.blog.model.Users" >
     insert into users
@@ -51,9 +51,7 @@
       <if test="password != null" >
         password,
       </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
+      create_time,
       <if test="statu != null" >
         statu,
       </if>
@@ -68,9 +66,7 @@
       <if test="password != null" >
         #{password,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
+      now(),
       <if test="statu != null" >
         #{statu,jdbcType=INTEGER},
       </if>
@@ -85,9 +81,6 @@
       <if test="password != null" >
         password = #{password,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="statu != null" >
         statu = #{statu,jdbcType=INTEGER},
       </if>
@@ -98,7 +91,6 @@
     update users
     set user_name = #{userName,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
       statu = #{statu,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>

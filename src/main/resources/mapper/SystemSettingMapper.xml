@@ -31,7 +31,7 @@
     insert into system_setting (id, type, value, 
       create_time, update_time)
     values (#{id,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, #{value,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR})
+      now(), #{updateTime,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.xsx.blog.model.SystemSetting" >
     insert into system_setting
@@ -91,8 +91,7 @@
     update system_setting
     set type = #{type,jdbcType=VARCHAR},
       value = #{value,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=VARCHAR}
+      update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

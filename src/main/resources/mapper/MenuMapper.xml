@@ -19,10 +19,10 @@
     select * from menu where statu = #{statu,jdbcType=INTEGER} order by sort_index asc
   </select>
   <select id="findAll" resultMap="BaseResultMap">
-    select * from menu
+    select * from menu ORDER BY statu DESC,create_time DESC
   </select>
   <update id="update" parameterType="com.xsx.blog.model.Menu">
-    update menu set create_time = #{createTime,jdbcType=TIMESTAMP},
+    update menu set
     name = #{name,jdbcType=VARCHAR},sort_index=#{sortIndex,jdbcType=INTEGER},statu=#{statu,jdbcType=INTEGER},
     url=#{url,jdbcType=VARCHAR} where id=#{id,jdbcType=INTEGER}
   </update>
@@ -60,9 +60,7 @@
       <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
+      now(),
       <if test="name != null" >
         #{name,jdbcType=VARCHAR},
       </if>
