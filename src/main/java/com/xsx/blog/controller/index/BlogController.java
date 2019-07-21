@@ -56,8 +56,9 @@ public class BlogController {
     @RequestMapping(value = "/getBlog",method = RequestMethod.POST)
     public PageInfo<BlogVo> getBlog(@RequestBody BlogSearchRequest blogSearchRequest){
         blogSearchRequest.setStatu(StatuEnum.OK.getStatu());
-        if(blogSearchRequest == null || blogSearchRequest.getMenuId() == null)
+        if(blogSearchRequest == null || blogSearchRequest.getMenuId() == null){
             return null;
+        }
         PageInfo<BlogVo> page = blogService.findPage(blogSearchRequest);
         return page;
     }

@@ -123,14 +123,14 @@
             methods: {
                 search:function(){
                     this.blogTitle = this.searchKey;
-                    this.getBlogByMenuId(this.currentMenuId);
+                    this.getBlogByMenuId();
                 },
-                getBlogByMenuId:function(menuId){
+                getBlogByMenuId:function(){
                     var self = this;
                     if (!self.isAppend){
                         self.blogList.splice(0,self.blogList.length);
                     }
-                    axios.post("/index/blog/getBlog",{"pageNo":self.page.pageNo,"pageSize":self.page.pageSize,"menuId":menuId,"blogTitle":self.blogTitle}).then(function(response){
+                    axios.post("/index/blog/getBlog",{"pageNo":self.page.pageNo,"pageSize":self.page.pageSize,"menuId":self.currentMenuId,"blogTitle":self.blogTitle}).then(function(response){
                         if(response.data != null && response.data.list != null){
                             for ( var i = 0; i <response.data.list.length; i++){
                                 self.blogList.push(response.data.list[i]);
@@ -153,7 +153,7 @@
                         this.isAppend = true;
                         this.page.pageNo += 1;
                         //获取当前选中的菜单
-                        this.getBlogByMenuId(this.currentMenuId);
+                        this.getBlogByMenuId();
                     }else{
                         $(".load_more").text("没有多余的数据");
                     }
@@ -165,7 +165,7 @@
             data() {
                 return {
                     searchKey:"",
-                    currentMenuId:'',
+                    currentMenuId:1,
                     defaultIndex:'0',
                     blogTitle:"",
                     currentDate: new Date(),
@@ -184,7 +184,7 @@
                 }
             },
             mounted:function(){
-                this.getBlogByMenuId(1);
+                this.getBlogByMenuId();
             }
         }
         var Ctor = Vue.extend(Main)

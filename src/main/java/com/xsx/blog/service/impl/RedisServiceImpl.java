@@ -143,8 +143,9 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public void synDianzanRedisToDB() {
         Map<Object,Object> redisMap = getDianzanRedisMap();
-        if(redisMap == null)
+        if(redisMap == null){
             return;
+        }
         List<BlogDTO> blogList = new ArrayList<BlogDTO>();
         buildBlogZanList(redisMap,blogList);
         //批量同步到数据库
