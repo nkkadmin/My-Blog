@@ -70,8 +70,9 @@ public class BlogController {
      */
     @RequestMapping(value = "/dianZan/{id}")
     public Integer dianZan(@PathVariable Integer id){
-        if(id == null)
+        if(id == null){
             return null;
+        }
         redisService.addDianzan(id);
         return 1;
     }
@@ -83,8 +84,9 @@ public class BlogController {
      */
     @RequestMapping(value = "/look/{id}")
     public Integer look(@PathVariable Integer id){
-        if(id == null)
+        if(id == null){
             return null;
+        }
         redisService.addLook(id);
         return 1;
     }

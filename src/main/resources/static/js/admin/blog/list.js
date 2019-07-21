@@ -95,11 +95,10 @@ var Main = {
         },
         loadParam:function(){
             var self = this;
-            toPost("/adminBlog/initData",self,function (response) {
-                if(value.data.content != null){
-                    self.menus = value.data.content.menus;
-                    self.tags = value.data.content.tags;
-
+            toPost("/adminBlog/initData",null,self,function (response) {
+                if(response.data.content != null){
+                    self.menus = response.data.content.menus;
+                    self.tags = response.data.content.tags;
                 }
             })
         },
