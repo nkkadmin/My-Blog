@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <title>标签列表</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../../element-ui/css/index.css">
 </head>
 <body>
     <div id="app">
         <template>
-            <el-button type="text" @click="add">新建</el-button>
-            <el-table :data="tableData" border style="width: 100%">
+            <el-button type="primary" plain @click="add" style="margin-bottom: 10px;width: 100px;">新建</el-button>
+            <el-table :data="tableData" border style="width: 100%" :header-cell-style="{background:'#eef1f6',color:'#606266'}">
                 <el-table-column fixed prop="id" label="ID">
                 </el-table-column>
                 <el-table-column prop="name" label="名称">
@@ -51,144 +51,9 @@
         </el-dialog>
     </div>
 </body>
-    <script type="text/javascript" src="../../js/vue.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-    <script>
-        var Main = {
-            methods: {
-                save(formName) {
-                    var self = this;
-                    self.$refs[formName].validate((valid) => {
-                        if (valid) {
-                            axios.post("/admin/tags/edit", this.editForm).then(function (response) {
-                                self.$message({
-                                    showClose: response.data,
-                                    message: response.data ? '编辑成功' : '编辑失败',
-                                    type: 'success'
-                                });
-                                if (response.data) {
-                                    self.dialogVisible = false;
-                                    self.loadData();
-                                }
-                            });
-                        } else {
-                            console.log('error submit!!');
-                            return false;
-                        }
-                    });
-                },
-                handleClose:function(){
-                    this.dialogVisible = false;
-                },
-                clear:function(){
-                    this.editForm.name = null;
-                    this.editForm.id = null;
-                },
-                add:function(){
-                   this.clear();
-                    this.dialogVisible = true;
-                },
-                edit(id){
-                    this.clear();
-                    this.findOne(id);
-                    this.dialogVisible = true;
-                },
-                findOne(id){
-                    var self = this;
-                    axios.get("/admin/tags/selectById",{params:{"id":id}}).then(function(response){
-                        if(response != null && response.data != null){
-                            var info = response.data;
-                            self.editForm.name = info.name;
-                            self.editForm.id = info.id;
-                        }
-                    });
-                },
-                loadData(){
-                    var self = this;
-                    self.tableData = [];
-
-                    axios.post("/admin/tags/findAll",{"pageNo":this.pageNo,"pageSize":this.pageSize}).then(function(response){
-                        console.log(response);
-                        if(response != null && response.data != null){
-                            var list = response.data.list;
-                            for(var i = 0;i<list.length;i++){
-                                var info = new Object();
-                                info.id = list[i].id;
-                                info.name = list[i].name;
-                                info.createTime = list[i].createTime;
-                                info.statu = list[i].statu === 1 ? "有效" : "删除";
-                                self.tableData.push(info);
-                            }
-                            self.totals = response.data.total;
-                            self.pageSize = response.data.pageSize;
-                            self.pageNo = response.data.pageNum;
-
-                        }
-                    });
-                },
-                deleteById(id){
-                    var self = this;
-                    axios.get("/admin/tags/deleteById",{params:{"id":id}}).then(function(response){
-                        console.log(response);
-                        if(response.data){
-                           self.$message({
-                              showClose: true,
-                              message: '删除成功',
-                              type: 'success'
-                            });
-                            self.loadData();
-                        }
-                    });
-                },
-                recoverById(id){
-                    var self = this;
-                    axios.get("/admin/tags/recoverById",{params:{"id":id}}).then(function(response){
-                        console.log(response);
-                        if(response.data){
-                           self.$message({
-                              showClose: true,
-                              message: '操作成功',
-                              type: 'success'
-                            });
-                            self.loadData();
-                        }
-                    });
-                },
-                handleSizeChange(val) {
-                    console.log(`每页 ${val} 条`);
-                    this.pageSize = val;
-                    this.loadData();
-                },
-                handleCurrentChange(val) {
-                    console.log(`当前页: ${val}`);
-                    this.pageNo = val;
-                    this.loadData();
-                }
-            },
-            data() {
-                return {
-                    tableData: [],
-                    totals:0,
-                    pageSize:10,
-                    pageNo:1,
-                    dialogVisible:false,
-                    editForm:{
-                        name:null,
-                        id:null
-                    },
-                    rules:{
-                        name:[
-                            { required: true, message: '请输入标签名称', trigger: 'blur,change' },
-                        ]
-                    }
-                }
-            },
-            mounted:function(){
-                this.loadData();
-            }
-        }
-        var Ctor = Vue.extend(Main)
-        new Ctor().$mount('#app')
-    </script>
+<script type="text/javascript" src="../../js/vue.js"></script>
+<script type="text/javascript" src="../../js/axios.min.js"></script>
+<script src="../../element-ui/js/index.js"></script>
+<script type="text/javascript" src="../../js/url.js"></script>
+<script src="../../js/admin/tag/list.js"></script>
 </html>

@@ -9,10 +9,12 @@ import com.xsx.blog.mapper.TagsMapper;
 import com.xsx.blog.model.Blog;
 import com.xsx.blog.request.BlogEditRequest;
 import com.xsx.blog.request.BlogSearchRequest;
+import com.xsx.blog.result.Result;
 import com.xsx.blog.service.BlogService;
 import com.xsx.blog.service.CommentService;
 import com.xsx.blog.service.LoggerService;
 import com.xsx.blog.service.RedisService;
+import com.xsx.blog.util.DateUtils;
 import com.xsx.blog.vo.BlogVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,34 +63,87 @@ public class BlogServiceImpl extends LoggerService implements BlogService  {
     }
 
     @Override
-    public Boolean save(BlogEditRequest blogEditRequest) {
-        Blog oldBlog = null;
+    public Result saveOrUpdate(BlogEditRequest blogEditRequest) {
+        Result result = check(blogEditRequest);
+        if(!result.isSuccess()){
+            return result;
+        }
         Blog blog = coverBlog(blogEditRequest);
         if(blog != null && blog.getId() != null){
-            oldBlog = findOne(blog.getId());
-            oldBlog.setTitle(blog.getTitle());
-            oldBlog.setContent(blog.getContent());
-            oldBlog.setMenuId(blog.getMenuId());
-            oldBlog.setTagId(blog.getTagId());
-            oldBlog.setCoverPic(blog.getCoverPic());
-            oldBlog.setUpdateTime(new Date());
-            Integer updateResult = blogMapper.update(oldBlog);
-            if(updateResult > 0){
-                //删除缓存
-                redisService.delBlogById(oldBlog.getId());
-            }
-            return updateResult > 0;
+            update(result,blog);
         }else{
-            oldBlog = blog;
-            oldBlog.setCreateTime(new Date());
-            oldBlog.setUpdateTime(new Date());
-            Integer saveResult = blogMapper.insert(oldBlog);
-            if(saveResult > 0){
-                //写入缓存
-                redisService.addBlog(blog);
-            }
-            return saveResult > 0;
+            save(result,blog);
         }
+        return result;
+    }
+
+    /**
+     * 新增
+     * @param result
+     * @param blog
+     */
+    private void save(Result result, Blog blog) {
+        blog.setCreateTime(new Date());
+        Integer saveResult = blogMapper.insert(blog);
+        if(saveResult > 0){
+            //写入缓存
+            redisService.addBlog(blog);
+        }
+        result.setSuccess(saveResult > 0);
+        result.setMsg("保存成功");
+    }
+
+    /**
+     * 更新
+     * @param result
+     * @param blog
+     */
+    private void update(Result result, Blog blog) {
+        Blog oldBlog = findOne(blog.getId());
+        oldBlog.setTitle(blog.getTitle());
+        oldBlog.setContent(blog.getContent());
+        oldBlog.setMenuId(blog.getMenuId());
+        oldBlog.setTagId(blog.getTagId());
+        oldBlog.setCoverPic(blog.getCoverPic());
+        oldBlog.setUpdateTime(new Date());
+        Integer updateResult = blogMapper.update(oldBlog);
+        if(updateResult > 0){
+            //删除缓存
+            redisService.delBlogById(oldBlog.getId());
+        }
+        result.setSuccess(updateResult > 0);
+        result.setMsg("修改成功");
+    }
+
+
+    /**
+     * 校验参数
+     * @param request
+     */
+    private Result check(BlogEditRequest request) {
+        Result result = new Result(false);
+        if(StringUtils.isEmpty(request.getTitle())){
+            result.setMsg("请输入标题");
+            return result;
+        }
+        if(StringUtils.isEmpty(request.getMenuId())){
+            result.setMsg("请选择所属菜单");
+            return result;
+        }
+        if(StringUtils.isEmpty(request.getTagId())){
+            result.setMsg("请选择标签");
+            return result;
+        }
+        if(StringUtils.isEmpty(request.getContent())){
+            result.setMsg("请填写博客内容");
+            return result;
+        }
+        if(StringUtils.isEmpty(request.getCreateUserId())){
+            result.setMsg("登录失效，请重新登录");
+            return result;
+        }
+        result.setSuccess(true);
+        return result;
     }
 
     private Blog coverBlog(BlogEditRequest blogEditRequest) {
@@ -113,8 +168,9 @@ public class BlogServiceImpl extends LoggerService implements BlogService  {
             String content = com.xsx.blog.util.StringUtils.delHTMLTag(blog.getContent());
             if(org.springframework.util.StringUtils.isEmpty(blog.getCoverPic())){
                 String[] img = com.xsx.blog.util.StringUtils.getImgs(blog.getContent());
-                if(img != null && img.length > 0)
+                if(img != null && img.length > 0){
                     blog.setCoverPic(img[0]);
+                }
             }
             blog.setContent(content.length() >= 250 ? content.substring(0,250)+"..." : content);
             BeanUtils.copyProperties(blog,blogVo);

@@ -37,7 +37,7 @@ public class BlogServiceTest extends BlogApplicationTests {
         blogEditRequest.setStatu(1);
         blogEditRequest.setTagId(1);
         blogEditRequest.setTitle("测试标题");
-        blogService.save(blogEditRequest);
+        blogService.saveOrUpdate(blogEditRequest);
 
 
     }

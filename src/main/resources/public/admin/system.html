@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>首页</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../element-ui/css/index.css">
     <style>
         .transition-box {
             margin-bottom: 10px;
@@ -45,8 +45,9 @@
     </div>
 </body>
     <script type="text/javascript" src="../../js/vue.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script type="text/javascript" src="../../js/axios.min.js"></script>
+<script src="../element-ui/js/index.js"></script>
+<script type="text/javascript" src="../../js/url.js"></script>
     <script>
         var Main = {
             data() {
@@ -57,11 +58,11 @@
             methods: {
                 loadData:function(){
                     var self = this;
-                    axios.get("/admin/systemSetting/getByType/loginType",null).then(function (response) {
+                    toGet("/admin/systemSetting/getByType/loginType",null,self,function (response) {
                         if(response.data.success){
                             self.loginValue=response.data.object.value;
                         }
-                    })
+                    });
                 },
                 edit:function(){
                     var self = this;
@@ -69,7 +70,7 @@
                         type:"loginType",
                         value:self.loginValue
                     }
-                    axios.post("/admin/systemSetting/edit",param).then(function (response) {
+                    toPost("/admin/systemSetting/edit",param,self,function (response) {
                         if(response.data.success){
                             self.$message({
                                 showClose: true,
@@ -77,11 +78,8 @@
                                 type: 'success'
                             });
                         }
-                    })
+                    });
                 }
-            },
-            watch:{
-
             },
             mounted:function(){
                 this.loadData();

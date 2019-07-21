@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>菜单管理</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../../element-ui/css/index.css">
 </head>
 <body>
     <div id="app">
         <template>
-            <el-button type="text" @click="add">新建</el-button>
-            <el-table :data="tableData" border style="width: 100%">
+            <el-button type="primary" plain @click="add" style="margin-bottom: 10px;width: 100px;">新建</el-button>
+            <el-table :data="tableData" border style="width: 100%" :header-cell-style="{background:'#eef1f6',color:'#606266'}">
                 <el-table-column fixed prop="id" label="ID">
                 </el-table-column>
                 <el-table-column prop="name" label="名称">
@@ -55,166 +55,18 @@
                     <el-form-item label="url" required prop="url">
                         <el-input v-model="editForm.url" style="width: 200px;"></el-input>
                     </el-form-item>
-                    <el-button type="primary" @click="save('editForm')">保存</el-button>
+                    <el-form-item>
+                        <el-button type="primary" @click="save('editForm')">保存</el-button>
+                    </el-form-item>
                 </el-form>
             </template>
         </el-dialog>
     </div>
 </body>
     <script type="text/javascript" src="../../js/vue.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-    <script>
-        var Main = {
-            methods: {
-                handleClose:function(){
-                    this.dialogVisible = false;
-                },
-                save(formName) {
-                    var self = this;
-                    self.$refs[formName].validate((valid) => {
-                        if (valid) {
-                            axios.post("/admin/menus/edit",self.editForm).then(function(response){
-                                self.$message({
-                                    showClose: response.data,
-                                    message: response.data ? '编辑成功' : "编辑失败",
-                                    type: 'success'
-                                });
-                                if(response.data){
-                                    self.dialogVisible = false;
-                                    self.loadData();
-                                }
-                            });
-                        }else{
-                            console.log('error submit!!');
-                            return false;
-                        }
-                    })
-                },
-                findOne(id){
-                    var self = this;
-                    axios.get("/admin/menus/selectById",{params:{"id":id}}).then(function(response){
-                        if(response != null && response.data != null){
-                            var info = response.data;
-                            self.editForm.name = info.name;
-                            self.editForm.url = info.url;
-                            self.editForm.sortIndex = info.sortIndex;
-                            self.editForm.id = info.id;
-                        }
-                    });
-                },
-                clear:function(){
-                   this.editForm.name = null;
-                   this.editForm.sortIndex = null;
-                   this.editForm.url = null;
-                   this.editForm.id = null;
-                },
-                add(){
-                    this.dialogVisible = true;
-                    this.clear();
-                },
-                edit(id){
-                    this.dialogVisible = true;
-                    this.clear();
-                    this.findOne(id);
-                },
-                loadData(){
-                    var self = this;
-                    self.tableData = [];
+    <script type="text/javascript" src="../../js/axios.min.js"></script>
+    <script src="../../element-ui/js/index.js"></script>
+    <script type="text/javascript" src="../../js/url.js"></script>
+    <script src="../../js/admin/menu/list.js"></script>
 
-                    axios.post("/admin/menus/findAll",{"pageNo":this.pageNo,"pageSize":this.pageSize}).then(function(response){
-                        console.log(response);
-                        if(response != null && response.data != null){
-                            var list = response.data.list;
-                            for(var i = 0;i<list.length;i++){
-                                var info = new Object();
-                                info.id = list[i].id;
-                                info.name = list[i].name;
-                                info.sortIndex = list[i].sortIndex;
-                                info.url = list[i].url;
-                                info.createTime = list[i].createTime;
-                                info.statu = list[i].statu === 1 ? "有效" : "删除";
-                                self.tableData.push(info);
-                            }
-                            self.totals = response.data.total;
-                            self.pageSize = response.data.pageSize;
-                            self.pageNo = response.data.pageNum;
-
-                        }
-                    });
-                },
-                deleteById(id){
-                    var self = this;
-                    axios.get("/admin/menus/deleteById",{params:{"id":id}}).then(function(response){
-                        console.log(response);
-                        if(response.data){
-                           self.$message({
-                              showClose: true,
-                              message: '删除成功',
-                              type: 'success'
-                            });
-                            self.loadData();
-                        }
-                    });
-                },
-                recoverById(id){
-                    var self = this;
-                    axios.get("/admin/menus/recoverById",{params:{"id":id}}).then(function(response){
-                        console.log(response);
-                        if(response.data){
-                           self.$message({
-                              showClose: true,
-                              message: '操作成功',
-                              type: 'success'
-                            });
-                            self.loadData();
-                        }
-                    });
-                },
-                handleSizeChange(val) {
-                    console.log(`每页 ${val} 条`);
-                    this.pageSize = val;
-                    this.loadData();
-                },
-                handleCurrentChange(val) {
-                    console.log(`当前页: ${val}`);
-                    this.pageNo = val;
-                    this.loadData();
-                }
-            },
-            data() {
-                return {
-                    tableData: [],
-                    totals:0,
-                    pageSize:10,
-                    pageNo:1,
-                    dialogVisible:false,
-                    editForm:{
-                      name:null,
-                      url:null,
-                      sortIndex:null,
-                      id:null
-                    },
-                    rules:{
-                        name:[
-                            { required: true, message: '请输入菜单名称', trigger: 'blur,change' },
-                            { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur,change' }
-                        ],
-                        sortIndex:[
-                            { required: true, message: '请输入排序值', trigger: 'blur,change' }/*,
-                            {type:'number',message:'必须输入数值'}*/
-                        ],
-                        url:[
-                            { required: true, message: '请输入链接地址', trigger: 'blur,change' }
-                        ]
-                    }
-                }
-            },
-            mounted:function(){
-                this.loadData();
-            }
-        }
-        var Ctor = Vue.extend(Main)
-        new Ctor().$mount('#app')
-    </script>
 </html>

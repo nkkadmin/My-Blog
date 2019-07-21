@@ -5,6 +5,7 @@ import com.xsx.blog.dto.BlogDTO;
 import com.xsx.blog.model.Blog;
 import com.xsx.blog.request.BlogEditRequest;
 import com.xsx.blog.request.BlogSearchRequest;
+import com.xsx.blog.result.Result;
 import com.xsx.blog.vo.BlogVo;
 import com.xsx.blog.vo.Page;
 
@@ -20,7 +21,7 @@ public interface BlogService {
 
     public Blog findOne(Integer id);
 
-    public Boolean save(BlogEditRequest blogEditRequest);
+    public Result saveOrUpdate(BlogEditRequest blogEditRequest);
 
     public PageInfo<BlogVo> findPage(BlogSearchRequest blogSearchRequest);
 

@@ -116,7 +116,7 @@
       </foreach>
   </update>
 
-  <insert id="insert" parameterType="com.xsx.blog.model.Blog" >
+  <insert id="insert" parameterType="com.xsx.blog.model.Blog" useGeneratedKeys="true" keyProperty="id">
     insert into blog (cover_pic, create_time,
       create_user_id, dist_name, sort_index, 
       statu, title, update_time, 

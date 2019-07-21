@@ -35,3 +35,42 @@ Date.prototype.Format = function(fmt)
          fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
    return fmt;
 }
+//封装axios请求  post
+function toPost(url,_self,_callback){
+    toPost(url,null,_self,_callback);
+}
+function toPost(url,data,_self,_callback){
+    axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+    axios.post(url,data).then(function(response){
+       if(response.data == "unlogin"){
+           toLogin(_self);
+       }else{
+           _callback(response);
+       }
+    });
+}
+
+//get
+function toGet(url,_self,_callback){
+   toGet(url,null,_self,_callback);
+}
+function toGet(url,data,_self,_callback){
+    axios.get(url,data).then(function(response){
+        if(response.data == "unlogin"){
+            toLogin(_self);
+        }else{
+            _callback(response);
+        }
+    });
+}
+
+function toLogin(_self){
+    _self.$notify.error({
+        title: '错误',
+        message: '登录失效，正在跳转到登录页面...'
+    });
+    setTimeout(function () {
+        //刷新iframe父页面
+        parent.location.reload();
+    },2000);
+}

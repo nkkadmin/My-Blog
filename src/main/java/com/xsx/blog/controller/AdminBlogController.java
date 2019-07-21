@@ -4,6 +4,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 import com.xsx.blog.common.Constants;
 import com.xsx.blog.common.StatuEnum;
+import com.xsx.blog.dto.UserInfo;
 import com.xsx.blog.model.Blog;
 import com.xsx.blog.model.Menu;
 import com.xsx.blog.model.Tags;
@@ -14,6 +15,7 @@ import com.xsx.blog.service.BlogService;
 import com.xsx.blog.service.MenuService;
 import com.xsx.blog.service.TagsService;
 import com.xsx.blog.util.FastDFSClient;
+import com.xsx.blog.util.SessionUtils;
 import com.xsx.blog.util.StringUtils;
 import com.xsx.blog.vo.BlogVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +63,9 @@ public class AdminBlogController {
     }
 
     @RequestMapping(value = "/edit",method = RequestMethod.POST)
-    public Boolean edit(@RequestBody BlogEditRequest blogEditRequest, HttpServletRequest request) throws Exception {
+    public Result edit(@RequestBody BlogEditRequest blogEditRequest, HttpServletRequest request) throws Exception {
+        UserInfo userInfo = SessionUtils.getLoginUser(request.getSession());
+        blogEditRequest.setCreateUserId(userInfo.getId());
         //判断是否有图片
         if(blogEditRequest.getContent().contains("<img")){
             String content = blogEditRequest.getContent();
@@ -73,13 +77,14 @@ public class AdminBlogController {
                 for(String path : paths){
                     savePath += path+"/";
                 }
-                if(!org.springframework.util.StringUtils.isEmpty(savePath))
+                if(!org.springframework.util.StringUtils.isEmpty(savePath)){
                     savePath = savePath.substring(0,savePath.length()-1);
+                }
                 content = content.replace(base64,savePath);
             }
             blogEditRequest.setContent(content);
         }
-        return blogService.save(blogEditRequest);
+        return blogService.saveOrUpdate(blogEditRequest);
     }
 
     private String getFdfsServerUrl(){

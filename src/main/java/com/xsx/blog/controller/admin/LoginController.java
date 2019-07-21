@@ -44,7 +44,7 @@ public class LoginController {
         }
 
         Result<UserInfo> result = userService.login(loginType,loginRequest);
-        if(result.getSuccess()){
+        if(result.isSuccess()){
             //设置session
             SessionUtils.setSessionValue(session,result.getObject());
             return new LoginResponse(true,LoginMsgConstants.LOGIN_SUCCESS);
@@ -80,8 +80,9 @@ public class LoginController {
     @RequestMapping(value = "/currentLoginUser",method = RequestMethod.POST)
     public UserInfo currentLoginUser(HttpSession session){
         UserInfo userInfo = SessionUtils.getLoginUser(session);
-        if(userInfo != null)
+        if(userInfo != null){
             userInfo.setPassword("**************");
+        }
         return userInfo;
     }
 

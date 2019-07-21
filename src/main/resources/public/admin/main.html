@@ -5,7 +5,7 @@
     <title>首页</title>
     <meta charset="UTF-8">
     <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../element-ui/css/index.css">
     <style>
         .transition-box {
             margin-bottom: 10px;
@@ -39,8 +39,9 @@
     </div>
 </body>
     <script type="text/javascript" src="../../js/vue.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script type="text/javascript" src="../../js/axios.min.js"></script>
+    <script src="../element-ui/js/index.js"></script>
+    <script type="text/javascript" src="../../js/url.js"></script>
     <script>
         var Main = {
             data() {
@@ -52,12 +53,12 @@
             methods: {
                 loadData:function(){
                     var self = this;
-                    axios.get("/admin/main/loadData",null).then(function (response) {
+                    toGet("/admin/main/loadData",null,self,function (response) {
                         if(response.data.success){
                             self.articleNum = response.data.articleNum;
                             self.commentNum = response.data.commentNum;
                         }
-                    })
+                    });
                 }
             },
             mounted:function(){
