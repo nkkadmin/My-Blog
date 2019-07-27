@@ -9,6 +9,7 @@ import com.xsx.blog.model.Menu;
 import com.xsx.blog.request.MenuRequest;
 import com.xsx.blog.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -64,6 +65,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
+    @Cacheable(value = "indexMenuData",key = "'menuList'",condition = "#result == null")
     public List<Menu> findByStatu(Integer statu) {
         return menuMapper.findByStatuOrderBySortIndexAsc(statu);
     }

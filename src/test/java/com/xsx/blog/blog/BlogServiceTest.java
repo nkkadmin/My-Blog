@@ -11,6 +11,7 @@ import com.xsx.blog.service.BlogService;
 import com.xsx.blog.service.MenuService;
 import com.xsx.blog.vo.BlogVo;
 import org.junit.Test;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
@@ -25,6 +26,7 @@ public class BlogServiceTest extends BlogApplicationTests {
 
     @Autowired
     private BlogService blogService;
+
     @Test
     public void save(){
         BlogEditRequest blogEditRequest = new BlogEditRequest();

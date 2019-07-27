@@ -29,4 +29,11 @@ public interface BlogMapper {
     List<String> groupByCreateTime();
 
     Integer validCount();
+
+    /**
+     * 更新点赞或者浏览量
+     * @param blog
+     * @return
+     */
+    int updateSelectiveNumber(Blog blog);
 }

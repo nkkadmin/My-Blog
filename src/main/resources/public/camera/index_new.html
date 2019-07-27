@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>摄影作品_新版</title>
+    <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <style type="text/css">
+
+        /* 标签重定义 */
+        img{border:none;}
+        a{text-decoration:none;color:#444;}
+        a:hover{color:#999;}
+        #title{width:600px;margin:20px auto;text-align:center;}
+        /* 定义关键帧 */
+        @-webkit-keyframes shade{
+            from{opacity:1;}
+            15%{opacity:0.4;}
+            to{opacity:1;}
+        }
+        @-moz-keyframes shade{
+            from{opacity:1;}
+            15%{opacity:0.4;}
+            to{opacity:1;}
+        }
+        @-ms-keyframes shade{
+            from{opacity:1;}
+            15%{opacity:0.4;}
+            to{opacity:1;}
+        }
+        @-o-keyframes shade{
+            from{opacity:1;}
+            15%{opacity:0.4;}
+            to{opacity:1;}
+        }
+        @keyframes shade{
+            from{opacity:1;}
+            15%{opacity:0.4;}
+            to{opacity:1;}
+        }
+        /* wrap */
+        #wrap{width:auto;height:auto;margin:0 auto;position:relative;}
+        #wrap .box{width:280px;height:auto;padding:10px;border:none;float:left;}
+        #wrap .box .info{width:280px;height:auto;border-radius:8px;box-shadow:0 0 11px #666;background:#fff;}
+        #wrap .box .info .pic{width:260px;height:auto;margin:0 auto;padding-top:10px;}
+        #wrap .box .info .pic:hover{
+            -webkit-animation:shade 3s ease-in-out 1;
+            -moz-animation:shade 3s ease-in-out 1;
+            -ms-animation:shade 3s ease-in-out 1;
+            -o-animation:shade 3s ease-in-out 1;
+            animation:shade 3s ease-in-out 1;
+        }
+        #wrap .box .info .pic img{width:260px;border-radius:3px;}
+        #wrap .box .info .title{width:260px;height:40px;margin:0 auto;line-height:40px;text-align:center;color:#666;font-size:18px;font-weight:bold;overflow:hidden;}
+    </style>
+</head>
+<body>
+<div id="app">
+    <template>
+        <header-content></header-content>
+        <el-container>
+            <el-main>
+                <div id="main">
+                    <div id="wrap">
+                        <div class="box">
+                            <div class="info">
+                                <div class="pic"><img src="../images/1.jpg"></div>
+                                <div class="title"><a href="#">This is a title.</a></div>
+                            </div>
+                        </div>
+
+                        <div class="box">
+                            <div class="info">
+                                <div class="pic"><img src="../images/2.jpg"></div>
+                                <div class="title"><a href="#">This is a title.</a></div>
+                            </div>
+                        </div>
+
+                        <div class="box">
+                            <div class="info">
+                                <div class="pic"><img src="../images/3.jpg"></div>
+                                <div class="title"><a href="#">This is a title.</a></div>
+                            </div>
+                        </div>
+
+                        <div class="box">
+                            <div class="info">
+                                <div class="pic"><img src="../images/4.jpg"></div>
+                                <div class="title"><a href="#">This is a title.</a></div>
+                            </div>
+                        </div>
+
+                        <div class="box">
+                            <div class="info">
+                                <div class="pic"><img src="../images/5.jpg"></div>
+                                <div class="title"><a href="#">This is a title.</a></div>
+                            </div>
+                        </div>
+
+                        <div class="box">
+                            <div class="info">
+                                <div class="pic"><img src="../images/6.jpg"></div>
+                                <div class="title"><a href="#">This is a title.</a></div>
+                            </div>
+                        </div>
+
+                        <div class="box">
+                            <div class="info">
+                                <div class="pic"><img src="../images/7.jpg"></div>
+                                <div class="title"><a href="#">This is a title.</a></div>
+                            </div>
+                        </div>
+
+                        <div class="box">
+                            <div class="info">
+                                <div class="pic"><img src="../images/8.jpg"></div>
+                                <div class="title"><a href="#">This is a title.</a></div>
+                            </div>
+                        </div>
+
+                        <div class="box">
+                            <div class="info">
+                                <div class="pic"><img src="../images/9.jpg"></div>
+                                <div class="title"><a href="#">This is a title.</a></div>
+                            </div>
+                        </div>
+
+                        <div class="box">
+                            <div class="info">
+                                <div class="pic"><img src="../images/10.jpg"></div>
+                                <div class="title"><a href="#">This is a title.</a></div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div style="text-align:center;clear:both">
+                    </div>
+                </div>
+            </el-main>
+        </el-container>
+        <footer-content></footer-content>
+    </template>
+</div>
+
+</body>
+<script type="text/javascript" src="../js/vue.js"></script>
+<script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="../js/index/component.js"></script>
+<script>
+    var Main = {
+        methods: {
+            loadCream:function () {
+                var self = this;
+                self.issuesHeight = 0;
+                if(!self.isAppend)
+                    self.listData = [];
+
+                var param = {
+                    "pageNo":self.pageNo,
+                    "pageSize":self.pageSize,
+                    "year":self.year
+                }
+                axios.post("/index/camrea/searchList", param).then(function (response) {
+                    // self.listData = self.listData.concat(response.data.object);
+                    if(self.listData.length > 0){
+                        self.listData = self.listData.concat(response.data.object);
+                    }else{
+                        self.listData = response.data.object;
+                    }
+                    self.years = response.data.years;
+                    var datas = self.listData;
+                    var itemSize = 0;
+                    for(var key in datas){
+                        itemSize += datas[key].length;
+                    }
+                    self.issuesHeight = itemSize * 250;
+                    self.pageNo = response.data.pageNo;
+                    self.hasNextPage = response.data.hasNextPage;
+                    $(".issues").css("height",self.issuesHeight+"px !important");
+                });
+            },
+            info:function(id){
+                window.location.href = "/blog/blog.html?id="+id;
+            },
+            nextPage:function () {
+                this.pageNo++;
+                this.isAppend = true;
+                this.loadCream();
+            },
+            clickYear:function (year) {
+                this.year = year;
+                this.isAppend = false;
+                this.loadCream();
+
+            },
+            PBL:function(wrap,box){
+                var self = this;
+                //	1.获得外层以及每一个box
+                var wrap = document.getElementById(wrap);
+                var boxs  = this.getClass(wrap,box);
+                //	2.获得屏幕可显示的列数
+                var boxW = boxs[0].offsetWidth;
+                var colsNum = Math.floor(document.documentElement.clientWidth/boxW);
+                wrap.style.width = boxW*colsNum+'px';//为外层赋值宽度
+                //	3.循环出所有的box并按照瀑布流排列
+                var everyH = [];//定义一个数组存储每一列的高度
+                for (var i = 0; i < boxs.length; i++) {
+                    if(i<colsNum){
+                        everyH[i] = boxs[i].offsetHeight;
+                    }else{
+                        var minH = Math.min.apply(null,everyH);//获得最小的列的高度
+                        var minIndex = this.getIndex(minH,everyH); //获得最小列的索引
+                        self.getStyle(boxs[i],minH,boxs[minIndex].offsetLeft,i);
+                        everyH[minIndex] += boxs[i].offsetHeight;//更新最小列的高度
+                    }
+                }
+            },
+            getClass(wrap,className){
+                var obj = wrap.getElementsByTagName('*');
+                var arr = [];
+                for(var i=0;i<obj.length;i++){
+                    if(obj[i].className == className){
+                        arr.push(obj[i]);
+                    }
+                }
+                return arr;
+            },
+            getIndex(minH,everyH){
+                for(index in everyH){
+                    if (everyH[index] == minH ) return index;
+                }
+            },
+            getCheck(){
+                var documentH = document.documentElement.clientHeight;
+                var scrollH = document.documentElement.scrollTop || document.body.scrollTop;
+                return documentH+scrollH>=getLastH() ?true:false;
+            },
+            getLastH(){
+                var wrap = document.getElementById('wrap');
+                var boxs = getClass(wrap,'box');
+                return boxs[boxs.length-1].offsetTop+boxs[boxs.length-1].offsetHeight;
+            },
+            getStyle(box,top,left,index){
+                if (this.getStartNum>=index) return;
+                $(box).css({
+                    'position':'absolute',
+                    'top':top,
+                    "left":left,
+                    "opacity":"0"
+                });
+                $(box).stop().animate({
+                    "opacity":"1"
+                },999);
+                this.getStartNum = index;//更新请求数据的条数位置
+            }
+        },
+        data() {
+            return {
+                issuesHeight:0, //数据条数
+                pageNo:1,
+                pageSize:10,
+                hasNextPage:false,
+                currentMenuId: '',
+                menuList: [],
+                listData: [],
+                isAppend:false,
+                years:[],
+                year:null,
+                // data:[{'src':'../../images/1.jpg','title':'This is a title.'},{'src':'../2.jpg','title':'This is a title.'},{'src':'../3.jpg','title':'This is a title.'},{'src':'4.jpg','title':'This is a title.'},{'src':'5.jpg','title':'This is a title.'},{'src':'6.jpg','title':'This is a title.'},{'src':'7.jpg','title':'This is a title.'},{'src':'8.jpg','title':'This is a title.'},{'src':'9.jpg','title':'This is a title.'},{'src':'10.jpg','title':'This is a title.'}],
+                getStartNum:0,
+            }
+        },
+        mounted: function () {
+            this.isAppend = false;
+            //运行瀑布流主函数
+            this.PBL('wrap','box');
+            this.loadCream();
+        }
+    }
+    var Ctor = Vue.extend(Main)
+    new Ctor().$mount('#app')
+</script>
+</html>

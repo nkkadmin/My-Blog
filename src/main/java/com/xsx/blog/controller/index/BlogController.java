@@ -13,7 +13,6 @@ import com.xsx.blog.service.RedisService;
 import com.xsx.blog.vo.BlogVo;
 import com.xsx.blog.vo.IndexVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +27,7 @@ public class BlogController {
     private BlogService blogService;
     @Autowired
     private RedisService redisService;
+
 
     /**
      * 初始化数据
