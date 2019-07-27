@@ -219,13 +219,14 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public void synLookNumRedisToDB() {
         Map<Object,Object> redisMap = getLookRedisMap();
-        if(redisMap == null)
+        if(redisMap == null){
             return;
+        }
         List<BlogDTO> blogList = new ArrayList<BlogDTO>();
         buildBlogLookList(redisMap,blogList);
         //批量同步到数据库
         Integer resultNum = blogService.batchUpdateBlog(blogList);
-        if(resultNum == blogList.size()){
+        if(resultNum > 0){
             //说明更新成功
             //清空浏览量redis
             clearLookRedis();

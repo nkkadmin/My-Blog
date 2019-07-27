@@ -10,6 +10,7 @@ import com.xsx.blog.vo.BlogVo;
 import org.junit.Test;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -97,6 +98,11 @@ public class RedisTest extends BlogApplicationTests {
         System.out.println(redisUtils.hmget(Constants.REDIS_DIANZAN_MAP_FLAG));
         redisUtils.del(Constants.REDIS_DIANZAN_MAP_FLAG);
         System.out.println(redisUtils.hmget(Constants.REDIS_DIANZAN_MAP_FLAG));
+    }
+
+    @Test
+    public void synLookNumRedisToDBTest(){
+        redisService.synLookNumRedisToDB();
     }
 
 

@@ -17,6 +17,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class BlogApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
+        //解决SpringBoot netty与ES netty 相关jar冲突
+        System.setProperty("es.set.netty.runtime.available.processors", "false");
         SpringApplication.run(BlogApplication.class, args);
     }
 

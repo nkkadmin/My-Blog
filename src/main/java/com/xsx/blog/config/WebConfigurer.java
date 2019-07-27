@@ -24,6 +24,8 @@ public class WebConfigurer implements WebMvcConfigurer{
         passUrl.add("/admin/login/loginType");
         passUrl.add("/admin/login/sendCode/*");
         passUrl.add("/img/**");
+        passUrl.add("/element-ui/**");
+        passUrl.add("/editormd/**");
         passUrl.add("/js/**");
         passUrl.add("/css/**");
         passUrl.add("/blog/index.html");
@@ -31,6 +33,7 @@ public class WebConfigurer implements WebMvcConfigurer{
         passUrl.add("/index/**");
         passUrl.add("/about/index.html");
         passUrl.add("/camera/index.html");
+        passUrl.add("/camera/index_new.html");
         passUrl.add("/");
     }
 

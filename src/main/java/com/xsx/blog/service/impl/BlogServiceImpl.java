@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -50,16 +51,12 @@ public class BlogServiceImpl extends LoggerService implements BlogService  {
     private RedisService redisService;
 
     @Override
+    @Cacheable(value = "blogInfo",key = "'blogInfo_' + #id",condition = "#result == null")
     public Blog findOne(Integer id) {
-        //从缓存获取
-        Blog blog = redisService.getBlog(id);
-        if(blog == null){
-            logger.info("缓存里没有{}",id);
-            blog = blogMapper.findById(id);
-            //放入缓存
-            redisService.addBlog(blog);
+        if(id == null){
+            return null;
         }
-        return blog;
+        return blogMapper.findById(id);
     }
 
     @Override
@@ -212,15 +209,17 @@ public class BlogServiceImpl extends LoggerService implements BlogService  {
         }
         blog.setZanNum(blog.increaseZanNum());
         int num = blogMapper.update(blog);
-        if(num > 0)
+        if(num > 0){
             return blog.getZanNum();
+        }
         return -1;
     }
 
     @Override
     public Integer batchUpdateBlog(List<BlogDTO> blogList) {
-        if(CollectionUtils.isEmpty(blogList))
+        if(CollectionUtils.isEmpty(blogList)){
             return 0;
+        }
         return blogMapper.batchUpdateBlog(blogList);
     }
 
