@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <style>
+    .avatar-uploader .el-upload {
+      border: 1px dashed #d9d9d9;
+      border-radius: 6px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .avatar-uploader .el-upload:hover {
+      border-color: #409EFF;
+    }
+    .avatar-uploader-icon {
+      font-size: 28px;
+      color: #8c939d;
+      width: 178px;
+      height: 178px;
+      line-height: 178px;
+      text-align: center;
+    }
+    .avatar {
+      width: 178px;
+      height: 178px;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+<div id="vueapp">
+  <template>
+    <el-form ref="form" :model="form" label-width="80px">
+      <el-input v-model="form.menuId" style="display: none;"></el-input>
+      <el-form-item label="标题">
+        <el-input v-model="form.title" style="width:400px;"></el-input>
+      </el-form-item>
+      <el-form-item label="标签">
+        <el-input v-model="form.tags" style="width:400px"></el-input>(多个标签地逗号分开)
+      </el-form-item>
+      <el-form-item label="照片">
+        <el-upload
+                action="/file/upload"
+                list-type="picture-card"
+                :auto-upload="true"
+                :multiple="true"
+                :on-preview="handlePictureCardPreview"
+                :on-remove="handleRemove"
+                :on-success="uploadSuccess"
+                :before-upload="beforeUpload">
+          <i class="el-icon-plus"></i>
+        </el-upload>
+        <el-dialog :visible.sync="dialogVisible" size="tiny">
+          <img width="100%" :src="dialogImageUrl" alt="">
+        </el-dialog>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="save">保存</el-button>
+      </el-form-item>
+    </el-form>
+
+  </template>
+</div>
+<script type="text/javascript" src="../../js/vue.js"></script>
+<script type="text/javascript" src="../../js/axios.min.js"></script>
+<script src="../../element-ui/js/index.js"></script>
+<script src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/url.js"></script>
+<script type="text/javascript" src="../../js/admin/camera/add.js"></script>
+</body>
+
+
+</html>

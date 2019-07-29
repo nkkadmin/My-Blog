@@ -28,12 +28,16 @@ public class FileUploadController {
         Base64Convert base64Convert = new Base64Convert();
 
         String base64 = base64Convert.ioToBase64(multipartFile.getInputStream());
-        if(!StringUtils.isEmpty(base64))
+        if(!StringUtils.isEmpty(base64)){
             base64 = "data:image/jpeg;base64,"+base64;
+        }
         String[] paths = FastDFSClient.upload(base64,request);
         String savePath = getFdfsServerUrl();
         for(String path : paths){
             savePath += path+"/";
+        }
+        if(savePath.endsWith("/")){
+            savePath = savePath.substring(0,savePath.length()-1);
         }
         return savePath;
     }

@@ -82,16 +82,16 @@ new Vue({
             console.log(file);
         },
         uploadSuccess(response, file, fileList){
-            this.form.coverPic = response.substring(0,response.length-1);
+            this.form.coverPic = response;
         },
         beforeAvatarUpload(file) {
             var isJPG = file.type === 'image/jpeg';
             var isLt2M = file.size / 1024 / 1024 < 2;
             if (!isJPG) {
-                this.$message.error('上传头像图片只能是 JPG 格式!');
+                this.$message.error('图片只能是 JPG 格式!');
             }
             if (!isLt2M) {
-                this.$message.error('上传头像图片大小不能超过 2MB!');
+                this.$message.error('图片大小不能超过 2MB!');
             }
             return isJPG && isLt2M;
         }

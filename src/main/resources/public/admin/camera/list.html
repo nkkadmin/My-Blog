@@ -2,156 +2,60 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>摄影作品</title>
+    <title>摄影作品管理</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../../element-ui/css/index.css">
 </head>
-<style>
-    .time {
-        font-size: 13px;
-        color: #999;
-    }
-
-    .bottom {
-        margin-top: 13px;
-        line-height: 12px;
-    }
-
-    .button {
-        padding: 0;
-        float: right;
-    }
-
-    .image {
-        width: 100%;
-        display: block;
-    }
-
-    .clearfix:before,
-    .clearfix:after {
-        display: table;
-        content: "";
-    }
-
-    .clearfix:after {
-        clear: both
-    }
-    .col_class{
-        width: 200px;
-        margin: 20px 20px 0px 15px;
-    }
-</style>
 <body>
     <div id="app">
         <template>
-            <el-button type="primary" @click="add">新建</el-button>
-            <el-row>
-                <el-col :span="4" v-for="(item, index) in tableData" :key="item.id" :offset="index > 0 ? 2 : 0" class="col_class">
-                    <el-card :body-style="{ padding: '0px' }">
-                        <img :src="item.coverPic" class="image">
-                        <div style="padding: 14px;">
-                            <el-tooltip class="item" effect="dark" :content="item.title" placement="top-start">
-                                <span>{{item.subTitle}}</span>
-                            </el-tooltip>
-                            <div class="bottom clearfix">
-                                {{item.distName}}
-                                <time class="time">{{ item.createTime }}</time>
-                                <el-button type="text" class="button">操作按钮</el-button>
-                            </div>
-                        </div>
-                    </el-card>
-                </el-col>
-            </el-row>
-            <el-row style="margin: 20px 20px 0px 0px;float: right;">
-                <el-pagination
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="form.pageNo"
-                        :page-sizes="[10, 20, 50, 100]"
-                        :page-size="form.pageSize"
-                        layout="total, sizes, prev, pager, next, jumper"
-                        :total="totals">
-                </el-pagination>
-            </el-row>
+            <el-form ref="form" :model="form" label-width="450px">
+                <el-input v-model="form.tags" placeholder="标签查询" style="width: 200px;"></el-input>
+                <el-button type="primary" @click="search">搜索</el-button>
+                <el-button type="primary" @click="add">新建</el-button>
+            </el-form>
+
+            <el-table :data="tableData" v-loading="loading" border style="width: 100%;margin-top: 10px;"
+                      :header-cell-style="{background:'#eef1f6',color:'#606266'}">
+                <el-table-column fixed prop="id" label="ID">
+                </el-table-column>
+                <el-table-column prop="title" label="标题">
+                </el-table-column>
+                <el-table-column prop="tags" label="标签">
+                </el-table-column>
+                <el-table-column prop="statu" label="状态">
+                </el-table-column>
+                <el-table-column prop="createTime" label="创建时间">
+                </el-table-column>
+                <el-table-column prop="updateTime" label="更新时间">
+                </el-table-column>
+                <el-table-column prop="lookNum" label="浏览量">
+                </el-table-column>
+                <el-table-column prop="commentNum" label="点赞量">
+                </el-table-column>
+
+                <el-table-column fixed="right" label="操作" >
+                    <template slot-scope="scope">
+                        <el-button @click="edit(scope.row.id)" type="text" size="small">编辑</el-button>
+                        <el-button @click="look(scope.row.id)" type="text" size="small">图片管理</el-button>
+                        <el-button v-if="scope.row.statu == '有效'" @click="deleteById(scope.row.id)" type="text" size="small">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="form.pageNo"
+                    :page-size="form.pageSize"
+                    :total="totals">
+            </el-pagination>
         </template>
     </div>
 </body>
-    <script type="text/javascript" src="../../js/vue.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-    <script src="../../js/url.js"></script>
-    <script>
-        var Main = {
-            methods: {
-                add(){
-                    window.location.href="edit.html";
-                },
-                edit(id){
-                    window.location.href="edit.html?id="+id;
-                },
-                loadData(){
-                    var self = this;
-                    self.tableData = [];
-                    axios.post("/camera/findAll",{"pageNo":this.form.pageNo,"pageSize":this.form.pageSize}).then(function(response){
-                        console.log(response);
-                        if(response != null && response.data != null){
-                            var list = response.data.list;
-                            for(var i = 0;i<list.length;i++){
-                                var info = new Object();
-                                info.id = list[i].id;
-                                info.title = list[i].title;
-                                info.subTitle = list[i].title.length >= 8 ? list[i].title.substring(0,8)+"..." : list[i].title;
-                                info.coverPic = list[i].coverPic;
-                                info.createTime = list[i].createTime;
-                                info.statu = list[i].statu === 1 ? "有效" : "删除";
-                                info.distName = list[i].distName;
-                                self.tableData.push(info);
-                            }
-                            self.totals = response.data.total;
-                        }
-                    });
-                },
-                deleteById(id){
-                    var self = this;
-                    axios.get("/tags/deleteById",{params:{"id":id}}).then(function(response){
-                        console.log(response);
-                        if(response.data){
-                           self.$message({
-                              showClose: true,
-                              message: '删除成功',
-                              type: 'success'
-                            });
-                            self.loadData();
-                        }
-                    });
-                },
-                handleSizeChange(val) {
-                    console.log(`每页 ${val} 条`);
-                    this.form.pageSize = val;
-                    this.loadData();
-                },
-                handleCurrentChange(val) {
-                    console.log(`当前页: ${val}`);
-                    this.form.pageNo = val;
-                    this.loadData();
-                }
-            },
-            data() {
-                return {
-                    tableData: [],
-                    totals:0,
-                    form:{
-                        pageSize:10,
-                        pageNo:1
-                    },
-                    currentDate: new Date()
-                }
-            },
-            mounted:function(){
-                this.loadData();
-            }
-        }
-        var Ctor = Vue.extend(Main)
-        new Ctor().$mount('#app')
-    </script>
+<script type="text/javascript" src="../../js/vue.js"></script>
+<script type="text/javascript" src="../../js/axios.min.js"></script>
+<script src="../../element-ui/js/index.js"></script>
+<script type="text/javascript" src="../../js/url.js"></script>
+<script src="../../js/admin/camera/list.js"></script>
+
 </html>
