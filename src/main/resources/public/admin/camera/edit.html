@@ -54,40 +54,26 @@
             <el-form-item label="标题">
                 <el-input v-model="form.title" style="width:400px;"></el-input>
             </el-form-item>
-            <el-form-item label="封面">
+            <el-form-item label="标签">
+                <el-input v-model="form.tags" style="width:400px"></el-input>(多个标签地逗号分开)
+            </el-form-item>
+            <el-form-item label="照片">
                 <el-upload
-                        class="avatar-uploader"
-                        action="/file/upload"
-                        :show-file-list="false"
-                        :auto-upload="true"
-                        name="file"
-                        :on-success="uploadSuccess"
-                        :on-change="changeFile"
-                        :before-upload="beforeAvatarUpload">
-                    <img v-if="form.coverPic" :src="form.coverPic" class="avatar">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        action="https://jsonplaceholder.typicode.com/posts/"
+                        list-type="picture-card"
+                        :on-preview="handlePictureCardPreview"
+                        :on-remove="handleRemove">
+                    <i class="el-icon-plus"></i>
                 </el-upload>
-                <el-dialog :visible.sync="dialogVisible">
+                <el-dialog :visible.sync="dialogVisible" size="tiny">
                     <img width="100%" :src="dialogImageUrl" alt="">
                 </el-dialog>
             </el-form-item>
-            <el-form-item label="摄影目的地">
-                <el-input v-model="form.distName" style="width:400px"></el-input>(多个目的地逗号分开)
-            </el-form-item>
-            <el-form-item label="分类">
-                <el-select v-model="form.tagId" placeholder="">
-                    <el-option v-for="(item) in tags" :label="item.name" :value="item.id"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="内容">
-                <quill-editor v-model="form.content"
-                              ref="quillEditorA"
-                              :options="editorOption"
-                              style="height:400px;">
-                </quill-editor>
+            <el-form-item>
+                <el-button type="primary" @click="save">保存</el-button>
             </el-form-item>
         </el-form>
-        <el-button type="primary" @click="save">保存</el-button>
+
     </template>
 </div>
 <script>
@@ -116,6 +102,13 @@
             LocalQuillEditor: VueQuillEditor.quillEditor
         },
         methods: {
+            handleRemove(file, fileList) {
+                console.log(file, fileList);
+            },
+            handlePictureCardPreview(file) {
+                this.dialogImageUrl = file.url;
+                this.dialogVisible = true;
+            },
             initData(){
                 var self = this;
                 axios.post("/adminBlog/initData").then(function(response){
