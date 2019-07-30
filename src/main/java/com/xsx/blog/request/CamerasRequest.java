@@ -10,7 +10,7 @@ import java.util.List;
  * @author: xieshengxiang
  * @date: 2019/7/29 20:03
  */
-public class CamerasRequest implements Serializable {
+public class CamerasRequest extends PageRequest implements Serializable {
 
     private Integer id;
 

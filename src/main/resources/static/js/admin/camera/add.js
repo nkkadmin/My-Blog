@@ -21,7 +21,7 @@ new Vue({
             obj.url = file.response;
             obj.uid = file.uid;
             this.form.imagesList.push(obj);
-            $(".el-upload-list").find("li").eq(this.form.imagesList.length-1).prepend("<el-button type='primary' class='set-cover' on-click='setCover'>封面</el-button>");
+            $(".el-upload-list").find("li").eq(this.form.imagesList.length-1).prepend("<div class='set-cover' @click='setCover'>封面</div>");
         },
         setCover:function(){
             console.log("...")
@@ -65,15 +65,15 @@ new Vue({
         save(){//保存
             var self = this;
             console.log(this.form);
-           /* axios.post("/admin/camera/save",this.form).then(function(response){
-                if(response.data){
+            axios.post("/admin/camera/save",this.form).then(function(response){
+                if(response.data.success){
                     self.$message({
                         showClose: true,
                         message: '保存成功',
                         type: 'success'
                     });
                 }
-            })*/
+            })
         },
         findOne(){
             var self = this;

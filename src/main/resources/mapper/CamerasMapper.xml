@@ -14,6 +14,18 @@
   <sql id="Base_Column_List" >
     id, title, tags, create_time, update_time, statu, look_num, zan_num
   </sql>
+
+  <select id="findAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from cameras
+    <where>
+      <if test="request.tags != null and request.tags != ''">
+        tags like #{request.tags,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />

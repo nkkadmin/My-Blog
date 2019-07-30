@@ -1,17 +1,25 @@
 package com.xsx.blog.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.xsx.blog.mapper.CamerasMapper;
 import com.xsx.blog.mapper.ImagesMapper;
 import com.xsx.blog.model.Cameras;
 import com.xsx.blog.model.Images;
+import com.xsx.blog.request.BlogSearchRequest;
 import com.xsx.blog.request.CamerasRequest;
 import com.xsx.blog.result.Result;
 import com.xsx.blog.service.CameraService;
+import com.xsx.blog.vo.BlogVo;
+import com.xsx.blog.vo.CameraVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +36,26 @@ public class CameraServiceImpl implements CameraService {
     private CamerasMapper camerasMapper;
     @Autowired
     private ImagesMapper imagesMapper;
+
+    @Override
+    public PageInfo<CameraVO> findPage(CamerasRequest request) {
+        PageHelper.startPage(request.getPageNo(),request.getPageSize());
+        if(!StringUtils.isEmpty(request.getTags())){
+            request.setTags("%"+request.getTags()+"%");
+        }
+        List<Cameras> list = camerasMapper.findAll(request);
+        PageInfo<Cameras> oldPage = new PageInfo<>(list);
+        List<CameraVO> resultList = new ArrayList<>();
+        for(Cameras camera : list){
+            CameraVO cameraVO = new CameraVO();
+            BeanUtils.copyProperties(camera,cameraVO);
+            resultList.add(cameraVO);
+        }
+        PageInfo<CameraVO> page = new PageInfo<>();
+        BeanUtils.copyProperties(oldPage,page);
+        page.setList(resultList);
+        return page;
+    }
 
     @Override
     public Result save(CamerasRequest camerasRequest) {
@@ -50,6 +78,9 @@ public class CameraServiceImpl implements CameraService {
         result.setMsg(result.isSuccess() ? "编辑成功" : "编辑失败");
         return result;
     }
+
+
+
 
     private List<Images> buildsImageModel(CamerasRequest camerasRequest, Integer id) {
         for(Images image : camerasRequest.getImagesList()){

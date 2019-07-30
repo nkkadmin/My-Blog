@@ -14,6 +14,14 @@
   <sql id="Base_Column_List" >
     id, url, cover, content, carmera_id, create_time, update_time, statu
   </sql>
+
+  <select id="findByCamId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from images
+    where carmera_id = #{camId,jdbcType=INTEGER}
+  </select>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />

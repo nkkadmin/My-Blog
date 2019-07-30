@@ -13,7 +13,7 @@ var Main = {
             var self = this;
             self.loading = true;
             self.tableData = [];
-            toPost("/adminBlog/findAll",this.form,self,function (response) {
+            toPost("/admin/camera/findAll",this.form,self,function (response) {
                 self.loading = false;
                 if(response != null && response.data != null){
                     var list = response.data.list;
@@ -21,10 +21,12 @@ var Main = {
                         var info = new Object();
                         info.id = list[i].id;
                         info.title = list[i].title;
-                        info.menuName = list[i].menuName;
-                        info.tagName = list[i].tagName;
+                        info.tags = list[i].tags;
                         info.createTime = list[i].createTime;
+                        info.updateTime = list[i].updateTime;
                         info.statu = list[i].statu === 1 ? "有效" : "删除";
+                        info.lookNum = list[i].lookNum;
+                        info.zanNum = list[i].zanNum;
                         self.tableData.push(info);
                     }
                     self.totals = response.data.total;
@@ -40,6 +42,20 @@ var Main = {
                     self.menus = response.data.content.menus;
                     self.tags = response.data.content.tags;
                 }
+            })
+        },
+        getImages:function(id){
+            var self = this;
+            self.images.splice(0,self.images.length);
+            toGet("/admin/camera/queryImgByCamId/"+id,null,self,function (response) {
+                self.imageShow = true;
+                for(var i = 0;i < response.data.length;i++){
+                    var obj = new Object();
+                    obj.url = response.data[i].url;
+                    obj.id = response.data[i].id;
+                    self.images.push(obj);
+                }
+                console.log(self.images);
             })
         },
         deleteById:function(id){
@@ -66,6 +82,8 @@ var Main = {
     },
     data() {
         return {
+            images:[],
+            imageShow:false,
             tableData: [],
             totals:0,
             form:{
