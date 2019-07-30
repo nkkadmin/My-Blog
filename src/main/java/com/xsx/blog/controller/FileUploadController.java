@@ -5,9 +5,7 @@ import com.xsx.blog.util.Base64Convert;
 import com.xsx.blog.util.FastDFSClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,6 +38,23 @@ public class FileUploadController {
             savePath = savePath.substring(0,savePath.length()-1);
         }
         return savePath;
+    }
+
+    @GetMapping("/delFile")
+    public void delFile(@RequestParam("filePath") String filePath){
+        if(StringUtils.isEmpty(filePath)){
+            return;
+        }
+        filePath = filePath.replace(getFdfsServerUrl(),"");
+        String group = filePath.substring(0,filePath.indexOf("/"));
+        String fileName = filePath.substring(group.length()+1,filePath.length());
+        try{
+            FastDFSClient.deleteFile(group, fileName);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
     }
 
     private String getFdfsServerUrl(){

@@ -21,7 +21,10 @@ new Vue({
             obj.url = file.response;
             obj.uid = file.uid;
             this.form.imagesList.push(obj);
-            $(".el-upload-list").find("li").eq(this.form.imagesList.length-1).find(".el-upload-list__item-actions").append("<input type='radio' value=''/>");
+            $(".el-upload-list").find("li").eq(this.form.imagesList.length-1).prepend("<el-button type='primary' class='set-cover' on-click='setCover'>封面</el-button>");
+        },
+        setCover:function(){
+            console.log("...")
         },
         beforeUpload(file) {
             var isJPG = file.type === 'image/jpeg';
@@ -43,6 +46,10 @@ new Vue({
                      break;
                  }
              }
+            toGet("/file/delFile",{params:{"filePath":file.response}},self,function(response){
+
+            });
+
         },
         handlePictureCardPreview(file) {
             this.dialogImageUrl = file.url;
