@@ -2,13 +2,17 @@ package com.xsx.blog.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.xsx.blog.common.StatuEnum;
+import com.xsx.blog.dto.CamerasDTO;
 import com.xsx.blog.mapper.CamerasMapper;
 import com.xsx.blog.mapper.ImagesMapper;
 import com.xsx.blog.model.Cameras;
 import com.xsx.blog.model.Images;
 import com.xsx.blog.request.CamerasRequest;
+import com.xsx.blog.result.CameraIndexResult;
 import com.xsx.blog.result.Result;
 import com.xsx.blog.service.CameraService;
+import com.xsx.blog.util.PingYinUtil;
 import com.xsx.blog.vo.CameraVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +21,9 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.TreeSet;
 
 /**
  * @description:
@@ -38,10 +44,10 @@ public class CameraServiceImpl implements CameraService {
         if(!StringUtils.isEmpty(request.getTags())){
             request.setTags("%"+request.getTags()+"%");
         }
-        List<Cameras> list = camerasMapper.findAll(request);
-        PageInfo<Cameras> oldPage = new PageInfo<>(list);
+        List<CamerasDTO> list = camerasMapper.findAll(request);
+        PageInfo<CamerasDTO> oldPage = new PageInfo<>(list);
         List<CameraVO> resultList = new ArrayList<>();
-        for(Cameras camera : list){
+        for(CamerasDTO camera : list){
             CameraVO cameraVO = new CameraVO();
             BeanUtils.copyProperties(camera,cameraVO);
             resultList.add(cameraVO);
@@ -74,7 +80,64 @@ public class CameraServiceImpl implements CameraService {
         return result;
     }
 
+    @Override
+    public CameraIndexResult findPageIndex(CamerasRequest request) {
+        request.setStatu(StatuEnum.OK.getStatu());
+        PageInfo<CameraVO> page = findPage(request);
+        CameraIndexResult result = coverIndexResult(page);
+        return result;
+    }
 
+    private CameraIndexResult coverIndexResult(PageInfo<CameraVO> page) {
+        CameraIndexResult result = new CameraIndexResult();
+        List<CameraIndexResult.CameraIndexVo> voList = new ArrayList<>();
+        result.setCameraIndexVos(voList);
+        TreeSet<CameraIndexResult.TagsVo> allInTags = new TreeSet<>();
+        for(CameraVO cameraVO : page.getList()){
+            CameraIndexResult.CameraIndexVo indexVo = new CameraIndexResult.CameraIndexVo();
+            buildCameraIndeVo(indexVo,cameraVO);
+            voList.add(indexVo);
+            TreeSet<CameraIndexResult.TagsVo> c = buildAllInTagVo(cameraVO);
+            allInTags.addAll(c);
+        }
+        result.setAllInTags(allInTags);
+        buildResultPageInfo(page,result);
+        return result;
+    }
+
+    private void buildResultPageInfo(PageInfo<CameraVO> page, CameraIndexResult result) {
+        result.setPageNo(page.getPageNum());
+        result.setPages(page.getPages());
+        result.setPageSize(page.getPageSize());
+        result.setTotal(page.getTotal());
+    }
+
+    private void buildCameraIndeVo(CameraIndexResult.CameraIndexVo indexVo,CameraVO cameraVO) {
+        BeanUtils.copyProperties(cameraVO,indexVo);
+        indexVo.setEnTags(buildEnTags(cameraVO.getTags()));
+    }
+
+    private String buildEnTags(String tags) {
+        StringBuffer sb = new StringBuffer();
+        String[] strings = tags.split(",");
+        for(String tag : strings){
+            sb.append(PingYinUtil.getPingYin(tag)).append(" ");
+        }
+        return sb.toString();
+    }
+
+
+    private TreeSet<CameraIndexResult.TagsVo> buildAllInTagVo(CameraVO cameraVO) {
+        TreeSet<CameraIndexResult.TagsVo> tagsVoTreeSet = new TreeSet<>();
+        String[] split = cameraVO.getTags().split(",");
+        for (String tag : split){
+            CameraIndexResult.TagsVo tagVo = new CameraIndexResult.TagsVo();
+            tagVo.setCnTag(tag);
+            tagVo.setEnTag(PingYinUtil.getPingYin(tag));
+            tagsVoTreeSet.add(tagVo);
+        }
+        return tagsVoTreeSet;
+    }
 
 
     private List<Images> buildsImageModel(CamerasRequest camerasRequest, Integer id) {

@@ -1,15 +1,14 @@
-package com.xsx.blog.vo;
+package com.xsx.blog.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @description:
  * @author: xieshengxiang
- * @date: 2019/7/30 20:27
+ * @date: 2019/7/31 20:46
  */
-public class CameraVO {
+public class CamerasDTO implements Serializable {
 
     private Integer id;
 
@@ -17,10 +16,8 @@ public class CameraVO {
 
     private String tags;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
     private Date createTime;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
     private Date updateTime;
 
     private Integer statu;
@@ -33,14 +30,6 @@ public class CameraVO {
      * 封面图
      */
     private String url;
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
 
     public Integer getId() {
         return id;
@@ -55,7 +44,7 @@ public class CameraVO {
     }
 
     public void setTitle(String title) {
-        this.title = title == null ? null : title.trim();
+        this.title = title;
     }
 
     public String getTags() {
@@ -63,7 +52,7 @@ public class CameraVO {
     }
 
     public void setTags(String tags) {
-        this.tags = tags == null ? null : tags.trim();
+        this.tags = tags;
     }
 
     public Date getCreateTime() {
@@ -104,5 +93,13 @@ public class CameraVO {
 
     public void setZanNum(Integer zanNum) {
         this.zanNum = zanNum;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

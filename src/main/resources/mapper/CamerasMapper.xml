@@ -11,17 +11,33 @@
     <result column="look_num" property="lookNum" jdbcType="INTEGER" />
     <result column="zan_num" property="zanNum" jdbcType="INTEGER" />
   </resultMap>
+  <resultMap id="BaseResultDTOMap" type="com.xsx.blog.dto.CamerasDTO" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="tags" property="tags" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="statu" property="statu" jdbcType="INTEGER" />
+    <result column="look_num" property="lookNum" jdbcType="INTEGER" />
+    <result column="zan_num" property="zanNum" jdbcType="INTEGER" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+  </resultMap>
+
   <sql id="Base_Column_List" >
     id, title, tags, create_time, update_time, statu, look_num, zan_num
   </sql>
 
-  <select id="findAll" resultMap="BaseResultMap">
+  <select id="findAll" resultMap="BaseResultDTOMap">
     select
-    <include refid="Base_Column_List" />
-    from cameras
+    c.*,t.url
+    from cameras c
+    LEFT JOIN (SELECT mi.`carmera_id`,mi.`url` FROM images mi WHERE mi.`cover`=1 AND mi.`statu`=1) t ON c.id = t.carmera_id
     <where>
       <if test="request.tags != null and request.tags != ''">
         tags like #{request.tags,jdbcType=VARCHAR}
+      </if>
+      <if test="request.statu != null and request.statu != ''">
+        statu = #{request.statu,jdbcType=INTEGER}
       </if>
     </where>
   </select>

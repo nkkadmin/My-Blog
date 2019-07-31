@@ -18,7 +18,17 @@ public class CamerasRequest extends PageRequest implements Serializable {
 
     private String tags;
 
+    private Integer statu;
+
     private List<Images> imagesList;
+
+    public Integer getStatu() {
+        return statu;
+    }
+
+    public void setStatu(Integer statu) {
+        this.statu = statu;
+    }
 
     public Integer getId() {
         return id;

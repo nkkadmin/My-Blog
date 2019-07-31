@@ -37,204 +37,26 @@
                     <div class="filter-container isotopeFilters">
                         <ul class="list-inline filter">
                             <li class="active"><button class="btn btn-isoFilter" data-filter="*">All </button></li>
-                            <li><button class="btn btn-isoFilter" data-filter=".illustrations">Illustrations</button></li>
-                            <li><button class="btn btn-isoFilter" data-filter=".photography">Photography</button></li>
-                            <li><button class="btn btn-isoFilter" data-filter=".websites">Websites</button></li>
-                            <li><button class="btn btn-isoFilter" data-filter=".art">Art</button></li>
+                            <li v-for="tag in tagList"><button class="btn btn-isoFilter" :data-filter="'.'+tag.enTag">{{tag.cnTag}}</button></li>
                         </ul>
                     </div>
                     <div class="isotopeContainer">
                         <ul id="list">
-                            <li class="col-lg-4 col-sm-4 col-md-6 isotopeSelector art">
+                            <li v-for="item in listData" :class="'col-lg-4 col-sm-4 col-md-6 isotopeSelector ' + item.enTags">
                                 <div class="portfolio-box zoom-effect">
-                                    <img src="../gallery/images/1-thumb.jpg" class="img-responsive" alt="">
+                                    <img :src="item.url" class="img-responsive" alt="">
                                     <div class="portfolio-box-caption">
                                         <div class="portfolio-box-caption-content">
                                             <div class="project-name">
-                                                Project Name
+                                                {{item.title}}
                                             </div>
                                             <div class="project-category">
                                                 Category
                                             </div>
-                                           <!-- <div class="project-social">
-                                                <ul class="list-inline">
-                                                    <li><a href="#"><i class="fa fa-link"></i></a></li>
-                                                    <li><a href="../gallery/images/1.jpg" data-lightbox="example-set" data-title="Click the right half of the image to move forward."><i class="fa fa-search"></i></a></li>
-                                                </ul>
-                                            </div>-->
                                         </div>
                                     </div>
                                 </div>
                             </li>
-                            <li class="col-lg-4 col-sm-4 col-md-6 isotopeSelector art">
-                                <div class="portfolio-box zoom-effect">
-                                    <img src="../gallery/images/2-thumb.jpg" class="img-responsive" alt="">
-                                    <div class="portfolio-box-caption">
-                                        <div class="portfolio-box-caption-content">
-                                            <div class="project-name">
-                                                Project Name
-                                            </div>
-                                            <div class="project-category">
-                                                Category
-                                            </div>
-                                            <!--<div class="project-social">
-                                                <ul class="list-inline">
-                                                    <li><a href="#"><i class="fa fa-link"></i></a></li>
-                                                    <li><a href="../gallery/images/2.jpg" data-lightbox="example-set" data-title="Click the right half of the image to move forward."><i class="fa fa-search"></i></a></li>
-                                                </ul>
-                                            </div>-->
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="col-lg-4 col-sm-4 col-md-6 isotopeSelector illustrations">
-                                <div class="portfolio-box zoom-effect">
-                                    <img src="../gallery/images/3-thumb.jpg" class="img-responsive" alt="">
-                                    <div class="portfolio-box-caption">
-                                        <div class="portfolio-box-caption-content">
-                                            <div class="project-name">
-                                                Project Name
-                                            </div>
-                                            <div class="project-category">
-                                                Category
-                                            </div>
-                                            <!--<div class="project-social">
-                                                <ul class="list-inline">
-                                                    <li><a href="#"><i class="fa fa-link"></i></a></li>
-                                                    <li><a href="../gallery/images/3.jpg" data-lightbox="example-set" data-title="Click the right half of the image to move forward."><i class="fa fa-search"></i></a></li>
-                                                </ul>
-                                            </div>-->
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="col-lg-4 col-sm-4 col-md-6 isotopeSelector illustrations">
-                                <div class="portfolio-box zoom-effect">
-                                    <img src="../gallery/images/3-thumb.jpg" class="img-responsive" alt="">
-                                    <div class="portfolio-box-caption">
-                                        <div class="portfolio-box-caption-content">
-                                            <div class="project-name">
-                                                Project Name
-                                            </div>
-                                            <div class="project-category">
-                                                Category
-                                            </div>
-                                            <!--<div class="project-social">
-                                                <ul class="list-inline">
-                                                    <li><a href="#"><i class="fa fa-link"></i></a></li>
-                                                    <li><a href="../gallery/images/3.jpg" data-lightbox="example-set" data-title="Click the right half of the image to move forward."><i class="fa fa-search"></i></a></li>
-                                                </ul>
-                                            </div>-->
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="col-lg-4 col-sm-4 col-md-6 isotopeSelector illustrations">
-                                <div class="portfolio-box zoom-effect">
-                                    <img src="../gallery/images/3-thumb.jpg" class="img-responsive" alt="">
-                                    <div class="portfolio-box-caption">
-                                        <div class="portfolio-box-caption-content">
-                                            <div class="project-name">
-                                                Project Name
-                                            </div>
-                                            <div class="project-category">
-                                                Category
-                                            </div>
-                                            <!--<div class="project-social">
-                                                <ul class="list-inline">
-                                                    <li><a href="#"><i class="fa fa-link"></i></a></li>
-                                                    <li><a href="../gallery/images/3.jpg" data-lightbox="example-set" data-title="Click the right half of the image to move forward."><i class="fa fa-search"></i></a></li>
-                                                </ul>
-                                            </div>-->
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="col-lg-4 col-sm-4 col-md-6 isotopeSelector illustrations">
-                                <div class="portfolio-box zoom-effect">
-                                    <img src="../gallery/images/3-thumb.jpg" class="img-responsive" alt="">
-                                    <div class="portfolio-box-caption">
-                                        <div class="portfolio-box-caption-content">
-                                            <div class="project-name">
-                                                Project Name
-                                            </div>
-                                            <div class="project-category">
-                                                Category
-                                            </div>
-                                            <!--<div class="project-social">
-                                                <ul class="list-inline">
-                                                    <li><a href="#"><i class="fa fa-link"></i></a></li>
-                                                    <li><a href="../gallery/images/3.jpg" data-lightbox="example-set" data-title="Click the right half of the image to move forward."><i class="fa fa-search"></i></a></li>
-                                                </ul>
-                                            </div>-->
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="col-lg-4 col-sm-4 col-md-6 isotopeSelector illustrations">
-                                <div class="portfolio-box zoom-effect">
-                                    <img src="../gallery/images/3-thumb.jpg" class="img-responsive" alt="">
-                                    <div class="portfolio-box-caption">
-                                        <div class="portfolio-box-caption-content">
-                                            <div class="project-name">
-                                                Project Name
-                                            </div>
-                                            <div class="project-category">
-                                                Category
-                                            </div>
-                                            <!--<div class="project-social">
-                                                <ul class="list-inline">
-                                                    <li><a href="#"><i class="fa fa-link"></i></a></li>
-                                                    <li><a href="../gallery/images/3.jpg" data-lightbox="example-set" data-title="Click the right half of the image to move forward."><i class="fa fa-search"></i></a></li>
-                                                </ul>
-                                            </div>-->
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="col-lg-4 col-sm-4 col-md-6 isotopeSelector illustrations">
-                                <div class="portfolio-box zoom-effect">
-                                    <img src="../gallery/images/3-thumb.jpg" class="img-responsive" alt="">
-                                    <div class="portfolio-box-caption">
-                                        <div class="portfolio-box-caption-content">
-                                            <div class="project-name">
-                                                Project Name
-                                            </div>
-                                            <div class="project-category">
-                                                Category
-                                            </div>
-                                            <!--<div class="project-social">
-                                                <ul class="list-inline">
-                                                    <li><a href="#"><i class="fa fa-link"></i></a></li>
-                                                    <li><a href="../gallery/images/3.jpg" data-lightbox="example-set" data-title="Click the right half of the image to move forward."><i class="fa fa-search"></i></a></li>
-                                                </ul>
-                                            </div>-->
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="col-lg-4 col-sm-4 col-md-6 isotopeSelector illustrations">
-                                <div class="portfolio-box zoom-effect">
-                                    <img src="../gallery/images/3-thumb.jpg" class="img-responsive" alt="">
-                                    <div class="portfolio-box-caption">
-                                        <div class="portfolio-box-caption-content">
-                                            <div class="project-name">
-                                                Project Name
-                                            </div>
-                                            <div class="project-category">
-                                                Category
-                                            </div>
-                                            <!--<div class="project-social">
-                                                <ul class="list-inline">
-                                                    <li><a href="#"><i class="fa fa-link"></i></a></li>
-                                                    <li><a href="../gallery/images/3.jpg" data-lightbox="example-set" data-title="Click the right half of the image to move forward."><i class="fa fa-search"></i></a></li>
-                                                </ul>
-                                            </div>-->
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-
                         </ul>
                     </div>
                     <div class="text-center"><button class="btn btn-skin" id="isotopeShowMore" >Show More</button></div>
@@ -276,31 +98,19 @@
             loadCream:function () {
                 var self = this;
                 self.issuesHeight = 0;
-                if(!self.isAppend)
-                    self.listData = [];
 
                 var param = {
                     "pageNo":self.pageNo,
-                    "pageSize":self.pageSize,
-                    "year":self.year
+                    "pageSize":self.pageSize
                 }
-                axios.post("/index/camrea/searchList", param).then(function (response) {
-                    // self.listData = self.listData.concat(response.data.object);
-                    if(self.listData.length > 0){
-                        self.listData = self.listData.concat(response.data.object);
-                    }else{
-                        self.listData = response.data.object;
+                axios.post("/index/camrea/queryAll", param).then(function (response) {
+                    console.log(response);
+                    if(response.data.cameraIndexVos != null){
+                        self.listData = response.data.cameraIndexVos;
                     }
-                    self.years = response.data.years;
-                    var datas = self.listData;
-                    var itemSize = 0;
-                    for(var key in datas){
-                        itemSize += datas[key].length;
+                    if(response.data.allInTags != null){
+                        self.tagList = response.data.allInTags;
                     }
-                    self.issuesHeight = itemSize * 250;
-                    self.pageNo = response.data.pageNo;
-                    self.hasNextPage = response.data.hasNextPage;
-                    $(".issues").css("height",self.issuesHeight+"px !important");
                 });
             },
             info:function(id){
@@ -308,33 +118,21 @@
             },
             nextPage:function () {
                 this.pageNo++;
-                this.isAppend = true;
                 this.loadCream();
-            },
-            clickYear:function (year) {
-                this.year = year;
-                this.isAppend = false;
-                this.loadCream();
-
             }
-
         },
         data() {
             return {
-                issuesHeight:0, //数据条数
                 pageNo:1,
                 pageSize:10,
                 hasNextPage:false,
                 currentMenuId: '',
                 menuList: [],
                 listData: [],
-                isAppend:false,
-                years:[],
-                year:null
+                tagList:[]
             }
         },
         mounted: function () {
-            self.isAppend = false;
             this.loadCream();
         }
     }

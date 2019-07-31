@@ -1,22 +1,135 @@
 package com.xsx.blog.result;
 
+
 import java.util.List;
-import com.xsx.blog.vo.CameraCoverVo;
+import java.util.TreeSet;
 
 /**
  * @Description:
  * @Date: 2019-03-21 07:58
  * @Auther: xieshengxiang
  */
-public class CameraIndexResult extends AbstractPageResult<CameraCoverVo> {
+public class CameraIndexResult extends AbstractPageResult {
 
-    private List<String> years;
+    /**
+     * 将标签去重
+     */
+    private TreeSet<TagsVo> allInTags;
 
-    public List<String> getYears() {
-        return years;
+    /**
+     * 数据
+     */
+    private List<CameraIndexVo> cameraIndexVos;
+
+    public TreeSet<TagsVo> getAllInTags() {
+        return allInTags;
     }
 
-    public void setYears(List<String> years) {
-        this.years = years;
+    public void setAllInTags(TreeSet<TagsVo> allInTags) {
+        this.allInTags = allInTags;
+    }
+
+    public List<CameraIndexVo> getCameraIndexVos() {
+        return cameraIndexVos;
+    }
+
+    public void setCameraIndexVos(List<CameraIndexVo> cameraIndexVos) {
+        this.cameraIndexVos = cameraIndexVos;
+    }
+
+    /**
+     * 标签对象
+     */
+    public static class TagsVo implements Comparable<TagsVo> {
+        private String cnTag;
+
+        private String enTag;
+
+        public String getCnTag() {
+            return cnTag;
+        }
+
+        public void setCnTag(String cnTag) {
+            this.cnTag = cnTag;
+        }
+
+        public String getEnTag() {
+            return enTag;
+        }
+
+        public void setEnTag(String enTag) {
+            this.enTag = enTag;
+        }
+
+        @Override
+        public int compareTo(TagsVo o) {
+            return 1;
+        }
+    }
+
+    public static class CameraIndexVo {
+
+        private Integer id;
+
+        private String title;
+
+        private String url;
+
+        /**
+         * 英文版标签
+         */
+        private String enTags;
+
+        private Integer lookNum;
+
+        private Integer zanNum;
+
+        public Integer getId() {
+            return id;
+        }
+
+        public void setId(Integer id) {
+            this.id = id;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public String getEnTags() {
+            return enTags;
+        }
+
+        public void setEnTags(String enTags) {
+            this.enTags = enTags;
+        }
+
+        public Integer getLookNum() {
+            return lookNum;
+        }
+
+        public void setLookNum(Integer lookNum) {
+            this.lookNum = lookNum;
+        }
+
+        public Integer getZanNum() {
+            return zanNum;
+        }
+
+        public void setZanNum(Integer zanNum) {
+            this.zanNum = zanNum;
+        }
     }
 }

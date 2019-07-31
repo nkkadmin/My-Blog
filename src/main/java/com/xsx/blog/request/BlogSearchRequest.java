@@ -1,6 +1,5 @@
 package com.xsx.blog.request;
 
-import com.xsx.blog.util.StringUtils;
 
 /**
  *

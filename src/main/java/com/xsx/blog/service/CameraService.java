@@ -2,6 +2,7 @@ package com.xsx.blog.service;
 
 import com.github.pagehelper.PageInfo;
 import com.xsx.blog.request.CamerasRequest;
+import com.xsx.blog.result.CameraIndexResult;
 import com.xsx.blog.result.Result;
 import com.xsx.blog.vo.CameraVO;
 
@@ -18,5 +19,7 @@ public interface CameraService {
     public PageInfo<CameraVO> findPage(CamerasRequest request);
 
     public Result save(CamerasRequest camerasRequest);
+
+    CameraIndexResult findPageIndex(CamerasRequest request);
 }
 
