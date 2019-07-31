@@ -69,11 +69,11 @@
             <el-dialog
                     title="提示"
                     :visible.sync="imageShow"
-                    width="30%"
+                    width="70%"
                     center>
                 <el-carousel indicator-position="outside">
                     <el-carousel-item v-for="image in images" :key="image.id">
-                        <img :src="image.url"/>
+                        <img :src="image.url" style="max-width: 100%;height: auto;"/>
                     </el-carousel-item>
                 </el-carousel>
             </el-dialog>

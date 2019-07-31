@@ -6,20 +6,15 @@ import com.xsx.blog.mapper.CamerasMapper;
 import com.xsx.blog.mapper.ImagesMapper;
 import com.xsx.blog.model.Cameras;
 import com.xsx.blog.model.Images;
-import com.xsx.blog.request.BlogSearchRequest;
 import com.xsx.blog.request.CamerasRequest;
 import com.xsx.blog.result.Result;
 import com.xsx.blog.service.CameraService;
-import com.xsx.blog.vo.BlogVo;
 import com.xsx.blog.vo.CameraVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,6 +87,7 @@ public class CameraServiceImpl implements CameraService {
     private void coverBaseModel(CamerasRequest camerasRequest, Cameras cameras) {
         BeanUtils.copyProperties(camerasRequest,cameras);
     }
+
 
     /**
      * 参数校验

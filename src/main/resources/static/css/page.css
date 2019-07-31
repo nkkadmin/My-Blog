@@ -23,8 +23,7 @@ body {
 .content {
 	float: right;
 	width: 89%;
-	height: 750px;
-	min-height: 600px;
+	height: 600px;
 }
 
 .leftTiyle {

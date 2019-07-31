@@ -13,7 +13,6 @@ import com.xsx.blog.model.Menu;
 import com.xsx.blog.request.BlogSearchRequest;
 import com.xsx.blog.request.CamerasRequest;
 import com.xsx.blog.result.Result;
-import com.xsx.blog.service.BlogService;
 import com.xsx.blog.service.CameraService;
 import com.xsx.blog.service.ImagesService;
 import com.xsx.blog.service.MenuService;
@@ -35,6 +34,7 @@ public class CameraController {
     private MenuService menuService;
     @Autowired
     private CameraService cameraService;
+
     @Autowired
     private ImagesService imagesService;
 
