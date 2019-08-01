@@ -6,11 +6,14 @@
 
     // Initialize all functions when the document is ready.
 	$(document).ready(function(){
-		initResize();
-		initScroller();
-		initAnimation();
-		initIsotope();
-		initContactAjax();
+		setTimeout(function () {
+			initResize();
+			initScroller();
+			initAnimation();
+			initIsotope();
+			initContactAjax();
+		},500)
+
 	});
 
 /* --------------------------------------------------

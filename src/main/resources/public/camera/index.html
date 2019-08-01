@@ -42,7 +42,7 @@
                     </div>
                     <div class="isotopeContainer">
                         <ul id="list">
-                            <li v-for="item in listData" :class="'col-lg-4 col-sm-4 col-md-6 isotopeSelector ' + item.enTags">
+                            <li v-for="item in listData" :class="'col-lg-4 col-sm-4 col-md-6 isotopeSelector ' + item.enTags" @click="selectImg(item.id)">
                                 <div class="portfolio-box zoom-effect">
                                     <img :src="item.url" class="img-responsive" alt="">
                                     <div class="portfolio-box-caption">
@@ -61,6 +61,9 @@
                     </div>
                     <div class="text-center"><button class="btn btn-skin" id="isotopeShowMore" >Show More</button></div>
                 </div>
+                <ul id="dialog-url-list" style="display: none;">
+                    <li v-for="item in dialogList" class="col-lg-4 col-sm-4 col-md-6 isotopeSelector"><img :src="item.url" class="img-responsive" alt=""></li>
+                </ul>
             </el-main>
         </el-container>
         <!--<footer-content></footer-content>-->
@@ -111,6 +114,8 @@
                     if(response.data.allInTags != null){
                         self.tagList = response.data.allInTags;
                     }
+
+
                 });
             },
             info:function(id){
@@ -119,6 +124,17 @@
             nextPage:function () {
                 this.pageNo++;
                 this.loadCream();
+            },
+            selectImg:function (id) {
+                var self = this;
+                axios.get("/index/camrea/queryImgByCamId/"+id).then(function (response) {
+                    console.log(response);
+                    if(response.data != null){
+                        self.dialogList = response.data;
+                        $('#list>li').picEyes();
+                    }
+                })
+
             }
         },
         data() {
@@ -129,7 +145,8 @@
                 currentMenuId: '',
                 menuList: [],
                 listData: [],
-                tagList:[]
+                tagList:[],
+                dialogList:[]
             }
         },
         mounted: function () {
