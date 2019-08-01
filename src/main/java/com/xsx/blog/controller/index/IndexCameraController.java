@@ -53,9 +53,8 @@ public class IndexCameraController {
 
     @RequestMapping("/queryImgByCamId/{camId}")
     public List<Images> queryImgByCamId(@PathVariable("camId") Integer camId){
-
         try {
-            List<Images> images = imagesService.findByCamId(camId);
+            List<Images> images = imagesService.indexFindByCamId(camId);
             return images;
         } catch (Exception e) {
             e.printStackTrace();

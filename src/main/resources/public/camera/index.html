@@ -88,72 +88,11 @@
 <!-- Definity JS -->
 <script type="text/javascript" src="../gallery/js/main.js"></script>
 <script type="text/javascript" src="../gallery/js/jquery.picEyes.js"></script>
+<script type="text/javascript" src="../js/index/indexCamera.js"></script>
 <script>
     $(function () {
         //picturesEyes($('.demo li'));
-        $('#list>li').picEyes();
+        // $('#list>li').picEyes();
     });
-</script>
-<script>
-    var Main = {
-        methods: {
-
-            loadCream:function () {
-                var self = this;
-                self.issuesHeight = 0;
-
-                var param = {
-                    "pageNo":self.pageNo,
-                    "pageSize":self.pageSize
-                }
-                axios.post("/index/camrea/queryAll", param).then(function (response) {
-                    console.log(response);
-                    if(response.data.cameraIndexVos != null){
-                        self.listData = response.data.cameraIndexVos;
-                    }
-                    if(response.data.allInTags != null){
-                        self.tagList = response.data.allInTags;
-                    }
-
-
-                });
-            },
-            info:function(id){
-                window.location.href = "/blog/blog.html?id="+id;
-            },
-            nextPage:function () {
-                this.pageNo++;
-                this.loadCream();
-            },
-            selectImg:function (id) {
-                var self = this;
-                axios.get("/index/camrea/queryImgByCamId/"+id).then(function (response) {
-                    console.log(response);
-                    if(response.data != null){
-                        self.dialogList = response.data;
-                        $('#list>li').picEyes();
-                    }
-                })
-
-            }
-        },
-        data() {
-            return {
-                pageNo:1,
-                pageSize:10,
-                hasNextPage:false,
-                currentMenuId: '',
-                menuList: [],
-                listData: [],
-                tagList:[],
-                dialogList:[]
-            }
-        },
-        mounted: function () {
-            this.loadCream();
-        }
-    }
-    var Ctor = Vue.extend(Main)
-    new Ctor().$mount('#app')
 </script>
 </html>

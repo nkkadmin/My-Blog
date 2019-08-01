@@ -43,6 +43,7 @@ public class CacheabelManagerConfig {
         //指定value进行过期时间配置（@Cacheable 注解中的value）
         redisCacheConfigurationMap.put("blogInfo", this.getRedisCacheConfigurationWithTtl(24*60*60));
         redisCacheConfigurationMap.put("indexMenuData", this.getRedisCacheConfigurationWithTtl(2*60*60));
+        redisCacheConfigurationMap.put("imageListCamId", this.getRedisCacheConfigurationWithTtl(24*60*60));
         return redisCacheConfigurationMap;
     }
 

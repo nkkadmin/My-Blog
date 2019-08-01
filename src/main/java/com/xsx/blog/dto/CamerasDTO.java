@@ -10,6 +10,7 @@ import java.util.Date;
  */
 public class CamerasDTO implements Serializable {
 
+    private static final long serialVersionUID = -2446610011476993008L;
     private Integer id;
 
     private String title;

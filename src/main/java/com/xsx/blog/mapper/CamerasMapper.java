@@ -23,4 +23,6 @@ public interface CamerasMapper {
     int updateByPrimaryKeySelective(Cameras record);
 
     int updateByPrimaryKey(Cameras record);
+
+    Integer validCount();
 }

@@ -9,8 +9,8 @@
 */
 (function($){
 	$.fn.picEyes = function(){
-		var $obj = this;
-		var num,zg = $obj.length - 1;
+		var $obj = $("#list>li");
+		var num;
 		var win_w = $(window).width();
 		var win_h = $(window).height();
 		var eyeHtml = '<div class="picshade"></div>'
@@ -25,11 +25,14 @@
 			+'<div class="pictures_eyes_indicators"></div>';
 		$('body').append(eyeHtml);
 		$obj.click(function() {
-			$(".picshade").css("height", win_h);
-			var n = $(this).find("img").attr('src');
-			$(".pictures_eyes img").attr("src", n);
-			num = $obj.index(this);
-			popwin($('.pictures_eyes'));
+            $(".picshade").css("height", win_h);
+            var n = $(this).find("img").attr('src');
+            console.log(n);
+            $(".pictures_eyes img").attr("src", n);
+            num = 0;
+            setTimeout(function () {
+                popwin($('.pictures_eyes'));
+            },1000)
 		});
 		$(".pictures_eyes_close,.picshade,.pictures_eyes").click(function() {
 			$(".picshade,.pictures_eyes,.pictures_eyes_close,.pictures_eyes_indicators").fadeOut();
@@ -39,12 +42,12 @@
 			stopPropagation(e);
 		});
 		$(".next").click(function(e){
-			if(num < zg){
+			if(num < $("#dialog-url-list>li").length){
 				num++;
 			}else{
 				num = 0;
 			}
-			var xx = $obj.eq(num).find('img').attr("src");
+			var xx = $("#dialog-url-list>li").eq(num).find('img').attr("src");
 			$(".pictures_eyes img").attr("src", xx);
 			stopPropagation(e);
 			popwin($('.pictures_eyes'));
@@ -53,9 +56,9 @@
 			if(num > 0){
 				num--;
 			}else{
-				num = zg;
+				num = $("#dialog-url-list>li").length;
 			}
-			var xx = $obj.eq(num).find('img').attr("src");
+			var xx = $("#dialog-url-list>li").eq(num).find('img').attr("src");
 			$(".pictures_eyes img").attr("src", xx);
 			stopPropagation(e);
 			popwin($('.pictures_eyes'));
@@ -75,7 +78,7 @@
 		}
 		function indicatorsList(){
 			var indHtml = '';
-			$obj.each(function(){
+			$("#dialog-url-list>li").each(function(){
 				var img = $(this).find('img').attr('src');
 				indHtml +='<a href="javascript:;"><img src="'+img+'"/></a>';
 			});

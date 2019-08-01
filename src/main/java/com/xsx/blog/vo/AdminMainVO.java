@@ -18,6 +18,19 @@ public class AdminMainVO extends Result {
      */
     private Integer commentNum;
 
+    /**
+     * 摄影作品数量
+     */
+    private Integer cameraNum;
+
+    public Integer getCameraNum() {
+        return cameraNum;
+    }
+
+    public void setCameraNum(Integer cameraNum) {
+        this.cameraNum = cameraNum;
+    }
+
     public Integer getArticleNum() {
         return articleNum;
     }

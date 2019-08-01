@@ -29,17 +29,22 @@
 
   <select id="findAll" resultMap="BaseResultDTOMap">
     select
-    c.*,t.url
-    from cameras c
-    LEFT JOIN (SELECT mi.`carmera_id`,mi.`url` FROM images mi WHERE mi.`cover`=1 AND mi.`statu`=1) t ON c.id = t.carmera_id
+    cc.*,t.url
+    from cameras cc
+    LEFT JOIN (SELECT mi.`carmera_id`,mi.`url` FROM images mi WHERE mi.`cover`=1 AND mi.`statu`=1) t ON cc.id = t.carmera_id
     <where>
       <if test="request.tags != null and request.tags != ''">
-        tags like #{request.tags,jdbcType=VARCHAR}
+        cc.tags like #{request.tags,jdbcType=VARCHAR}
       </if>
       <if test="request.statu != null and request.statu != ''">
-        statu = #{request.statu,jdbcType=INTEGER}
+        cc.statu = #{request.statu,jdbcType=INTEGER}
       </if>
     </where>
+    order by cc.create_time desc
+  </select>
+
+  <select id="validCount" resultType="java.lang.Integer">
+    select count(1) from cameras where statu = 1
   </select>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >

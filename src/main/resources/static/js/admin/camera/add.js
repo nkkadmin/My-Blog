@@ -6,25 +6,64 @@ new Vue({
             id:"",
             title:"",
             tags:"",
-            imagesList:[] //图片
+            imagesList:[], //图片
+            addOrDelImgs:[], //编辑时，用于记录删除以及添加的图片
         },
+        isEnlargeImage:false,//是否显示放大图片
+        enlargeImage: '',//放大图片地址
         base64:"",
         dialogImageUrl:"",
-        dialogVisible: false
+        dialogVisible: false,
+        progress: 0,//上传进度
+        pass: null,//是否上传成功
+        updateOper:false //是否为更新操作
+    },
+    computed: {
+        proStatus(){//上传状态
+            if(this.pass){
+                return 'success'
+            }else if(this.pass == false){
+                return 'exception'
+            }else{
+                return ''
+            }
+        }
     },
     components: {
 
     },
     methods: {
+        uploadOnProgress(e,file){//开始上传
+            this.progress = Math.floor(e.percent)
+        },
+        uploadOnChange(file){
+            if(file.status == 'ready'){
+                //重置progress组件
+                this.pass = null;
+                this.progress = 0;
+            }else if(file.status == 'fail'){
+                this.$message.error("图片上传出错，请刷新重试！")
+            }
+        },
         uploadSuccess(response, file, fileList){
+            var self = this;
+            this.pass = true;
+            this.$message.success("上传成功")
             var obj = new Object();
             obj.url = file.response;
-            obj.uid = file.uid;
+            obj.id = file.uid;
             this.form.imagesList.push(obj);
-            $(".el-upload-list").find("li").eq(this.form.imagesList.length-1).prepend("<div class='set-cover' @click='setCover'>封面</div>");
+            if(self.updateOper){
+                var operObj = new Object();
+                operObj.id = file.id;
+                operObj.type = "ADD";
+                operObj.url = file.response;
+                self.form.addOrDelImgs.push(operObj);
+            }
         },
-        setCover:function(){
-            console.log("...")
+        uploadOnError(e,file){
+            console.log(e)
+            this.pass = false;
         },
         beforeUpload(file) {
             var isJPG = file.type === 'image/jpeg';
@@ -37,23 +76,40 @@ new Vue({
             }
             return isJPG && isLt2M;
         },
-        handleRemove(file, fileList) {
+        handleFileRemove(file) {
             var self = this;
-            var removeUid = file.uid;
+            var removeUid = file.id;
              for (var i = 0; i < self.form.imagesList.length; i++) {
-                 if(removeUid == self.form.imagesList[i].uid){
+                 if(removeUid == self.form.imagesList[i].id){
                      self.form.imagesList.splice(i,1);
                      break;
                  }
              }
-            toGet("/file/delFile",{params:{"filePath":file.response}},self,function(response){
-
+            toGet("/file/delFile",{params:{"filePath":file.url}},self,function(response){
             });
-
+             if(self.updateOper){
+                 var obj = new Object();
+                 obj.id = file.id;
+                 obj.type = "REMOVE";
+                 self.form.addOrDelImgs.push(obj);
+             }
         },
-        handlePictureCardPreview(file) {
-            this.dialogImageUrl = file.url;
-            this.dialogVisible = true;
+        handleFileEnlarge(_url){//放大图片
+            if(_url){
+                this.enlargeImage = _url;
+                this.isEnlargeImage = !this.isEnlargeImage;
+            }
+        },
+        handleFileCover(file){//设为封面
+            var self = this;
+            var uid = file.id;
+            for (var i = 0; i < self.form.imagesList.length; i++) {
+                if(uid == self.form.imagesList[i].id){
+                    self.form.imagesList[i].cover = '1';
+                }else{
+                    self.form.imagesList[i].cover = '0';
+                }
+            }
         },
         initData(){
             var self = this;
@@ -64,36 +120,76 @@ new Vue({
         },
         save(){//保存
             var self = this;
-            console.log(this.form);
-            axios.post("/admin/camera/save",this.form).then(function(response){
+            if(!self.checkSaveParam()){
+                return false;
+            }
+            toPost("/admin/camera/save",this.form,self,function(response){
                 if(response.data.success){
                     self.$message({
                         showClose: true,
                         message: '保存成功',
                         type: 'success'
                     });
+                    setTimeout(function () {
+                        window.location.href = "list.html";
+                    },1000);
+                }else{
+                    self.$message.error("保存失败");
                 }
+
             })
+        },
+        checkSaveParam:function(){
+            var self = this;
+            if(self.form.title == null || self.form.title == ''){
+                this.$message.error("请输入标题");
+                return false;
+            }
+
+            if(self.form.tags == null || self.form.tags == ''){
+                this.$message.error("请输入标签");
+                return;
+            }
+
+            if(self.form.imagesList.length <= 0){
+                this.$message.error("请上传图片");
+                return false;
+            }
+            var hasCover = false;
+            for (var i = 0; i < self.form.imagesList.length; i++) {
+                if(self.form.imagesList[i].cover == '1'){
+                    hasCover = true;
+                    break;
+                }
+            }
+            if(!hasCover){
+                this.$message.error("请设置封面图");
+                return false;
+            }
+            return true;
         },
         findOne(){
             var self = this;
-            axios.get("/adminBlog/selectById",{params:{"id":this.form.id}}).then(function(response){
+            toGet("/admin/camera/queryById/"+this.form.id,null,self,function(response){
                 if(response.data != null){
                     var info = response.data;
                     self.form.title = info.title;
-                    self.form.content = info.content;
-                    self.form.menuId = info.menu.id;
-                    self.form.tagId = info.tags.id;
+                    self.form.tags = info.tags;
+                    self.form.imagesList = info.imagesList;
                 }
             });
         }
     },
     mounted:function(){
+        var self = this;
         this.initData();
         var param = GetRequest();
         if(Object.keys(param).length > 0){
             this.form.id = param.id;
-            this.findOne();
+            if(typeof(param.id) != "undefined" ){
+                self.updateOper = true;
+            }
+            self.findOne();
         }
     }
 })

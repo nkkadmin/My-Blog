@@ -13,7 +13,10 @@ import com.xsx.blog.result.CameraIndexResult;
 import com.xsx.blog.result.Result;
 import com.xsx.blog.service.CameraService;
 import com.xsx.blog.util.PingYinUtil;
+import com.xsx.blog.vo.AdminCameraVO;
 import com.xsx.blog.vo.CameraVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +35,8 @@ import java.util.TreeSet;
  */
 @Service
 public class CameraServiceImpl implements CameraService {
+
+    private final static Logger logger = LoggerFactory.getLogger(CameraServiceImpl.class);
 
     @Autowired
     private CamerasMapper camerasMapper;
@@ -64,6 +69,44 @@ public class CameraServiceImpl implements CameraService {
         if(!result.isSuccess()){
             return result;
         }
+
+        Integer id = camerasRequest.getId();
+        if(id == null){
+           insertCamera(result,camerasRequest);
+        }else{
+            updateCamera(result,camerasRequest);
+        }
+
+        return result;
+    }
+
+    private void updateCamera(Result result, CamerasRequest camerasRequest) {
+        Cameras cameras = camerasMapper.selectByPrimaryKey(camerasRequest.getId());
+        cameras.setTitle(camerasRequest.getTitle());
+        cameras.setTags(camerasRequest.getTitle());
+        int flag = camerasMapper.updateByPrimaryKey(cameras);
+        if(flag > 1){
+            logger.info("id:{}基本信息修改成功",camerasRequest.getId());
+            List<CamerasRequest.OperImags> addOrDelItems = camerasRequest.getAddOrDelItems();
+            for(CamerasRequest.OperImags operImag : addOrDelItems){
+                Images images = new Images();
+                images.setId(operImag.getId());
+                if(CamerasRequest.OperImagType.isAdd(operImag.getType())){
+                    images.setCarmeraId(camerasRequest.getId());
+                    images.setUrl(operImag.getUrl());
+                    images.setCover(operImag.getCover());
+                    imagesMapper.insertSelective(images);
+                }else if(CamerasRequest.OperImagType.isRemove(operImag.getType())){
+                    images.setStatu(StatuEnum.DELETE.getStatu());
+                    imagesMapper.updateByPrimaryKeySelective(images);
+                }
+            }
+            result.setSuccess(true);
+            result.setMsg("更新成功");
+        }
+    }
+
+    private Result insertCamera(Result result,CamerasRequest camerasRequest) {
         //新增基本信息
         Cameras cameras = new Cameras();
         coverBaseModel(camerasRequest,cameras);
@@ -88,6 +131,20 @@ public class CameraServiceImpl implements CameraService {
         return result;
     }
 
+    @Override
+    public Integer validCount() {
+        return camerasMapper.validCount();
+    }
+
+    @Override
+    public AdminCameraVO queryById(Integer id) {
+        Cameras cameras = camerasMapper.selectByPrimaryKey(id);
+        AdminCameraVO adminCameraVO = new AdminCameraVO();
+        BeanUtils.copyProperties(cameras,adminCameraVO);
+        adminCameraVO.setImagesList(imagesMapper.findByCamId(adminCameraVO.getId()));
+        return adminCameraVO;
+    }
+
     private CameraIndexResult coverIndexResult(PageInfo<CameraVO> page) {
         CameraIndexResult result = new CameraIndexResult();
         List<CameraIndexResult.CameraIndexVo> voList = new ArrayList<>();
@@ -97,8 +154,7 @@ public class CameraServiceImpl implements CameraService {
             CameraIndexResult.CameraIndexVo indexVo = new CameraIndexResult.CameraIndexVo();
             buildCameraIndeVo(indexVo,cameraVO);
             voList.add(indexVo);
-            TreeSet<CameraIndexResult.TagsVo> c = buildAllInTagVo(cameraVO);
-            allInTags.addAll(c);
+            buildAllInTagVo(allInTags,cameraVO);
         }
         result.setAllInTags(allInTags);
         buildResultPageInfo(page,result);
@@ -127,16 +183,15 @@ public class CameraServiceImpl implements CameraService {
     }
 
 
-    private TreeSet<CameraIndexResult.TagsVo> buildAllInTagVo(CameraVO cameraVO) {
-        TreeSet<CameraIndexResult.TagsVo> tagsVoTreeSet = new TreeSet<>();
+    private void buildAllInTagVo(TreeSet<CameraIndexResult.TagsVo> allInTags,CameraVO cameraVO) {
         String[] split = cameraVO.getTags().split(",");
         for (String tag : split){
             CameraIndexResult.TagsVo tagVo = new CameraIndexResult.TagsVo();
-            tagVo.setCnTag(tag);
-            tagVo.setEnTag(PingYinUtil.getPingYin(tag));
-            tagsVoTreeSet.add(tagVo);
+            tagVo.setCnTag(tag.trim());
+            tagVo.setEnTag(PingYinUtil.getPingYin(tag.trim()));
+            tagVo.setTagsId(allInTags.size()+1);
+            allInTags.add(tagVo);
         }
-        return tagsVoTreeSet;
     }
 
 

@@ -16,6 +16,7 @@ import com.xsx.blog.result.Result;
 import com.xsx.blog.service.CameraService;
 import com.xsx.blog.service.ImagesService;
 import com.xsx.blog.service.MenuService;
+import com.xsx.blog.vo.AdminCameraVO;
 import com.xsx.blog.vo.BlogVo;
 import com.xsx.blog.vo.CameraVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +69,19 @@ public class CameraController {
             return new ArrayList<>();
         }
         return imagesService.findByCamId(camId);
+    }
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/queryById/{id}")
+    public AdminCameraVO queryById(@PathVariable Integer id){
+        if(id == null){
+            return new AdminCameraVO();
+        }
+        return cameraService.queryById(id);
     }
 
 }

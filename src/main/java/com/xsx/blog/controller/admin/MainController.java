@@ -1,6 +1,7 @@
 package com.xsx.blog.controller.admin;
 
 import com.xsx.blog.service.BlogService;
+import com.xsx.blog.service.CameraService;
 import com.xsx.blog.service.CommentService;
 import com.xsx.blog.vo.AdminMainVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ public class MainController {
     private BlogService blogService;
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private CameraService cameraService;
 
     @RequestMapping("/loadData")
     public AdminMainVO loadData(){
@@ -29,8 +32,10 @@ public class MainController {
         try {
             Integer articleCount = blogService.count();
             Integer commentCount = commentService.count();
+            Integer cameraNum = cameraService.validCount();
             adminMainVO.setArticleNum(articleCount);
             adminMainVO.setCommentNum(commentCount);
+            adminMainVO.setCameraNum(cameraNum);
             adminMainVO.setSuccess(true);
         } catch (Exception e) {
             e.printStackTrace();

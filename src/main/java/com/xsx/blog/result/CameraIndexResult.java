@@ -41,9 +41,19 @@ public class CameraIndexResult extends AbstractPageResult {
      * 标签对象
      */
     public static class TagsVo implements Comparable<TagsVo> {
+        private Integer tagsId;
+
         private String cnTag;
 
         private String enTag;
+
+        public Integer getTagsId() {
+            return tagsId;
+        }
+
+        public void setTagsId(Integer tagsId) {
+            this.tagsId = tagsId;
+        }
 
         public String getCnTag() {
             return cnTag;
@@ -62,8 +72,28 @@ public class CameraIndexResult extends AbstractPageResult {
         }
 
         @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            TagsVo tagsVo = (TagsVo) o;
+
+            if (tagsId != null ? !tagsId.equals(tagsVo.tagsId) : tagsVo.tagsId != null) return false;
+            if (cnTag != null ? !cnTag.equals(tagsVo.cnTag) : tagsVo.cnTag != null) return false;
+            return enTag != null ? enTag.equals(tagsVo.enTag) : tagsVo.enTag == null;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = tagsId != null ? tagsId.hashCode() : 0;
+            result = 31 * result + (cnTag != null ? cnTag.hashCode() : 0);
+            result = 31 * result + (enTag != null ? enTag.hashCode() : 0);
+            return result;
+        }
+
+        @Override
         public int compareTo(TagsVo o) {
-            return 1;
+            return this.getTagsId() - o.getTagsId() ;
         }
     }
 

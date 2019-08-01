@@ -4,13 +4,78 @@
   <meta charset="UTF-8">
   <title>Title</title>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <link rel="stylesheet" href="../../element-ui/css/index.css">
   <style>
-  .set-cover{
-    position: absolute;
-    z-index: 9999;
-    cursor: pointer;
-  }
+    .img-list{
+      overflow:hidden;
+      width:100%;
+    }
+    .img-list .img-content{
+      float:left;
+      position:relative;
+      display:inline-block;
+      width:200px;
+      height:270px;
+      padding:5px;
+      margin:5px 20px 20px 0;
+      border:1px solid #d1dbe5;
+      border-radius:4px;
+      transition:all .3s;
+      box-shadow:0 2px 4px 0 rgba(0,0,0,.12), 0 0 6px 0 rgba(0,0,0,.04);
+    }
+    .img-list .img-content img{
+      display:block;
+      width:100%;
+      height:190px;
+      margin:0 auto;
+      border-radius:4px;
+    }
+    .img-list .img-content .name{
+      margin-top:10px;
+    }
+    .img-list .img-content .name>div{
+      width:90%;
+      text-overflow:ellipsis;
+      overflow:hidden;
+      height:25px;
+      line-height:25px;
+    }
+    .img-list .img-content:hover .del,
+    .img-list .img-content:hover .layer{
+      opacity:1;
+    }
+    .img-list .img-content .del,
+    .img-list .img-content .layer{
+      opacity:0;
+      transition:all .3s;
+    }
+    .img-list .img-content .del{
+      position:absolute;
+      bottom:10px;
+      right:10px;
+      color:#8492a6;
+      cursor:pointer;
+      font-size:1.1em;
+    }
+    .img-list .img-content .layer{
+      position:absolute;
+      left:0;
+      right:0;
+      top:0;
+      height:200px;
+      color:#fff;
+      text-align:center;
+      z-index:5;
+      background-color:rgba(0,0,0,.4);
+    }
+    .img-list .img-content .layer i{
+      font-size:1.6em;
+      margin-top:80px;
+    }
+    .img-list .img-progress{
+      text-align:center;
+      padding-top:50px;
+    }
   </style>
 </head>
 <body>
@@ -25,14 +90,33 @@
         <el-input v-model="form.tags" style="width:400px"></el-input>(多个标签地逗号分开)
       </el-form-item>
       <el-form-item label="照片">
+        <div class="img-list">
+          <div class="img-content" v-for="(item,key) in form.imagesList" :key="key">
+            <img :src="item.url">
+            <div class="name">
+              <div>{{ item.name }}</div>
+              <el-button :type="item.cover == '1' ? 'primary' : ''" @click="handleFileCover(item)">设为封面</el-button>
+            </div>
+            <!-- 删除icon -->
+            <div class="del">
+              <i @click="handleFileRemove(item)" class="el-icon-delete"></i>
+            </div>
+            <!-- 放大icon -->
+            <div class="layer" @click="handleFileEnlarge(item.url)">
+              <i class="el-icon-view"></i>
+            </div>
+          </div>
+        </div>
         <el-upload
                 action="/file/upload"
                 list-type="picture-card"
+                :show-file-list="false"
                 :auto-upload="true"
                 :multiple="true"
-                :on-preview="handlePictureCardPreview"
-                :on-remove="handleRemove"
+                :on-change="uploadOnChange"
                 :on-success="uploadSuccess"
+                :on-error="uploadOnError"
+                :on-progress="uploadOnProgress"
                 :before-upload="beforeUpload">
           <i class="el-icon-plus"></i>
         </el-upload>
@@ -44,7 +128,12 @@
         <el-button type="primary" @click="save">保存</el-button>
       </el-form-item>
     </el-form>
-
+    <el-dialog title="" :visible.sync="isEnlargeImage" size="large" :modal-append-to-body="false" top="8%" width="60%">
+      <img @click="isEnlargeImage = false" style="width:100%;" :src="enlargeImage">
+    </el-dialog>
+    <div v-if="!pass && progress !== 0" class="img-content img-progress">
+      <el-progress type="circle" :percentage="progress" :status="proStatus"></el-progress>
+    </div>
   </template>
 </div>
 <script type="text/javascript" src="../../js/vue.js"></script>
