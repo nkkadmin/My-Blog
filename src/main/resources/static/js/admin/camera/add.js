@@ -8,6 +8,7 @@ new Vue({
             tags:"",
             imagesList:[], //图片
             addOrDelImgs:[], //编辑时，用于记录删除以及添加的图片
+            coverChange:[] //封面变化
         },
         isEnlargeImage:false,//是否显示放大图片
         enlargeImage: '',//放大图片地址
@@ -51,13 +52,13 @@ new Vue({
             this.$message.success("上传成功")
             var obj = new Object();
             obj.url = file.response;
-            obj.id = file.uid;
+            obj.uid = file.uid;
             this.form.imagesList.push(obj);
             if(self.updateOper){
                 var operObj = new Object();
-                operObj.id = file.id;
                 operObj.type = "ADD";
                 operObj.url = file.response;
+                operObj.uil = file.uid;
                 self.form.addOrDelImgs.push(operObj);
             }
         },
@@ -78,9 +79,9 @@ new Vue({
         },
         handleFileRemove(file) {
             var self = this;
-            var removeUid = file.id;
+            var removeUid = file.uid;
              for (var i = 0; i < self.form.imagesList.length; i++) {
-                 if(removeUid == self.form.imagesList[i].id){
+                 if(removeUid == self.form.imagesList[i].uid){
                      self.form.imagesList.splice(i,1);
                      break;
                  }
@@ -102,12 +103,24 @@ new Vue({
         },
         handleFileCover(file){//设为封面
             var self = this;
-            var uid = file.id;
+            var uid = file.uid;
+            var inImageslist = false;
             for (var i = 0; i < self.form.imagesList.length; i++) {
-                if(uid == self.form.imagesList[i].id){
+                if(uid == self.form.imagesList[i].uid){
                     self.form.imagesList[i].cover = '1';
+                    if(typeof(self.form.imagesList[i].id) != "undefined"){
+                        inImageslist = true;
+                    }
+
                 }else{
                     self.form.imagesList[i].cover = '0';
+                }
+            }
+            if(!inImageslist){
+                for(var i = 0;i<self.form.addOrDelImgs.length;i++){
+                    if(uid == self.form.addOrDelImgs[i].uid){
+                        self.form.addOrDelImgs[i].cover = "1";
+                    }
                 }
             }
         },
@@ -176,6 +189,10 @@ new Vue({
                     self.form.title = info.title;
                     self.form.tags = info.tags;
                     self.form.imagesList = info.imagesList;
+                    for(var i = 0;i<self.form.imagesList.length;i++){
+                        var obj = self.form.imagesList[i];
+                        obj.uid = obj.id;
+                    }
                 }
             });
         }

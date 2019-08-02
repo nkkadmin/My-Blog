@@ -24,7 +24,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -85,9 +84,9 @@ public class CameraServiceImpl implements CameraService {
         cameras.setTitle(camerasRequest.getTitle());
         cameras.setTags(camerasRequest.getTitle());
         int flag = camerasMapper.updateByPrimaryKey(cameras);
-        if(flag > 1){
+        if(flag > 0){
             logger.info("id:{}基本信息修改成功",camerasRequest.getId());
-            List<CamerasRequest.OperImags> addOrDelItems = camerasRequest.getAddOrDelItems();
+            List<CamerasRequest.OperImags> addOrDelItems = camerasRequest.getAddOrDelImgs();
             for(CamerasRequest.OperImags operImag : addOrDelItems){
                 Images images = new Images();
                 images.setId(operImag.getId());

@@ -19,7 +19,7 @@
     select
     <include refid="Base_Column_List" />
     from images
-    where carmera_id = #{camId,jdbcType=INTEGER}
+    where carmera_id = #{camId,jdbcType=INTEGER} and statu = 1
   </select>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >

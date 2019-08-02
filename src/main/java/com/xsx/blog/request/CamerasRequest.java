@@ -22,14 +22,14 @@ public class CamerasRequest extends PageRequest implements Serializable {
 
     private List<Images> imagesList;
 
-    private List<OperImags> addOrDelItems;
+    private List<OperImags> addOrDelImgs;
 
-    public List<OperImags> getAddOrDelItems() {
-        return addOrDelItems;
+    public List<OperImags> getAddOrDelImgs() {
+        return addOrDelImgs;
     }
 
-    public void setAddOrDelItems(List<OperImags> addOrDelItems) {
-        this.addOrDelItems = addOrDelItems;
+    public void setAddOrDelImgs(List<OperImags> addOrDelImgs) {
+        this.addOrDelImgs = addOrDelImgs;
     }
 
     public Integer getStatu() {
