@@ -100,9 +100,30 @@ public class CameraServiceImpl implements CameraService {
                     imagesMapper.updateByPrimaryKeySelective(images);
                 }
             }
+            //封面变更
+            updateCover(camerasRequest.getChangeCover());
             result.setSuccess(true);
             result.setMsg("更新成功");
         }
+    }
+
+    private void updateCover(CamerasRequest.ChangeCover changeCover) {
+        if(changeCover == null){
+            return;
+        }
+        if(changeCover.getOldCover() != null){
+            changeImageCover(changeCover.getOldCover(),0);
+        }
+        if(changeCover.getNewCover() != null){
+            changeImageCover(changeCover.getNewCover(),1);
+        }
+    }
+
+    private void changeImageCover(Integer imageId,Integer coverVal){
+        Images images = new Images();
+        images.setId(imageId);
+        images.setCover(coverVal);
+        imagesMapper.updateByPrimaryKeySelective(images);
     }
 
     private Result insertCamera(Result result,CamerasRequest camerasRequest) {
@@ -142,6 +163,15 @@ public class CameraServiceImpl implements CameraService {
         BeanUtils.copyProperties(cameras,adminCameraVO);
         adminCameraVO.setImagesList(imagesMapper.findByCamId(adminCameraVO.getId()));
         return adminCameraVO;
+    }
+
+    @Override
+    public Result changeStatu(Integer id,StatuEnum statuEnum) {
+        Cameras cameras = new Cameras();
+        cameras.setId(id);
+        cameras.setStatu(statuEnum.getStatu());
+        int flag = camerasMapper.updateByPrimaryKeySelective(cameras);
+        return new Result(flag > 0);
     }
 
     private CameraIndexResult coverIndexResult(PageInfo<CameraVO> page) {

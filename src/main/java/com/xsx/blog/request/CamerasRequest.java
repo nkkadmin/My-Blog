@@ -22,7 +22,23 @@ public class CamerasRequest extends PageRequest implements Serializable {
 
     private List<Images> imagesList;
 
+    /**
+     * 新增或者删除的图片
+     */
     private List<OperImags> addOrDelImgs;
+
+    /**
+     * 封面变更
+     */
+    private ChangeCover changeCover;
+
+    public ChangeCover getChangeCover() {
+        return changeCover;
+    }
+
+    public void setChangeCover(ChangeCover changeCover) {
+        this.changeCover = changeCover;
+    }
 
     public List<OperImags> getAddOrDelImgs() {
         return addOrDelImgs;
@@ -70,6 +86,28 @@ public class CamerasRequest extends PageRequest implements Serializable {
 
     public void setImagesList(List<Images> imagesList) {
         this.imagesList = imagesList;
+    }
+
+    public static class ChangeCover implements Serializable {
+
+        private Integer oldCover;
+        private Integer newCover;
+
+        public Integer getOldCover() {
+            return oldCover;
+        }
+
+        public void setOldCover(Integer oldCover) {
+            this.oldCover = oldCover;
+        }
+
+        public Integer getNewCover() {
+            return newCover;
+        }
+
+        public void setNewCover(Integer newCover) {
+            this.newCover = newCover;
+        }
     }
 
     public static class OperImags implements Serializable {

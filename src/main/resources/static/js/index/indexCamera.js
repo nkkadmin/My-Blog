@@ -3,19 +3,29 @@ var Main = {
     methods: {
         loadCream:function () {
             var self = this;
-            self.issuesHeight = 0;
-
             var param = {
                 "pageNo":self.pageNo,
                 "pageSize":self.pageSize
             }
             axios.post("/index/camrea/queryAll", param).then(function (response) {
-                console.log(response);
-                if(response.data.cameraIndexVos != null){
-                    self.listData = response.data.cameraIndexVos;
+                var cameraList = response.data.cameraIndexVos;
+                var tagList = response.data.allInTags;
+                if(self.appendList){
+                    for(var i = 0;i<cameraList.length;i++){
+                        self.listData.push(cameraList[i]);
+                    }
+                    for(var i = 0;i<tagList.length;i++){
+                        self.tagList.push(tagList[i]);
+                    }
+                }else{
+                    self.listData = cameraList;
+                    self.tagList = tagList;
                 }
-                if(response.data.allInTags != null){
-                    self.tagList = response.data.allInTags;
+
+                if(response.data.pageNo < response.data.pages){
+                    self.hasNextPage = true;
+                }else{
+                    self.hasNextPage = false;
                 }
                 setTimeout(function () {
                     $('#list>li').picEyes();
@@ -34,7 +44,16 @@ var Main = {
                     self.dialogList = response.data;
                 }
             })
-        }
+        },
+        showMore:function(){
+            if(this.hasNextPage){
+                this.appendList = true;
+                this.pageNo++;
+                this.loadCream();
+            }else{
+                $('#isotopeShowMore').hide();
+            }
+        },
     },
     data() {
         return {
@@ -45,7 +64,8 @@ var Main = {
             menuList: [],
             listData: [],
             tagList:[],
-            dialogList:[]
+            dialogList:[],
+            appendList:false,
         }
     },
     mounted: function () {

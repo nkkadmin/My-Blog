@@ -1,23 +1,17 @@
 package com.xsx.blog.controller.admin;
 
-import com.github.pagehelper.Page;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import com.github.pagehelper.PageInfo;
-import com.xsx.blog.model.Blog;
-import com.xsx.blog.model.Cameras;
+import com.xsx.blog.common.StatuEnum;
 import com.xsx.blog.model.Images;
 import com.xsx.blog.model.Menu;
-import com.xsx.blog.request.BlogSearchRequest;
 import com.xsx.blog.request.CamerasRequest;
 import com.xsx.blog.result.Result;
 import com.xsx.blog.service.CameraService;
 import com.xsx.blog.service.ImagesService;
 import com.xsx.blog.service.MenuService;
 import com.xsx.blog.vo.AdminCameraVO;
-import com.xsx.blog.vo.BlogVo;
 import com.xsx.blog.vo.CameraVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -82,6 +76,34 @@ public class CameraController {
             return new AdminCameraVO();
         }
         return cameraService.queryById(id);
+    }
+
+    /**
+     * 删除
+     * deleteById
+     * @param id
+     * @return
+     */
+    @GetMapping("/deleteById/{id}")
+    public Result deleteById(@PathVariable Integer id){
+        if(id == null){
+            return new Result(false);
+        }
+        return cameraService.changeStatu(id, StatuEnum.DELETE);
+    }
+
+    /**
+     * 恢复
+     * deleteById
+     * @param id
+     * @return
+     */
+    @GetMapping("/recover/{id}")
+    public Result recover(@PathVariable Integer id){
+        if(id == null){
+            return new Result(false);
+        }
+        return cameraService.changeStatu(id,StatuEnum.OK);
     }
 
 }

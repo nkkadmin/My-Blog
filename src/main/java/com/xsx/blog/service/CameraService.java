@@ -1,6 +1,7 @@
 package com.xsx.blog.service;
 
 import com.github.pagehelper.PageInfo;
+import com.xsx.blog.common.StatuEnum;
 import com.xsx.blog.request.CamerasRequest;
 import com.xsx.blog.result.CameraIndexResult;
 import com.xsx.blog.result.Result;
@@ -35,5 +36,12 @@ public interface CameraService {
      * @return
      */
     AdminCameraVO queryById(Integer id);
+
+    /**
+     * 变更状态
+     * @param id
+     * @return
+     */
+    Result changeStatu(Integer id, StatuEnum statuEnum);
 }
 

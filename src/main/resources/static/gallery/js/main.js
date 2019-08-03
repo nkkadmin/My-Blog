@@ -69,8 +69,8 @@
 -------------------------------------------------- */
 
 	function initIsotope () {
-		var initial_items = 5;
-		var next_items = 3;
+		var initial_items = 10;
+		var next_items = 10;
 		// init Isotope
 		var $isotopeContainer = $('.isotopeContainer').isotope({
 		  itemSelector: '.isotopeSelector',
@@ -96,7 +96,7 @@
 				$('#isotopeShowMore').show();
 			}
 			else {
-				$('#isotopeShowMore').hide();
+				// $('#isotopeShowMore').hide();
 			}
 			if ($('.isotopeSelector').hasClass('visible-xs')) {
 				$('.isotopeSelector').removeClass('visible-xs');
@@ -133,7 +133,7 @@
 				}
 			});
 			if (itemsCount >= itemsMax) {
-				$('#isotopeShowMore').hide();
+				// $('#isotopeShowMore').hide();
 			}
 			$isotopeContainer.isotope('layout');
 		}
@@ -148,7 +148,7 @@
 				itemsCount++;
 			});
 			if (itemsCount < itemsMax || initial_items >= itemsMax) {
-				$('#isotopeShowMore').hide();
+				// $('#isotopeShowMore').hide();
 			}
 			$isotopeContainer.isotope('layout');
 		}

@@ -59,10 +59,10 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="text-center"><button class="btn btn-skin" id="isotopeShowMore" >Show More</button></div>
+                    <div class="text-center"><button class="btn btn-skin" id="isotopeShowMore" @click="showMore">Show More</button></div>
                 </div>
                 <ul id="dialog-url-list" style="display: none;">
-                    <li v-for="item in dialogList" class="col-lg-4 col-sm-4 col-md-6 isotopeSelector"><img :src="item.url" class="img-responsive" alt=""></li>
+                    <li v-for="item in dialogList" class="col-lg-4 col-sm-4 col-md-6 isotopeSelector" ><img :src="item.url" class="img-responsive" alt=""></li>
                 </ul>
             </el-main>
         </el-container>

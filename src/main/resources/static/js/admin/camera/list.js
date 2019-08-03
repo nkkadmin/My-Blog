@@ -60,13 +60,28 @@ var Main = {
         },
         deleteById:function(id){
             var self = this;
-            toGet("/adminBlog/deleteById",{params:{"id":id}},self,function (response) {
-                if(response.data){
-                    self.$message({
-                        showClose: true,
-                        message: '删除成功',
-                        type: 'success'
-                    });
+            toGet("/admin/camera/deleteById/"+id,null,self,function (response) {
+                var succ = response.data.success;
+                self.$message({
+                    showClose: true,
+                    message: succ ? "删除成功" : "删除失败",
+                    type: succ ? 'success' : 'false'
+                });
+                if(succ){
+                    self.loadData();
+                }
+            });
+        },
+        recover:function(id){
+            var self = this;
+            toGet("/admin/camera/recover/"+id,null,self,function (response) {
+                var succ = response.data.success;
+                self.$message({
+                    showClose: true,
+                    message: succ ? "恢复成功" : "恢复失败",
+                    type: succ ? 'success' : 'false'
+                });
+                if(succ){
                     self.loadData();
                 }
             });
